@@ -1,0 +1,83 @@
+{
+  "Header": {
+    "logo": "DocuServe",
+    "services": "Services",
+    "howItWorks": "How it Works",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "cta": "Create Document"
+  },
+  "Hero": {
+    "title": "Create professional documents online. Fast, easy, and print-ready.",
+    "subtitle": "CVs, agreements, and documents — fill the form, pay online, and download instantly or print in our office.",
+    "ctaPrimary": "Start Now",
+    "ctaSecondary": "View Services",
+    "imageAlt": "Document Preview"
+  },
+  "HowItWorks": {
+    "title": "How It Works",
+    "step1": "Choose a service",
+    "step2": "Fill the form online",
+    "step3": "Pay securely",
+    "step4": "Download or print"
+  },
+  "Services": {
+    "title": "Our Services",
+    "digital": {
+      "title": "Digital Document Services",
+      "cv": "CV / Resume Writing",
+      "agreement": "Agreement Documents",
+      "editing": "Document Editing & Typing",
+      "action": "Order Online"
+    },
+    "printing": {
+      "title": "Printing Services",
+      "invitations": "Invitations",
+      "certificates": "Certificates",
+      "menus": "Menus",
+      "academic": "Academic Documents",
+      "action": "Submit Request"
+    },
+    "promotional": {
+      "title": "Branding & Promotional Items",
+      "banners": "Banners",
+      "tshirts": "T-Shirts",
+      "mugs": "Mugs",
+      "stickers": "Stickers",
+      "action": "Request a Quote"
+    }
+  },
+  "WhyChooseUs": {
+    "title": "Why Choose Us",
+    "point1": "No account required",
+    "point2": "Fast turnaround",
+    "point3": "Professional layouts",
+    "point4": "Print-ready PDFs",
+    "point5": "Secure online payments"
+  },
+  "Preview": {
+    "title": "What you see is what you print.",
+    "cvLabel": "CV Preview",
+    "agreementLabel": "Agreement Preview"
+  },
+  "Payment": {
+    "text": "Pay online safely. No hidden fees."
+  },
+  "CallToAction": {
+    "text": "Ready to get started?",
+    "cta1": "Create CV",
+    "cta2": "Create Document"
+  },
+  "Contact": {
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "location": "Location",
+    "hours": "Working Hours"
+  },
+  "Footer": {
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "contact": "Contact",
+    "terms": "Terms & Privacy"
+  }
+}

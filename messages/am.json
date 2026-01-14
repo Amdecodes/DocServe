@@ -1,0 +1,83 @@
+{
+  "Header": {
+    "logo": "DocuServe",
+    "services": "አገልግሎቶች",
+    "howItWorks": "እንዴት እንደሚሰራ",
+    "pricing": "ዋጋዎች",
+    "contact": "ያግኙን",
+    "cta": "ዶክመንት ይፍጠሩ"
+  },
+  "Hero": {
+    "title": "ፕሮፌሽናል ዶክመንቶችን በመስመር ላይ በፍጥነት እና በቀላሉ ያዘጋጁ።",
+    "subtitle": "CV፣ ውሎች እና ሌሎች ሰነዶች — ቅጹን ይሙሉ፣ ይክፈሉ፣ እና ወዲያውኑ ያውርዱ ወይም ቢሮአችን ውስጥ ያትሙ።",
+    "ctaPrimary": "አሁን ይጀምሩ",
+    "ctaSecondary": "አገልግሎቶችን ይመልከቱ",
+    "imageAlt": "የዶክመንት ምሳሌ"
+  },
+  "HowItWorks": {
+    "title": "እንዴት እንደሚሰራ",
+    "step1": "አገልግሎት ይምረጡ",
+    "step2": "ቅጹን በመስመር ላይ ይሙሉ",
+    "step3": "በአስተማማኝ ሁኔታ ይክፈሉ",
+    "step4": "ያውርዱ ወይም ያትሙ"
+  },
+  "Services": {
+    "title": "አገልግሎቶቻችን",
+    "digital": {
+      "title": "የዲጂታል ዶክመንት አገልግሎቶች",
+      "cv": "CV / ህይወት ታሪክ",
+      "agreement": "የውል ሰነዶች",
+      "editing": "ዶክመንት ኤዲቲንግ እና ታይፒንግ",
+      "action": "ኦንላይን ይዘዙ"
+    },
+    "printing": {
+      "title": "የህትመት አገልግሎቶች",
+      "invitations": "የግብዣ ካርዶች",
+      "certificates": "ሰርተፊኬቶች",
+      "menus": "ሜኑዎች",
+      "academic": "ትምህርታዊ ሰነዶች",
+      "action": "ጥያቄ ያቅርቡ"
+    },
+    "promotional": {
+      "title": "ብራንዲንግ እና ፕሮሞሽናል",
+      "banners": "ባነሮች",
+      "tshirts": "ቲ-ሸርቶች",
+      "mugs": "ማጎች",
+      "stickers": "ስቲገሮች",
+      "action": "ዋጋ ይጠይቁ"
+    }
+  },
+  "WhyChooseUs": {
+    "title": "ለምን እኛን ይምረጡ?",
+    "point1": "አካውንት መክፈት አይጠበቅብዎትም",
+    "point2": "ፈጣን አገልግሎት",
+    "point3": "ፕሮፌሽናል ንድፍ",
+    "point4": "ለህትመት ዝግጁ የሆነ PDF",
+    "point5": "አስተማማኝ የክፍያ አማራጭ"
+  },
+  "Preview": {
+    "title": "የሚያዩት የሚያገኙት ነው።",
+    "cvLabel": "የ CV ምሳሌ",
+    "agreementLabel": "የውል ምሳሌ"
+  },
+  "Payment": {
+    "text": "በአስተማማኝ ሁኔታ ይክፈሉ። ምንም ድብቅ ክፍያ የለም።"
+  },
+  "CallToAction": {
+    "text": "ለመጀመር ዝግጁ ነዎት?",
+    "cta1": "CV ይፍጠሩ",
+    "cta2": "ዶክመንት ይፍጠሩ"
+  },
+  "Contact": {
+    "phone": "ስልክ",
+    "whatsapp": "WhatsApp",
+    "location": "አድራሻ",
+    "hours": "የስራ ሰዓት"
+  },
+  "Footer": {
+    "quickLinks": "ፈጣን ሊንኮች",
+    "services": "አገልግሎቶች",
+    "contact": "ያግኙን",
+    "terms": "ደንቦች እና ሁኔታዎች"
+  }
+}

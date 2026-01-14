@@ -1,0 +1,20 @@
+
+> paperless@0.1.0 lint /home/amde/Documents/ElaProject/paperless
+> eslint
+
+
+/home/amde/Documents/ElaProject/paperless/components/landing/Footer.tsx
+  9:9  warning  'tContact' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/amde/Documents/ElaProject/paperless/components/landing/Hero.tsx
+  5:10  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/amde/Documents/ElaProject/paperless/components/landing/HowItWorks.tsx
+  7:7  warning  'icons' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/amde/Documents/ElaProject/paperless/i18n.ts
+  7:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 4 problems (1 error, 3 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.
