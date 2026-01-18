@@ -18,7 +18,7 @@ export default function Footer() {
               DocuServe
             </Link>
             <p className="text-gray-400 mb-6">
-              Professional document services for everyone. Fast, reliable, and secure.
+              {t("brandDesc")}
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-gray-400 hover:text-primary transition-colors"><Facebook className="w-5 h-5"/></a>
@@ -33,9 +33,9 @@ export default function Footer() {
             <h3 className="text-lg font-bold mb-6">{t("quickLinks")}</h3>
             <ul className="space-y-4">
               <li><Link href="/services" className="text-gray-400 hover:text-primary transition-colors">{t("services")}</Link></li>
-              <li><Link href="/about" className="text-gray-400 hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/about" className="text-gray-400 hover:text-primary transition-colors">{t("aboutUs")}</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-primary transition-colors">{t("contact")}</Link></li>
-              <li><Link href="/process" className="text-gray-400 hover:text-primary transition-colors">How it Works</Link></li>
+              <li><Link href="/process" className="text-gray-400 hover:text-primary transition-colors">{t("howItWorks")}</Link></li>
             </ul>
           </div>
 
@@ -43,10 +43,10 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-6">{t("services")}</h3>
             <ul className="space-y-4">
-              <li><Link href="/services#digital" className="text-gray-400 hover:text-primary transition-colors">Digital Documents</Link></li>
-              <li><Link href="/services#printing" className="text-gray-400 hover:text-primary transition-colors">Printing</Link></li>
-              <li><Link href="/services#branding" className="text-gray-400 hover:text-primary transition-colors">Branding</Link></li>
-              <li><Link href="/prices" className="text-gray-400 hover:text-primary transition-colors">Pricing</Link></li>
+              <li><Link href="/services#digital" className="text-gray-400 hover:text-primary transition-colors">{t("digitalDocs")}</Link></li>
+              <li><Link href="/services#printing" className="text-gray-400 hover:text-primary transition-colors">{t("printing")}</Link></li>
+              <li><Link href="/services#branding" className="text-gray-400 hover:text-primary transition-colors">{t("branding")}</Link></li>
+              <li><Link href="/prices" className="text-gray-400 hover:text-primary transition-colors">{t("pricing")}</Link></li>
             </ul>
           </div>
 
@@ -56,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-4 text-gray-400">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
-                <span>Addis Ababa, Ethiopia<br/>Bole, Friendship Bldg</span>
+                <span>{t("addressLine1")}<br/>{t("addressLine2")}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
@@ -71,12 +71,12 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} DocuServe. All rights reserved.
+            <p className="text-gray-500 text-sm">
+            © {new Date().getFullYear()} DocuServe. {t("rightsReserved")}
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
             <Link href="/privacy" className="hover:text-white transition-colors">{t("terms")}</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">{t("privacyPolicy")}</Link>
           </div>
         </div>
       </div>

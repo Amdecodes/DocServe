@@ -12,32 +12,61 @@ export default function Preview() {
         <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">{t("title")}</h2>
         <div className="h-1 w-20 bg-secondary mx-auto rounded-full mb-12" />
 
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
-          {/* CV Preview */}
-          <motion.div 
-             initial={{ opacity: 0, scale: 0.95 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             className="relative group"
-          >
-             <div className="w-full max-w-sm aspect-[1/1.4] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100 flex items-center justify-center">
-                <span className="text-gray-400 font-medium">CV Preview</span>
-             </div>
-             <p className="mt-4 font-medium text-charcoal">{t("cvLabel")}</p>
-          </motion.div>
+        <div className="relative w-full overflow-hidden">
+          {/* Gradient Overlay Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-lightbg to-transparent z-10" />
+          
+          {/* Gradient Overlay Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-lightbg to-transparent z-10" />
 
-          {/* Agreement Preview */}
           <motion.div 
-             initial={{ opacity: 0, scale: 0.95 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.1 }}
-             className="relative group"
+             className="flex gap-6 md:gap-8"
+             animate={{ x: ["0%", "-50%"] }}
+             transition={{ 
+               repeat: Infinity, 
+               ease: "linear", 
+               duration: 30 
+             }}
+             style={{ width: "fit-content" }}
           >
-             <div className="w-full max-w-sm aspect-[1/1.4] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100 flex items-center justify-center">
-                <span className="text-gray-400 font-medium">Agreement Preview</span>
-             </div>
-             <p className="mt-4 font-medium text-charcoal">{t("agreementLabel")}</p>
+            {[
+              "/images/auto play/Screenshot From 2026-01-18 18-18-45.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-20-17.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-20-41.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-21-18.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-22-11.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-22-47.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-23-13.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-24-07.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-24-44.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-25-28.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-26-00.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-26-28.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-18-45.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-20-17.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-20-41.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-21-18.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-22-11.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-22-47.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-23-13.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-24-07.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-24-44.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-25-28.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-26-00.png",
+              "/images/auto play/Screenshot From 2026-01-18 18-26-28.png"
+            ].map((src, index) => (
+              <div 
+                key={index} 
+                className="flex-shrink-0 w-64 md:w-80 aspect-[1/1.4] bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+              >
+                <img 
+                  src={src} 
+                  alt="Document Preview" 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </motion.div>
         </div>
       </div>

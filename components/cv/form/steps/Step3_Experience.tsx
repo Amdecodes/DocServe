@@ -1,0 +1,114 @@
+"use client"
+
+import { useState } from "react"
+import { useCV, ExperienceItem } from "@/components/cv/CVContext"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/Input"
+import { Textarea } from "@/components/ui/Textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Plus, Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
+
+export function Step3_Experience() {
+  const { cvData, addItem, removeItem } = useCV()
+  const t = useTranslations("Experience")
+  
+  const [isAdding, setIsAdding] = useState(false)
+  const [newItem, setNewItem] = useState<Partial<ExperienceItem>>({})
+
+  const handleAdd = () => {
+    if (newItem.company && newItem.jobTitle) {
+      addItem("experience", newItem)
+      setNewItem({})
+      setIsAdding(false)
+    }
+  }
+
+  const handleCancel = () => {
+    setNewItem({})
+    setIsAdding(false)
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold">{t("title")}</h2>
+        <p className="text-gray-500">{t("description")}</p>
+      </div>
+
+      <div className="space-y-4">
+        {cvData.experience.map((exp) => (
+          <Card key={exp.id} className="relative group">
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold">{exp.jobTitle}</h3>
+                  <p className="text-sm font-medium text-teal-600">{exp.company}</p>
+                  <p className="text-xs text-gray-400">{exp.startDate} - {exp.endDate || t("present")}</p>
+                  {exp.description && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{exp.description}</p>}
+                </div>
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeItem("experience", exp.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {isAdding ? (
+        <Card className="border-primary/50 ring-1 ring-primary/20">
+          <CardHeader>
+            <CardTitle className="text-base">{t("add")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t("jobTitle")}</label>
+                <Input value={newItem.jobTitle || ""} onChange={(e) => setNewItem({...newItem, jobTitle: e.target.value})} placeholder={t("placeholders.jobTitle")} />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t("company")}</label>
+                <Input value={newItem.company || ""} onChange={(e) => setNewItem({...newItem, company: e.target.value})} placeholder={t("placeholders.company")} />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t("startDate")}</label>
+                <Input type="date" value={newItem.startDate || ""} onChange={(e) => setNewItem({...newItem, startDate: e.target.value})} placeholder="Select date" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t("endDate")}</label>
+                <Input type="date" value={newItem.endDate || ""} onChange={(e) => setNewItem({...newItem, endDate: e.target.value})} placeholder="Select date" />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium">{t("descriptionLabel")}</label>
+                <Textarea 
+                    value={newItem.description || ""} 
+                    onChange={(e) => setNewItem({...newItem, description: e.target.value})} 
+                    placeholder={t("placeholders.description")} 
+                    className="min-h-[100px]"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={handleCancel}>{t("cancel")}</Button>
+              <Button onClick={handleAdd}>{t("save")}</Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Button 
+            variant="outline" 
+            className="w-full border-dashed py-8"
+            onClick={() => setIsAdding(true)}
+        >
+            <Plus className="mr-2 h-4 w-4" /> {t("add")}
+        </Button>
+      )}
+    </div>
+  )
+}

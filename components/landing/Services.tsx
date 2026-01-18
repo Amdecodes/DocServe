@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/lib/navigation";
 import { FileText, Printer, Megaphone, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -82,10 +83,12 @@ export default function Services() {
                 ))}
               </ul>
               
-              <Button variant="outline" className="w-full justify-between group">
-                {category.action}
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link href={category.id === 'digital' ? '/services/cv/templates' : '/contact'} className="w-full">
+                <Button variant="outline" className="w-full justify-between group">
+                  {category.action}
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </motion.div>
           ))}
         </div>

@@ -16,12 +16,10 @@ export default function PaymentTrust() {
             <span className="font-semibold">{t("text")}</span>
           </div>
 
-          <div className="flex items-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-             {/* Payment Logos Placeholders */}
-             <div className="h-8 w-24 bg-gray-200 rounded flex items-center justify-center text-xs font-bold text-gray-500">Chapa</div>
-             <div className="h-8 w-24 bg-gray-200 rounded flex items-center justify-center text-xs font-bold text-gray-500">Telebirr</div>
-             <div className="h-8 w-24 bg-gray-200 rounded flex items-center justify-center text-xs font-bold text-gray-500">CBE</div>
-          </div>
+             {/* Payment Logos */}
+             <div className="h-16 bg-white rounded flex items-center justify-center p-2 border border-gray-100 shadow-sm">
+                <img src="/images/chapa-logo.png" alt="Chapa" className="h-full object-contain" />
+             </div>
 
         </div>
       </div>

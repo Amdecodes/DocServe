@@ -17,9 +17,13 @@
   "HowItWorks": {
     "title": "እንዴት እንደሚሰራ",
     "step1": "አገልግሎት ይምረጡ",
+    "step1Desc": "ሰፊ ከሆነው የዶክመንት አገልግሎቶቻችን ይምረጡ።",
     "step2": "ቅጹን በመስመር ላይ ይሙሉ",
+    "step2Desc": "መረጃዎትን በቀላል ቅጾቻችን ይሙሉ::",
     "step3": "በአስተማማኝ ሁኔታ ይክፈሉ",
-    "step4": "ያውርዱ ወይም ያትሙ"
+    "step3Desc": "በቻፓ በታማኝነት ይክፈሉ።",
+    "step4": "ያውርዱ ወይም ያትሙ",
+    "step4Desc": "ፋይሎን ወዲያውኑ ያግኙ ወይም ቢሮአችን መጥተው ይውሰዱ።"
   },
   "Services": {
     "title": "አገልግሎቶቻችን",
@@ -43,7 +47,7 @@
       "banners": "ባነሮች",
       "tshirts": "ቲ-ሸርቶች",
       "mugs": "ማጎች",
-      "stickers": "ስቲገሮች",
+      "stickers": "ስቲከሮች",
       "action": "ዋጋ ይጠይቁ"
     }
   },
@@ -75,9 +79,192 @@
     "hours": "የስራ ሰዓት"
   },
   "Footer": {
+    "brandDesc": "ለሁሉም የሚሆን የዶክመንት አገልግሎት። ፈጣን፣ አስተማማኝ እና ደህንነቱ የተጠበቀ።",
     "quickLinks": "ፈጣን ሊንኮች",
+    "aboutUs": "ስለ እኛ",
+    "howItWorks": "እንዴት እንደሚሰራ",
     "services": "አገልግሎቶች",
+    "digitalDocs": "ዲጂታል ዶክመንቶች",
+    "printing": "ህትመት",
+    "branding": "ብራንዲንግ",
+    "pricing": "ዋጋዎች",
     "contact": "ያግኙን",
-    "terms": "ደንቦች እና ሁኔታዎች"
+    "addressLine1": "አዲስ አበባ፣ ኢትዮጵያ",
+    "addressLine2": "ፈረንሳይ፣ ጉራራ",
+    "terms": "ደንቦች እና ሁኔታዎች",
+    "privacyPolicy": "ፕራይቬሲ ፖሊሲ",
+    "rightsReserved": "መብቱ በህግ የተጠበቀ ነው።"
+  },
+  "ServicesPage": {
+    "title": "አገልግሎት ይምረጡ",
+    "description": "ፍላጎትዎን የሚያሟላውን አገልግሎት ይምረጡ። ፕሮፌሽናል ዶክመንቶችን እንዲያዘጋጁ እንረዳዎታለን።",
+    "cvTitle": "CV ማዘጋጃ",
+    "cvDescription": "በደቂቃዎች ውስጥ ፕሮፌሽናል እና ደረጃውን የጠበቀ CV ያዘጋጁ።",
+    "cvPrice": "ከ 199 ብር ይጀምራል",
+    "letterTitle": "የሽፋን ደብዳቤ",
+    "letterDescription": "ለስራ ማመልከቻዎ አሳማኝ የሆነ የሽፋን ደብዳቤ (Cover Letter) ያዘጋጁ።",
+    "letterPrice": "በቅርብ ቀን",
+    "comingSoon": "ተጨማሪ አገልግሎቶች በቅርብ ቀን"
+  },
+  "ServiceCard": {
+    "mostPopular": "በጣም ተወዳጅ",
+    "startNow": "ጀምር"
+  },
+  "TemplateSelectionPage": {
+    "title": "የ CV ዲዛይን ይምረጡ",
+    "description": "CVዎን ለማዘጋጀት ክሚከተሉት ዲዛይኖች አንዱን ይምረጡ። በኋላ መቀየር ይችላሉ።",
+    "templates": {
+      "modern": {
+        "name": "ዘመናዊ (Modern)",
+        "description": "ለቴክኖሎጂ እና ለፈጠራ ስራዎች ተስማሚ የሆነ ንጹህ እና ፕሮፌሽናል ዲዛይን።"
+      },
+      "classic": {
+        "name": "ክላሲክ (Classic)",
+        "description": "ለቢሮ እና ለአካዳሚክ ስራዎች ተስማሚ የሆነ ጊዜ የማይሽረው ዲዛይን።"
+      },
+      "simple": {
+        "name": "ቀላል (Simple)",
+        "description": "በይዘትዎ ላይ የሚያተኩር ቀላል ዲዛይን።"
+      }
+    }
+  },
+  "TemplateCard": {
+    "useTemplate": "ይህንን ዲዛይን ተጠቀም"
+  },
+  "ReviewStep": {
+    "title": "ትንሽ ቀረዎት!",
+    "subtitle": "የ CVዎን ቅድመ-እይታ ይመልከቱ። ሰነድዎን ለማግኘት ዝርዝርዎን ከታች ያስገቡ።",
+    "cardTitle": "የደንበኛ ዝርዝሮች",
+    "cardDescription": "መለያ መክፈት አይጠበቅብዎትም። ይህን መረጃ ሰነድዎን ለመላክ ብቻ እንጠቀምበታለን።",
+    "fullName": "ሙሉ ስም",
+    "phone": "ስልክ ቁጥር (ግዴታ)",
+    "email": "ኢሜይል (አማራጭ)",
+    "autoFilled": "ከግል መረጃ የተወሰደ።",
+    "firstName": "ስም",
+    "lastName": "የአባት ስም",
+    "noteLabel": "ማሳሰቢያ:",
+    "noteText": "ወደ ክፍያ ቀጥል የሚለውን ሲጫኑ፣ የ CV ዝርዝርዎ ትክክል መሆኑን ያረጋግጣሉ።",
+    "proceedButton": "ወደ ክፍያ ይቀጥሉ"
+  },
+  "CheckoutPage": {
+    "title": "ደህንነቱ የተጠበቀ ክፍያ",
+    "subtitle": "ክፍያዎን ይፈጽሙና ፕሮፌሽናል CVዎን ያውርዱ።",
+    "orderSummary": "የትዕዛዝ ማጠቃለያ",
+    "reviewOrder": "የትዕዛዝዎን ዝርዝር ይመልከቱ።",
+    "service": "አገልግሎት",
+    "serviceName": "ፕሮፌሽናል CV ዲዛይን",
+    "documentId": "የሰነድ መለያ",
+    "template": "ዲዛይን",
+    "total": "ጠቅላላ",
+    "payment": "ክፍያ",
+    "securePayment": "ደህንነቱ የተጠበቀ ክፍያ በ Chapa።",
+    "payWithChapa": "በ Chapa ደህንነቱ በተጠበቀ ሁኔታ ይክፈሉ",
+    "payButton": "{amount} በ Chapa ይክፈሉ",
+    "terms": "ይክፈሉን ሲጫኑ በአገልግሎት ውላችን ይስማማሉ።"
+  },
+  "PaymentSuccess": {
+    "title": "ክፍያ ተፈጽሟል!",
+    "orderId": "የትዕዛዝ ቁጥር",
+    "message": "ለግዢዎ እናመሰግናለን። CVዎ ለመውረድ ዝግጁ ነው።",
+    "download": "PDF አውርድ",
+    "needChanges": "ለውጥ ይፈልጋሉ?",
+    "contactUs": "ያግኙን",
+    "withOrderId": "በትዕዛዝ ቁጥርዎ።",
+    "returnHome": "ወደ ዋናው ገጽ ተመለስ"
+  },
+  "PaymentFailed": {
+    "title": "ክፍያ አልተሳካም",
+    "orderId": "የትዕዛዝ ቁጥር",
+    "message": "ክፍያዎን ማስተናገድ አልቻልንም። እባክዎ ቀሪ ሂሳብዎን ወይም የኔትወርክ ግንኙነትዎን ያረጋግጡ።",
+    "retry": "እንደገና ሞክር",
+    "processing": "በማስተናገድ ላይ...",
+    "changeDetails": "ዝርዝር ቀይር",
+    "trouble": "ችግር አጋጠመዎት?",
+    "contactSupport": "እርዳታ ያግኙ",
+    "verifyingTitle": "የትዕዛዝ ቁጥርን በማረጋገጥ ላይ...",
+    "verifyingText": "የክፍያ ሁኔታን በመፈተሽ ላይ",
+    "connectingTitle": "Chapa Gatewayን ደህንነት በማረጋገጥ ላይ...",
+    "connectingText": "ደህንነቱ የተጠበቀ ግንኙነት በመፍጠር ላይ",
+    "redirectingTitle": "ወደ ክፍያ በመመለስ ላይ...",
+    "redirectingText": "ወደ ክፍያ ገጽ በመውሰድ ላይ"
+  },
+  "PersonalInfo": {
+    "title": "የግል መረጃ",
+    "description": "መሰረታዊ የመገኛ አድራሻዎን ያስገቡ።",
+    "photoLabel": "የፕሮፋይል ፎቶ",
+    "noPhoto": "ፎቶ የለም",
+    "photoHint": "የሚመከር: ስኩዌር JPG ወይም PNG፣ እስከ 2MB።",
+    "firstName": "ስም",
+    "lastName": "የአባት ስም",
+    "jobTitle": "የስራ መደብ",
+    "email": "ኢሜይል",
+    "phone": "ስልክ ቁጥር",
+    "city": "ከተማ",
+    "country": "ሀገር",
+    "summaryTitle": "ስለ እርስዎ",
+    "summaryDescription": "ስለ እርስዎ ልምድ እና ብቃት የሚገልጽ ከ2-4 ዓረፍተ ነገር ይጻፉ።",
+    "placeholders": {
+        "firstName": "ምሳሌ: አበበ",
+        "lastName": "ምሳሌ: ከበደ",
+        "jobTitle": "ምሳሌ: ሶፍትዌር ኢንጂነር",
+        "email": "abebe@example.com",
+        "phone": "+251 911 234 567",
+        "city": "አዲስ አበባ",
+        "country": "ኢትዮጵያ",
+        "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
+    }
+  },
+  "Education": {
+    "title": "ትምህርት",
+    "description": "የትምህርት ታሪክዎን ያስገቡ።",
+    "add": "ትምህርት ጨምር",
+    "save": "አስቀምጥ",
+    "cancel": "ተወው",
+    "school": "ትምህርት ቤት / ዩኒቨርሲቲ",
+    "degree": "ዲግሪ / ሰርተፊኬት",
+    "startDate": "የጀመሩበት ጊዜ",
+    "endDate": "የጨረሱበት ጊዜ",
+    "city": "ከተማ",
+    "placeholders": {
+        "school": "ምሳሌ: አዲስ አበባ ዩኒቨርሲቲ",
+        "degree": "ምሳሌ: የኮምፒውተር ሳይንስ ዲግሪ",
+        "city": "ምሳሌ: አዲስ አበባ"
+    }
+  },
+  "Experience": {
+    "title": "የስራ ልምድ",
+    "description": "አግባብነት ያለው የስራ ልምድዎን ያስገቡ።",
+    "add": "የስራ ልምድ ጨምር",
+    "save": "አስቀምጥ",
+    "cancel": "ተወው",
+    "jobTitle": "የስራ መደብ",
+    "company": "ድርጅት",
+    "startDate": "የጀመሩበት ጊዜ",
+    "endDate": "የለቀቁበት ጊዜ",
+    "descriptionLabel": "ዝርዝር መግለጫ",
+    "present": "እስካሁን",
+    "placeholders": {
+        "jobTitle": "ምሳሌ: ሲኒየር ዴቢሎፐር",
+        "company": "ምሳሌ: ቴክ ሶሉሽንስ",
+        "description": "ስለ ስራዎ ዝርዝር እና ስኬቶችዎ ይግለጹ..."
+    }
+  },
+  "Skills": {
+    "title": "ክህሎቶች",
+    "description": "ዋና ዋና ክህሎቶችዎን ይዘርዝሩ።",
+    "add": "ጨምር",
+    "noSkills": "ምንም ክህሎት አልተጨመረም።",
+    "placeholder": "ምሳሌ: ፕሮጀክት ማኔጅመንት, ግራፊክ ዲዛይን"
+  },
+  "CVNavigation": {
+    "next": "ቀጣይ",
+    "back": "ተመለስ",
+    "steps": {
+        "personal": "ግላዊ መረጃ",
+        "education": "ትምህርት",
+        "experience": "ስራ ልምድ",
+        "skills": "ክህሎት",
+        "review": "ማረጋገጫ"
+    }
   }
 }

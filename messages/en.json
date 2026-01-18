@@ -17,9 +17,13 @@
   "HowItWorks": {
     "title": "How It Works",
     "step1": "Choose a service",
+    "step1Desc": "Select from our wide range of document services.",
     "step2": "Fill the form online",
+    "step2Desc": "Enter your details in our easy-to-use forms.",
     "step3": "Pay securely",
-    "step4": "Download or print"
+    "step3Desc": "Securely pay with Chapa.",
+    "step4": "Download or print",
+    "step4Desc": "Get your file instantly or pick it up."
   },
   "Services": {
     "title": "Our Services",
@@ -75,9 +79,192 @@
     "hours": "Working Hours"
   },
   "Footer": {
+    "brandDesc": "Professional document services for everyone. Fast, reliable, and secure.",
     "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "howItWorks": "How it Works",
     "services": "Services",
+    "digitalDocs": "Digital Documents",
+    "printing": "Printing",
+    "branding": "Branding",
+    "pricing": "Pricing",
     "contact": "Contact",
-    "terms": "Terms & Privacy"
+    "addressLine1": "Addis Ababa, Ethiopia",
+    "addressLine2": "Ferensay legasion, Gurara",
+    "terms": "Terms & Privacy",
+    "privacyPolicy": "Privacy Policy",
+    "rightsReserved": "All rights reserved."
+  },
+  "ServicesPage": {
+    "title": "Choose Your Service",
+    "description": "Select the service that best fits your needs. We help you create professional documents that stand out.",
+    "cvTitle": "CV Writing",
+    "cvDescription": "Create a professional, Ethiopian-standardized CV in minutes.",
+    "cvPrice": "Starting from 199 ETB",
+    "letterTitle": "Cover Letter",
+    "letterDescription": "Write a persuasive cover letter to accompany your job application.",
+    "letterPrice": "Coming Soon",
+    "comingSoon": "More Services Coming Soon"
+  },
+  "ServiceCard": {
+    "mostPopular": "Most Popular",
+    "startNow": "Start Now"
+  },
+  "TemplateSelectionPage": {
+    "title": "Choose Your CV Template",
+    "description": "Select a template to start building your professional resume. You can change it later.",
+    "templates": {
+      "modern": {
+        "name": "Modern",
+        "description": "Clean and professional, perfect for tech and creative roles."
+      },
+      "classic": {
+        "name": "Classic",
+        "description": "Timeless and elegant, suitable for corporate and academic positions."
+      },
+      "simple": {
+        "name": "Simple",
+        "description": "Minimalist layout that focuses on your content."
+      }
+    }
+  },
+  "TemplateCard": {
+    "useTemplate": "Use Template"
+  },
+  "ReviewStep": {
+    "title": "Almost There!",
+    "subtitle": "Review your CV preview on the right. Enter your details below to receive your document.",
+    "cardTitle": "Customer Details",
+    "cardDescription": "No account needed. We’ll use this to send your document and track your order.",
+    "fullName": "Full Name",
+    "phone": "Phone Number (Required)",
+    "email": "Email (Optional)",
+    "autoFilled": "Taken from Personal Info step.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "noteLabel": "Note:",
+    "noteText": "By clicking \"Proceed to Payment\", you confirm that your CV details are correct.",
+    "proceedButton": "Proceed to Payment"
+  },
+  "CheckoutPage": {
+    "title": "Secure Checkout",
+    "subtitle": "Complete your payment to download your professional CV.",
+    "orderSummary": "Order Summary",
+    "reviewOrder": "Review your order details.",
+    "service": "Service",
+    "serviceName": "Professional CV Design",
+    "documentId": "Document ID",
+    "template": "Template",
+    "total": "Total",
+    "payment": "Payment",
+    "securePayment": "Secure payment via Chapa.",
+    "payWithChapa": "Pay securely with Chapa",
+    "payButton": "Pay {amount} with Chapa",
+    "terms": "By clicking pay, you agree to our terms of service."
+  },
+  "PaymentSuccess": {
+    "title": "Payment Successful!",
+    "orderId": "Order ID",
+    "message": "Thank you for your purchase. Your CV is ready for download.",
+    "download": "Download PDF",
+    "needChanges": "Need changes?",
+    "contactUs": "Contact us",
+    "withOrderId": "with your Order ID.",
+    "returnHome": "Return to Home"
+  },
+  "PaymentFailed": {
+    "title": "Payment Failed",
+    "orderId": "Order ID",
+    "message": "We couldn't process your payment. Please check your balance or network and try again.",
+    "retry": "Retry Payment",
+    "processing": "Processing...",
+    "changeDetails": "Change Details",
+    "trouble": "Having trouble?",
+    "contactSupport": "Contact Support",
+    "verifyingTitle": "Verifying Order ID...",
+    "verifyingText": "Checking transaction status",
+    "connectingTitle": "Securing Chapa Gateway...",
+    "connectingText": "Establishing secure connection",
+    "redirectingTitle": "Redirecting...",
+    "redirectingText": "Sending you back to payment"
+  },
+  "PersonalInfo": {
+    "title": "Personal Information",
+    "description": "Start with your basic contact details.",
+    "photoLabel": "Profile Photo",
+    "noPhoto": "No Photo",
+    "photoHint": "Recommended: Square JPG or PNG, max 2MB.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "jobTitle": "Job Title",
+    "email": "Email",
+    "phone": "Phone",
+    "city": "City",
+    "country": "Country",
+    "summaryTitle": "Professional Summary",
+    "summaryDescription": "Write 2-4 sentences that highlight your value and years of experience.",
+    "placeholders": {
+        "firstName": "e.g. Abebe",
+        "lastName": "e.g. Kebede",
+        "jobTitle": "e.g. Software Engineer",
+        "email": "abebe@example.com",
+        "phone": "+251 911 234 567",
+        "city": "Addis Ababa",
+        "country": "Ethiopia",
+        "summary": "e.g. Experienced software engineer with 5 years of experience..."
+    }
+  },
+  "Education": {
+    "title": "Education",
+    "description": "Add your educational background.",
+    "add": "Add Education",
+    "save": "Save",
+    "cancel": "Cancel",
+    "school": "School / University",
+    "degree": "Degree",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "city": "City",
+    "placeholders": {
+        "school": "e.g. Addis Ababa University",
+        "degree": "e.g. BSc in Computer Science",
+        "city": "e.g. Addis Ababa"
+    }
+  },
+  "Experience": {
+    "title": "Work Experience",
+    "description": "Add your relevant work experience.",
+    "add": "Add Experience",
+    "save": "Save",
+    "cancel": "Cancel",
+    "jobTitle": "Job Title",
+    "company": "Company",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "descriptionLabel": "Description",
+    "present": "Present",
+    "placeholders": {
+        "jobTitle": "e.g. Senior Developer",
+        "company": "e.g. Tech Solutions",
+        "description": "Describe your responsibilities and achievements..."
+    }
+  },
+  "Skills": {
+    "title": "Skills",
+    "description": "List your top skills.",
+    "add": "Add",
+    "noSkills": "No skills added yet.",
+    "placeholder": "e.g. JavaScript, Project Management"
+  },
+  "CVNavigation": {
+    "next": "Next",
+    "back": "Back",
+    "steps": {
+        "personal": "Personal",
+        "education": "Education",
+        "experience": "Experience",
+        "skills": "Skills",
+        "review": "Review"
+    }
   }
 }
