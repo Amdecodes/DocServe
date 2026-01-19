@@ -59,10 +59,23 @@ function CVWizardContent() {
     }
   }
 
+  // Determine current form ID for steps that are refactored to use HTML forms
+  // This allows the external "Next" button to trigger the internal form submission
+  const getFormId = () => {
+      switch (currentStep) {
+          case 0: return "step1-personal-form"
+          // Future steps will be added here
+          default: return undefined
+      }
+  }
+
+  const currentFormId = getFormId()
+
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <Step1_Personal />
+        // Pass onNext handler to refactored steps
+        return <Step1_Personal onNext={nextStep} />
       case 1:
         return <Step2_Education />
       case 2:
@@ -131,7 +144,11 @@ function CVWizardContent() {
                     {t("proceedButton")}
                 </Link>
             ) : (
-                <Button onClick={nextStep}>
+                <Button 
+                    onClick={currentFormId ? undefined : nextStep}
+                    type={currentFormId ? "submit" : "button"}
+                    form={currentFormId}
+                >
                     {navT("next")} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             )}
@@ -153,7 +170,7 @@ function CVWizardContent() {
 
 export default function CVBuilderPage() {
   return (
-    <div className="min-h-screen flex flex-col pt-24">
+    <div className="min-h-screen flex flex-col">
        <Header />
        <main className="flex-1">
         <CVProvider>

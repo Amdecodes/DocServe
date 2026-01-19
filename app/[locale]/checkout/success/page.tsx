@@ -7,11 +7,14 @@ import { motion } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { Link } from "@/lib/navigation"
 
+import { PaymentSuccessHandler } from "@/components/checkout/PaymentSuccessHandler"
+
 export default function PaymentSuccessPage() {
   const t = useTranslations("PaymentSuccess")
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+      <PaymentSuccessHandler />
       <Header />
       
       <div className="max-w-md mx-auto px-4 mt-12 text-center">
@@ -52,9 +55,6 @@ export default function PaymentSuccessPage() {
                 {t("needChanges")} <a href="#" className="text-teal-600 underline">{t("contactUs")}</a> {t("withOrderId")}
             </p>
             
-
-
-// ...
 
             <div className="mt-8">
                 <Link href="/" className="text-sm text-gray-400 hover:text-gray-600">{t("returnHome")}</Link>

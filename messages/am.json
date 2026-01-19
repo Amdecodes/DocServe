@@ -9,7 +9,7 @@
   },
   "Hero": {
     "title": "ፕሮፌሽናል ዶክመንቶችን በመስመር ላይ በፍጥነት እና በቀላሉ ያዘጋጁ።",
-    "subtitle": "CV፣ ውሎች እና ሌሎች ሰነዶች — ቅጹን ይሙሉ፣ ይክፈሉ፣ እና ወዲያውኑ ያውርዱ ወይም ቢሮአችን ውስጥ ያትሙ።",
+    "subtitle": "CV፣ ውሎች እና ሌሎች ሰነዶች ቅጹን ይሙሉ፣ ይክፈሉ፣ እና ወዲያውኑ ያውርዱ ወይም ቢሮአችን ውስጥ ያትሙ።",
     "ctaPrimary": "አሁን ይጀምሩ",
     "ctaSecondary": "አገልግሎቶችን ይመልከቱ",
     "imageAlt": "የዶክመንት ምሳሌ"
@@ -160,7 +160,15 @@
     "securePayment": "ደህንነቱ የተጠበቀ ክፍያ በ Chapa።",
     "payWithChapa": "በ Chapa ደህንነቱ በተጠበቀ ሁኔታ ይክፈሉ",
     "payButton": "{amount} በ Chapa ይክፈሉ",
-    "terms": "ይክፈሉን ሲጫኑ በአገልግሎት ውላችን ይስማማሉ።"
+    "terms": "ይክፈሉን ሲጫኑ በአገልግሎት ውላችን ይስማማሉ።",
+    "premiumTemplate": "ፕሪሚየም CV ዲዛይን (Modern)",
+    "instantDelivery": "ወዲያውኑ ይደርሰዎታል",
+    "fullName": "ሙሉ ስም",
+    "phoneNumber": "ስልክ ቁጥር",
+    "phoneError": "እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ (በ 09 ወይም 07 የሚጀምር፣ 10 አሃዝ)።",
+    "payWith": "ክፈል በ",
+    "fillDetails": "ለመክፈል ዝርዝሩን ይሙሉ",
+    "securedBy": "ደህንነቱ በ Chapa የተጠበቀ"
   },
   "PaymentSuccess": {
     "title": "ክፍያ ተፈጽሟል!",

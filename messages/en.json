@@ -9,7 +9,7 @@
   },
   "Hero": {
     "title": "Create professional documents online. Fast, easy, and print-ready.",
-    "subtitle": "CVs, agreements, and documents — fill the form, pay online, and download instantly or print in our office.",
+    "subtitle": "CVs, agreements, and documents fill the form, pay online, and download instantly or print in our office.",
     "ctaPrimary": "Start Now",
     "ctaSecondary": "View Services",
     "imageAlt": "Document Preview"
@@ -160,7 +160,15 @@
     "securePayment": "Secure payment via Chapa.",
     "payWithChapa": "Pay securely with Chapa",
     "payButton": "Pay {amount} with Chapa",
-    "terms": "By clicking pay, you agree to our terms of service."
+    "terms": "By clicking pay, you agree to our terms of service.",
+    "premiumTemplate": "Premium CV Template (Modern)",
+    "instantDelivery": "Instant Delivery",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "phoneError": "Please enter a valid phone number (starting with 09 or 07, 10 digits).",
+    "payWith": "Pay with",
+    "fillDetails": "Fill details to pay",
+    "securedBy": "Secured by Chapa"
   },
   "PaymentSuccess": {
     "title": "Payment Successful!",
