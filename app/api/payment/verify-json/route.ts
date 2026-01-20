@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   }
 
   const order = await prisma.order.findUnique({
-    where: { id: orderId }
+    where: { id: orderId },
   });
 
   if (!order) {
@@ -22,9 +22,9 @@ export async function GET(req: Request) {
     `https://api.chapa.co/v1/transaction/verify/${order.tx_ref}`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`
-      }
-    }
+        Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`,
+      },
+    },
   );
 
   const data = await res.json();
@@ -32,13 +32,13 @@ export async function GET(req: Request) {
   if (data.status === "success") {
     await prisma.order.update({
       where: { id: orderId },
-      data: { status: "PAID" }
+      data: { status: "PAID" },
     });
   }
 
   return NextResponse.json({
     orderId,
     status: data.status === "success" ? "PAID" : "PENDING",
-    chapa: data
+    chapa: data,
   });
 }
