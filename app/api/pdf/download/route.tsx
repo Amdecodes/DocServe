@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     <CvPdf data={order.form_data} />
   );
 
-  return new Response(stream as any, {
+  return new Response(stream as unknown as ReadableStream<Uint8Array>, {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": "attachment; filename=cv.pdf"
