@@ -32,7 +32,10 @@ export async function GET(req: Request) {
   if (data.status === "success") {
     await prisma.order.update({
       where: { id: orderId },
-      data: { status: "PAID" },
+      data: {
+        status: "PAID",
+        paid_at: new Date(),
+      },
     });
   }
 

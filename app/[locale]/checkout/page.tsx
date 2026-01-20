@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
@@ -16,6 +17,9 @@ export default function CheckoutPage() {
   // Order state
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(true);
+
+  // Prevent double firing in Strict Mode
+  const isInitializedRef = useRef(false);
 
   // Helper function to gather all CV data from localStorage
   const gatherCVFormData = () => {
@@ -42,6 +46,9 @@ export default function CheckoutPage() {
 
   // Create Order on Mount or Retrieve from Storage
   useEffect(() => {
+    if (isInitializedRef.current) return;
+    isInitializedRef.current = true;
+
     const initOrder = async () => {
       // 1. Try to get existing order from storage
       const storedOrderId = localStorage.getItem("paperless.orderId");
@@ -52,30 +59,10 @@ export default function CheckoutPage() {
         return;
       }
 
-      // 2. Create new if none exists
-      try {
-        const res = await fetch("/api/orders", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            service_type: "premium_resume",
-            form_data: gatherCVFormData(), // Include CV data
-          }),
-        });
-
-        if (!res.ok) throw new Error("Failed to create order");
-
-        const data = await res.json();
-        setOrderId(data.orderId);
-
-        // Persist
-        localStorage.setItem("paperless.orderId", data.orderId);
-      } catch (error) {
-        console.error("Error creating draft order:", error);
-        setPaymentError("Failed to initialize order. Please refresh.");
-      } finally {
-        setIsCreatingOrder(false);
-      }
+      // 2. No order found - User typically shouldn't be here without one
+      // If we stop auto-creation, show error or redirect.
+      setIsCreatingOrder(false);
+      // Optional: setPaymentError("No active order found. Please create a CV first.");
     };
 
     initOrder();
@@ -88,10 +75,19 @@ export default function CheckoutPage() {
     setPaymentError(null);
     try {
       // Initialize Chapa Payment
+      const cvData = gatherCVFormData();
+      const personal = cvData?.personal || {};
+
       const initPaymentRes = await fetch("/api/payment/chapa/init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
+        body: JSON.stringify({
+          orderId,
+          email: personal.email,
+          firstName: personal.firstName,
+          lastName: personal.lastName,
+          phone: personal.phone,
+        }),
       });
 
       if (!initPaymentRes.ok) {
@@ -117,6 +113,29 @@ export default function CheckoutPage() {
       setIsProcessing(false);
     }
   };
+
+  if (isCreatingOrder) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!orderId) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <Card className="w-full max-w-md p-8 text-center space-y-4">
+          <ShoppingBag className="h-12 w-12 mx-auto text-gray-400" />
+          <h2 className="text-xl font-bold">No Active Order</h2>
+          <p className="text-gray-600">Please create a CV first.</p>
+          <Button asChild className="w-full">
+            <Link href="/en/form/cv">Start New CV</Link>
+          </Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/50">

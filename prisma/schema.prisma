@@ -15,6 +15,13 @@ model Order {
   pdf_path     String?
   form_data    Json?
   created_at   DateTime    @default(now())
+  
+  // Payment Details
+  customer_name  String?
+  customer_email String?
+  customer_phone String?
+  chapa_ref      String?    @unique // The 'reference' from Chapa
+  paid_at        DateTime?
 }
 
 enum OrderStatus {
