@@ -13,6 +13,7 @@ model Order {
   service_type String
   status       OrderStatus
   pdf_path     String?
+  form_data    Json?
   created_at   DateTime    @default(now())
 }
 

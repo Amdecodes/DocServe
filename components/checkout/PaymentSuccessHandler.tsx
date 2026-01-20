@@ -11,6 +11,7 @@ export function PaymentSuccessHandler() {
     localStorage.removeItem("paperless.skills") // If we add skills persistence
     localStorage.removeItem("paperless.cv") // If we use a global key
     localStorage.removeItem("paperless.customer")
+    localStorage.removeItem("paperless.orderId")
     
     console.log("Wizard data cleared after successful payment")
   }, [])

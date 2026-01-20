@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { service_type } = await req.json();
+    const { service_type, form_data } = await req.json();
 
     if (!service_type) {
       return NextResponse.json(
@@ -12,24 +12,23 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create order with auto-generated UUID
+    // Generate UUID locally
+    const id = crypto.randomUUID();
+
+    // Create order with explicit UUID for both id and tx_ref
     const order = await prisma.order.create({
       data: {
+        id,
         service_type,
         status: "DRAFT",
-        tx_ref: "", // temporary, will be updated
+        tx_ref: id, // Guaranteed to match
+        form_data: form_data || null, // Save CV data from frontend
       },
     });
 
-    // Update tx_ref to match order.id for consistency
-    const updatedOrder = await prisma.order.update({
-      where: { id: order.id },
-      data: { tx_ref: order.id },
-    });
-
     return NextResponse.json({
-      orderId: updatedOrder.id,
-      tx_ref: updatedOrder.tx_ref,
+      orderId: order.id,
+      tx_ref: order.tx_ref,
     });
   } catch (error) {
     console.error("[API] Error creating order:", error);

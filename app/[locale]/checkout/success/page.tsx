@@ -9,11 +9,15 @@ import { Link } from "@/lib/navigation"
 
 import { PaymentSuccessHandler } from "@/components/checkout/PaymentSuccessHandler"
 
+import { useSearchParams } from "next/navigation"
+
 export default function PaymentSuccessPage() {
   const t = useTranslations("PaymentSuccess")
+  const searchParams = useSearchParams()
+  const orderId = searchParams.get("orderId")
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 pb-12">
       <PaymentSuccessHandler />
       <Header />
       
@@ -40,7 +44,9 @@ export default function PaymentSuccessPage() {
             
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
                 <p className="text-gray-500 text-sm mb-1">{t("orderId")}</p>
-                <p className="text-xl font-mono font-bold text-gray-800 tracking-wider">#8829-ET</p>
+                <p className="text-xl font-mono font-bold text-gray-800 tracking-wider">
+                    {orderId ? `#${orderId.slice(0, 8).toUpperCase()}` : "#8829-ET"}
+                </p>
                 <hr className="my-4" />
                 <p className="text-gray-600 mb-4">
                     {t("message")}

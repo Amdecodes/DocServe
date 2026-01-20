@@ -13,10 +13,14 @@ import { Link, useRouter } from "@/lib/navigation"
 
 
 
+import { useSearchParams } from "next/navigation"
+
 export default function PaymentFailedPage() {
   const [retryStatus, setRetryStatus] = useState<RetryStatus>('idle')
   const t = useTranslations("PaymentFailed")
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const orderId = searchParams.get("orderId")
 
   const handleRetry = () => {
     setRetryStatus('verifying')
@@ -40,7 +44,7 @@ export default function PaymentFailedPage() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-50 pb-12 relative overflow-hidden">
       <Header />
       
       <div className="max-w-md mx-auto px-4 mt-12 text-center">
@@ -52,7 +56,9 @@ export default function PaymentFailedPage() {
          
          <div className="bg-white p-6 rounded-lg shadow-sm border border-red-100 mb-8">
              <p className="text-gray-500 text-sm mb-1">{t("orderId")}</p>
-             <p className="text-xl font-mono font-bold text-gray-800 tracking-wider mb-4">#8829-ET</p>
+             <p className="text-xl font-mono font-bold text-gray-800 tracking-wider mb-4">
+                {orderId ? `#${orderId.slice(0, 8).toUpperCase()}` : "#8829-ET"}
+             </p>
              
              <div className="bg-red-50 text-red-700 p-3 rounded text-sm mb-6">
                  {t("message")}
