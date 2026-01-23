@@ -1,6 +1,0 @@
-Creating Order...
-Response: {"orderId":"96ee6d05-e125-41c0-9a2b-f378974a0733","tx_ref":"96ee6d05-e125-41c0-9a2b-f378974a0733"}
-Order ID: 96ee6d05-e125-41c0-9a2b-f378974a0733
-Initializing Payment for Order: 96ee6d05-e125-41c0-9a2b-f378974a0733
-Init Response: {"checkout_url":"https://checkout.chapa.co/checkout/payment/fo7wbGfBulTJsEMw3vPFTaP8sDITuUeGnqUX0ar1d6nJt"}
-✅ Payment Initialization Successful!

@@ -110,6 +110,22 @@
     "mostPopular": "በጣም ተወዳጅ",
     "startNow": "ጀምር"
   },
+  "Templates": {
+    "modern": {
+      "name": "ዘመናዊ ፕሮፌሽናል",
+      "description": "ለኮርፖሬት ሚናዎች ፍጹም የሆነ ንፁህ ፣ የተደራጀ አቀማመጥ።"
+    },
+    "professional": {
+      "name": "ኤክስኪዩቲቭ ሰማያዊ",
+      "description": "ጠንካራ የአመራር የጎን አሞሌ ያለው የጊዜ መስመር ላይ የተመሠረተ አቀማመጥ።"
+    },
+    "classic": {
+      "name": "ጊዜ የማይሽረው ክላሲክ",
+      "description": "በጭራሽ ጊዜ የማይሽረው ባህላዊ አቀማመጥ።"
+    },
+    "useThisTemplate": "ይህንን ቅጽ ተጠቀም",
+    "previewNotAvailable": "ቅድመ እይታ አይገኝም"
+  },
   "TemplateSelectionPage": {
     "title": "የ CV ዲዛይን ይምረጡ",
     "description": "CVዎን ለማዘጋጀት ክሚከተሉት ዲዛይኖች አንዱን ይምረጡ። በኋላ መቀየር ይችላሉ።",
@@ -121,10 +137,6 @@
       "classic": {
         "name": "ክላሲክ (Classic)",
         "description": "ለቢሮ እና ለአካዳሚክ ስራዎች ተስማሚ የሆነ ጊዜ የማይሽረው ዲዛይን።"
-      },
-      "simple": {
-        "name": "ቀላል (Simple)",
-        "description": "በይዘትዎ ላይ የሚያተኩር ቀላል ዲዛይን።"
       }
     }
   },
@@ -212,14 +224,14 @@
     "summaryTitle": "ስለ እርስዎ",
     "summaryDescription": "ስለ እርስዎ ልምድ እና ብቃት የሚገልጽ ከ2-4 ዓረፍተ ነገር ይጻፉ።",
     "placeholders": {
-        "firstName": "ምሳሌ: አበበ",
-        "lastName": "ምሳሌ: ከበደ",
-        "jobTitle": "ምሳሌ: ሶፍትዌር ኢንጂነር",
-        "email": "abebe@example.com",
-        "phone": "+251 911 234 567",
-        "city": "አዲስ አበባ",
-        "country": "ኢትዮጵያ",
-        "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
+      "firstName": "ምሳሌ: አበበ",
+      "lastName": "ምሳሌ: ከበደ",
+      "jobTitle": "ምሳሌ: ሶፍትዌር ኢንጂነር",
+      "email": "abebe@example.com",
+      "phone": "+251 911 234 567",
+      "city": "አዲስ አበባ",
+      "country": "ኢትዮጵያ",
+      "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
     }
   },
   "Education": {
@@ -234,9 +246,9 @@
     "endDate": "የጨረሱበት ጊዜ",
     "city": "ከተማ",
     "placeholders": {
-        "school": "ምሳሌ: አዲስ አበባ ዩኒቨርሲቲ",
-        "degree": "ምሳሌ: የኮምፒውተር ሳይንስ ዲግሪ",
-        "city": "ምሳሌ: አዲስ አበባ"
+      "school": "ምሳሌ: አዲስ አበባ ዩኒቨርሲቲ",
+      "degree": "ምሳሌ: የኮምፒውተር ሳይንስ ዲግሪ",
+      "city": "ምሳሌ: አዲስ አበባ"
     }
   },
   "Experience": {
@@ -252,9 +264,9 @@
     "descriptionLabel": "ዝርዝር መግለጫ",
     "present": "እስካሁን",
     "placeholders": {
-        "jobTitle": "ምሳሌ: ሲኒየር ዴቢሎፐር",
-        "company": "ምሳሌ: ቴክ ሶሉሽንስ",
-        "description": "ስለ ስራዎ ዝርዝር እና ስኬቶችዎ ይግለጹ..."
+      "jobTitle": "ምሳሌ: ሲኒየር ዴቢሎፐር",
+      "company": "ምሳሌ: ቴክ ሶሉሽንስ",
+      "description": "ስለ ስራዎ ዝርዝር እና ስኬቶችዎ ይግለጹ..."
     }
   },
   "Skills": {
@@ -268,11 +280,24 @@
     "next": "ቀጣይ",
     "back": "ተመለስ",
     "steps": {
-        "personal": "ግላዊ መረጃ",
-        "education": "ትምህርት",
-        "experience": "ስራ ልምድ",
-        "skills": "ክህሎት",
-        "review": "ማረጋገጫ"
+      "personal": "ግላዊ መረጃ",
+      "education": "ትምህርት",
+      "experience": "ስራ ልምድ",
+      "skills": "ክህሎት",
+      "extras": "ተጨማሪ",
+      "review": "ማረጋገጫ"
     }
+  },
+  "CoreCompetencies": {
+    "title": "ቁልፍ ነጥቦች / ዋና ዋና ብቃቶች",
+    "description": "ልክዎችን ወይም የተለዩ ክህሎቶችን የያዙ 3-5 ቁልፍ ስኬቶችን ወይም ብቃቶችን ያክሉ።",
+    "add": "አክል",
+    "items": "ንጥሎች",
+    "placeholder": "ለምሳሌ ሽያጭ በ 20% ጨምሯል"
+  },
+  "TemplatesPage": {
+    "title": "የሲቪ ቅጾች",
+    "description": "እምቅ አቅምዎን በሚያንፀባርቁ እና በፕሮፌሽናል መልኩ ማስተካከል በሚችሏቸው ሲቪዎች ህልምዎትን ስራ ያግኙ።",
+    "select": "ለመጀመር ቅጽ ይምረጡ"
   }
 }

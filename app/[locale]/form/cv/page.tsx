@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Link } from "@/lib/navigation";
 import { useTranslations } from "next-intl";
 import { CVProvider, useCV } from "../../../../components/cv/CVContext";
 import Header from "../../../../components/landing/Header";
 import { CVPreview } from "../../../../components/cv/preview/CVPreview";
 import { Stepper } from "../../../../components/ui/Stepper";
 import { Button } from "../../../../components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 // Steps
 // Steps
@@ -17,14 +16,14 @@ import { Step1_Personal } from "../../../../components/cv/form/steps/Step1_Perso
 import { Step2_Education } from "../../../../components/cv/form/steps/Step2_Education";
 import { Step3_Experience } from "../../../../components/cv/form/steps/Step3_Experience";
 import { Step4_Skills } from "../../../../components/cv/form/steps/Step4_Skills";
+import { Step5_Extras } from "../../../../components/cv/form/steps/Step5_Extras";
 import { Step5_Review } from "../../../../components/cv/form/steps/Step5_Review";
-// import { Step5_Review } from "@/components/cv/form/steps/Step5_Review" // Placeholder for now
 
 function CVWizardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template");
-  const { setTemplate } = useCV();
+  const { setTemplate, cvData, selectedTemplate } = useCV();
   const [currentStep, setCurrentStep] = useState(0);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
@@ -36,6 +35,7 @@ function CVWizardContent() {
     navT("steps.education"),
     navT("steps.experience"),
     navT("steps.skills"),
+    navT("steps.extras"),
     navT("steps.review"),
   ];
 
@@ -61,24 +61,18 @@ function CVWizardContent() {
 
   // Helper to gather data for order creation
   const gatherCVFormData = () => {
-    if (typeof window === "undefined") return null;
-    try {
-      return {
-        personal: JSON.parse(
-          localStorage.getItem("paperless.personal") || "{}",
-        ),
-        education: JSON.parse(
-          localStorage.getItem("paperless.education") || "[]",
-        ),
-        experience: JSON.parse(
-          localStorage.getItem("paperless.experience") || "[]",
-        ),
-        skills: JSON.parse(localStorage.getItem("paperless.skills") || "[]"),
-      };
-    } catch (e) {
-      console.error("Failed to gather CV data:", e);
-      return null;
-    }
+    // Phase 1: Ensure architecture consistency
+    // We use the context state which is the single source of truth for the Preview and now the PDF
+    return {
+      personalInfo: cvData.personalInfo,
+      education: cvData.education,
+      experience: cvData.experience,
+      skills: cvData.skills,
+      summary: cvData.summary,
+      languages: cvData.languages, // Add languages
+      volunteer: cvData.volunteer, // Add volunteer
+      selectedTemplate: selectedTemplate, // Keep template selection
+    };
   };
 
   const handleProceedToCheckout = async () => {
@@ -134,6 +128,8 @@ function CVWizardContent() {
       case 3:
         return <Step4_Skills />;
       case 4:
+        return <Step5_Extras />;
+      case 5:
         return <Step5_Review />;
       default:
         return null;
@@ -201,7 +197,7 @@ function CVWizardContent() {
               <Button
                 onClick={handleProceedToCheckout}
                 disabled={isCreatingOrder}
-                className="bg-green-600 hover:bg-green-700 text-white min-w-[200px]"
+                className="bg-green-600 hover:bg-green-700 text-white min-w-50"
               >
                 {isCreatingOrder ? <>Processing...</> : t("proceedButton")}
               </Button>

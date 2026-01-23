@@ -54,7 +54,9 @@ export default function Services() {
     <section id="services" className="py-20 bg-lightbg">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">{t("title")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
+            {t("title")}
+          </h2>
           <div className="h-1 w-20 bg-secondary mx-auto rounded-full" />
         </div>
 
@@ -68,12 +70,16 @@ export default function Services() {
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 flex flex-col"
             >
-              <div className={`w-14 h-14 ${category.color} rounded-xl flex items-center justify-center mb-6`}>
+              <div
+                className={`w-14 h-14 ${category.color} rounded-xl flex items-center justify-center mb-6`}
+              >
                 <category.icon className="w-7 h-7" />
               </div>
-              
-              <h3 className="text-xl font-bold text-charcoal mb-6">{category.title}</h3>
-              
+
+              <h3 className="text-xl font-bold text-charcoal mb-6">
+                {category.title}
+              </h3>
+
               <ul className="space-y-4 mb-8 flex-grow">
                 {category.items.map((item, idx) => (
                   <li key={idx} className="flex items-center text-gray-600">
@@ -82,9 +88,15 @@ export default function Services() {
                   </li>
                 ))}
               </ul>
-              
-              <Link href={category.id === 'digital' ? '/services/cv/templates' : '/contact'} className="w-full">
-                <Button variant="outline" className="w-full justify-between group">
+
+              <Link
+                href={category.id === "digital" ? "/form/cv" : "/contact"}
+                className="w-full"
+              >
+                <Button
+                  variant="outline"
+                  className="w-full justify-between group"
+                >
                   {category.action}
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>

@@ -30,9 +30,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Update order to PENDING and GENERATE NEW tx_ref
-    // Chapa requires unique tx_ref for every attempt.
-    const newTxRef = crypto.randomUUID();
+    // 3. Update order to PENDING (Reuse existing tx_ref = id)
+    // We maintain order.id === tx_ref as per requirement.
+    // Ensure Chapa allows retries with same tx_ref or handle failures gracefully.
 
     // Construct customer name
     const customerName =
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       where: { id: orderId },
       data: {
         status: "PENDING",
-        tx_ref: newTxRef,
+        // tx_ref is NOT updated, keeping it same as order.id
         // Update customer details if provided
         customer_email: email,
         customer_phone: phone,
@@ -92,7 +92,7 @@ export async function POST(req: Request) {
       first_name: payloadFirstName,
       last_name: payloadLastName,
       phone_number: payloadPhone,
-      tx_ref: newTxRef,
+      tx_ref: order.tx_ref, // Use the existing tx_ref (which is order.id)
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
       customization: {

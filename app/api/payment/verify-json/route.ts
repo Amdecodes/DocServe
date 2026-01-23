@@ -35,6 +35,7 @@ export async function GET(req: Request) {
       data: {
         status: "PAID",
         paid_at: new Date(),
+        chapa_ref: data.data?.reference, // Save Chapa reference
       },
     });
   }

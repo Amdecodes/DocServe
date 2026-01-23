@@ -110,6 +110,22 @@
     "mostPopular": "Most Popular",
     "startNow": "Start Now"
   },
+  "Templates": {
+    "modern": {
+      "name": "Modern Professional",
+      "description": "Clean, organized layout perfect for corporate roles."
+    },
+    "professional": {
+      "name": "Executive Blue",
+      "description": "Timeline-based layout with a strong executive sidebar."
+    },
+    "classic": {
+      "name": "Timeless Classic",
+      "description": "Traditional layout that never goes out of style."
+    },
+    "useThisTemplate": "Use This Template",
+    "previewNotAvailable": "Preview Not Available"
+  },
   "TemplateSelectionPage": {
     "title": "Choose Your CV Template",
     "description": "Select a template to start building your professional resume. You can change it later.",
@@ -121,10 +137,6 @@
       "classic": {
         "name": "Classic",
         "description": "Timeless and elegant, suitable for corporate and academic positions."
-      },
-      "simple": {
-        "name": "Simple",
-        "description": "Minimalist layout that focuses on your content."
       }
     }
   },
@@ -212,14 +224,14 @@
     "summaryTitle": "Professional Summary",
     "summaryDescription": "Write 2-4 sentences that highlight your value and years of experience.",
     "placeholders": {
-        "firstName": "e.g. Abebe",
-        "lastName": "e.g. Kebede",
-        "jobTitle": "e.g. Software Engineer",
-        "email": "abebe@example.com",
-        "phone": "+251 911 234 567",
-        "city": "Addis Ababa",
-        "country": "Ethiopia",
-        "summary": "e.g. Experienced software engineer with 5 years of experience..."
+      "firstName": "e.g. Abebe",
+      "lastName": "e.g. Kebede",
+      "jobTitle": "e.g. Software Engineer",
+      "email": "abebe@example.com",
+      "phone": "+251 911 234 567",
+      "city": "Addis Ababa",
+      "country": "Ethiopia",
+      "summary": "e.g. Experienced software engineer with 5 years of experience..."
     }
   },
   "Education": {
@@ -234,9 +246,9 @@
     "endDate": "End Date",
     "city": "City",
     "placeholders": {
-        "school": "e.g. Addis Ababa University",
-        "degree": "e.g. BSc in Computer Science",
-        "city": "e.g. Addis Ababa"
+      "school": "e.g. Addis Ababa University",
+      "degree": "e.g. BSc in Computer Science",
+      "city": "e.g. Addis Ababa"
     }
   },
   "Experience": {
@@ -252,9 +264,9 @@
     "descriptionLabel": "Description",
     "present": "Present",
     "placeholders": {
-        "jobTitle": "e.g. Senior Developer",
-        "company": "e.g. Tech Solutions",
-        "description": "Describe your responsibilities and achievements..."
+      "jobTitle": "e.g. Senior Developer",
+      "company": "e.g. Tech Solutions",
+      "description": "Describe your responsibilities and achievements..."
     }
   },
   "Skills": {
@@ -268,11 +280,24 @@
     "next": "Next",
     "back": "Back",
     "steps": {
-        "personal": "Personal",
-        "education": "Education",
-        "experience": "Experience",
-        "skills": "Skills",
-        "review": "Review"
+      "personal": "Personal",
+      "education": "Education",
+      "experience": "Experience",
+      "skills": "Skills",
+      "extras": "Extras",
+      "review": "Review"
     }
+  },
+  "CoreCompetencies": {
+    "title": "Key Highlights / Core Competencies",
+    "description": "Add 3-5 key achievements or competencies containing metrics or specific skills.",
+    "add": "Add",
+    "items": "items",
+    "placeholder": "e.g. Increased sales by 20%"
+  },
+  "TemplatesPage": {
+    "title": "Resume Templates",
+    "description": "Land your dream job with captivating CVs you can professionally customize to reflect your true potential.",
+    "select": "Select a template to start building"
   }
 }

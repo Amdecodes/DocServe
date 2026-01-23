@@ -105,6 +105,7 @@ export async function POST(req: Request) {
         customer_name: verifyName || undefined,
         customer_email: email || undefined,
         customer_phone: phone_number || undefined,
+        chapa_ref: reference, // Save Chapa reference
         paid_at: new Date(),
       },
     });
