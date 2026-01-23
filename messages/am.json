@@ -1,11 +1,26 @@
 {
+  "LanguageSelection": {
+    "title": "የሰነድ ቋንቋ ይምረጡ",
+    "subtitle": "ለCV እና ለሽፋን ደብዳቤዎ ቋንቋ ይምረጡ",
+    "aiGenerationNote": "በAI የሚፈጠረው ይዘት በመረጡት ቋንቋ ይፃፋል።",
+    "websiteLanguageNote": "ይህ የድረ-ገጹን ቋንቋ አይቀይርም። የድረ-ገጹን ቋንቋ ለመቀየር በራስጌው ላይ ያለውን የአለም ምልክት ይጠቀሙ።",
+    "continue": "ቀጥል",
+    "englishOption": "English",
+    "englishDesc": "Professional CV in English",
+    "amharicOption": "አማርኛ (Amharic)",
+    "amharicDesc": "ሙያዊ CV በአማርኛ"
+  },
   "Header": {
     "logo": "DocuServe",
     "services": "አገልግሎቶች",
     "howItWorks": "እንዴት እንደሚሰራ",
     "pricing": "ዋጋዎች",
     "contact": "ያግኙን",
-    "cta": "ዶክመንት ይፍጠሩ"
+    "cta": "ዶክመንት ይፍጠሩ",
+    "telegramContact": "ያግኙን",
+    "switchLanguage": "ወደ እንግሊዝኛ ቀይር",
+    "switchLanguageAria": "ወደ እንግሊዝኛ ቀይር",
+    "otherLanguageName": "English"
   },
   "Hero": {
     "title": "ፕሮፌሽናል ዶክመንቶችን በመስመር ላይ በፍጥነት እና በቀላሉ ያዘጋጁ።",
@@ -300,5 +315,26 @@
     "title": "የሲቪ ቅጾች",
     "description": "እምቅ አቅምዎን በሚያንፀባርቁ እና በፕሮፌሽናል መልኩ ማስተካከል በሚችሏቸው ሲቪዎች ህልምዎትን ስራ ያግኙ።",
     "select": "ለመጀመር ቅጽ ይምረጡ"
+  },
+  "CoverLetter": {
+    "title": "የሽፋን ደብዳቤ",
+    "description": "ለስራ ማመልከቻዎ አሳማኝ የሆነ የሽፋን ደብዳቤ ይጻፉ።",
+    "recipientDetails": "የተቀባይ ዝርዝሮች",
+    "recipientName": "የተቀባይ ስም",
+    "recipientPlaceholder": "ምሳሌ: የስራ ሃላፊ",
+    "companyName": "የድርጅት ስም",
+    "companyPlaceholder": "ምሳሌ: ኢትዮ ቴሌኮም",
+    "jobTitle": "የስራ መደብ",
+    "jobTitlePlaceholder": "ምሳሌ: ሶፍትዌር ኢንጂነር",
+    "letterContent": "የደብዳቤ ይዘት",
+    "tone": "የአጻጻፍ ስልት",
+    "tones": {
+      "Formal": "ፎርማል (መደበኛ)",
+      "Neutral": "ኒውትራል (ገለልተኛ)",
+      "Confident": "ኮንፊደንት (በራስ መተማመን)"
+    },
+    "toneHelp": "ለድርጅቱ ባህል የሚመጥን የአጻጻፍ ስልት ይምረጡ።",
+    "letterBody": "የደብዳቤው አካል",
+    "letterPlaceholder": "የተከበሩ የስራ ሃላፊ፣\n\nበድርጅታችሁ ለወጣው የስራ ማስታወቂያ ለማመልከት ነው..."
   }
 }

@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 
 export function ModernLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -81,14 +82,19 @@ export function ModernLayout({ data }: { data: CVData }) {
       <div className="space-y-6">
         {/* Summary */}
         {(summary || (typeof summary === "string" && summary.length > 0)) && (
-          <section>
-            <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
-              Profile
-            </h3>
-            <p className="text-gray-700 leading-relaxed">
-              {typeof summary === "string" ? summary : ""}
-            </p>
-          </section>
+          <AIBlurOverlay
+            type="summary"
+            isGenerated={data.aiMetadata?.generated}
+          >
+            <section>
+              <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
+                Profile
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                {typeof summary === "string" ? summary : ""}
+              </p>
+            </section>
+          </AIBlurOverlay>
         )}
 
         {/* Core Competencies / Highlights */}
@@ -126,16 +132,21 @@ export function ModernLayout({ data }: { data: CVData }) {
                 </p>
                 {/* Achievements */}
                 {exp.achievements && exp.achievements.length > 0 ? (
-                  <div className="mt-2">
-                    <p className="text-xs font-bold uppercase text-gray-400 mb-1">
-                      Achievements
-                    </p>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                      {exp.achievements.map((ach, i) => (
-                        <li key={i}>{ach}</li>
-                      ))}
-                    </ul>
-                  </div>
+                  <AIBlurOverlay
+                    type="bullets"
+                    isGenerated={data.aiMetadata?.generated}
+                  >
+                    <div className="mt-2">
+                      <p className="text-xs font-bold uppercase text-gray-400 mb-1">
+                        Achievements
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                        {exp.achievements.map((ach, i) => (
+                          <li key={i}>{ach}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </AIBlurOverlay>
                 ) : (
                   exp.description && (
                     <p className="text-sm text-gray-700 whitespace-pre-line">

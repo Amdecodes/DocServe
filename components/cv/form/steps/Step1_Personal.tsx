@@ -337,11 +337,20 @@ export function Step1_Personal({ onNext }: Step1Props) {
         <Card>
           <CardHeader>
             <CardTitle>{t("summaryTitle")}</CardTitle>
-            <CardDescription>{t("summaryDescription")}</CardDescription>
+            <CardDescription>
+              {t("summaryDescription")}
+              <span className="block mt-2 text-blue-600 font-medium text-sm">
+                💡 AI will generate your professional summary after payment
+              </span>
+            </CardDescription>
           </CardHeader>
           <CardContent>
+            <label htmlFor="summary" className="text-sm font-medium block mb-2">
+              Brief Notes (For AI Context)
+            </label>
             <Textarea
-              placeholder={t("placeholders.summary")}
+              id="summary"
+              placeholder="e.g., Key achievements, main skills, career highlights... AI will craft this into a professional summary"
               className={`min-h-30 ${form.formState.errors.summary ? "border-red-500 focus-visible:ring-red-500" : ""}`}
               {...form.register("summary")}
             />

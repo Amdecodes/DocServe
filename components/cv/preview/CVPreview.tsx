@@ -5,6 +5,7 @@ import { useCV } from "@/components/cv/CVContext";
 import { DEFAULT_TEMPLATE } from "@/config/templates";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 import { FileText, Mail } from "lucide-react";
+import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 
 // Create a map of lazy-loaded components for client-side
 const lazyTemplates: Record<
@@ -28,9 +29,11 @@ const lazyTemplates: Record<
 function CoverLetterPreviewContent({
   coverLetter,
   personalInfo,
+  aiGenerated = false,
 }: {
   coverLetter?: CoverLetterData;
   personalInfo: PersonalInfo;
+  aiGenerated?: boolean;
 }) {
   const formatDate = () => {
     return new Date().toLocaleDateString("en-US", {
@@ -82,14 +85,16 @@ function CoverLetterPreviewContent({
       </div>
 
       {/* Body */}
-      <div className="mb-8 whitespace-pre-wrap text-justify">
-        {coverLetter?.letterBody || (
-          <span className="text-gray-400 italic">
-            [Your cover letter body will appear here. Fill in the Cover Letter
-            step to see your content.]
-          </span>
-        )}
-      </div>
+      <AIBlurOverlay type="coverLetter" isGenerated={aiGenerated}>
+        <div className="mb-8 whitespace-pre-wrap text-justify">
+          {coverLetter?.letterBody || (
+            <span className="text-gray-400 italic">
+              [Your cover letter body will appear here. Fill in the Cover Letter
+              step to see your content.]
+            </span>
+          )}
+        </div>
+      </AIBlurOverlay>
 
       {/* Sign-off */}
       <div className="mt-12">
@@ -153,6 +158,7 @@ export function CVPreview() {
             <CoverLetterPreviewContent
               coverLetter={cvData.coverLetter}
               personalInfo={cvData.personalInfo}
+              aiGenerated={cvData.aiMetadata?.generated}
             />
           )}
         </Suspense>

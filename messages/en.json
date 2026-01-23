@@ -1,11 +1,26 @@
 {
+  "LanguageSelection": {
+    "title": "Choose Document Language",
+    "subtitle": "Select the language for your CV and cover letter",
+    "aiGenerationNote": "AI-generated content will be written in your selected language.",
+    "websiteLanguageNote": "This does not change the website language. Use the globe icon in the header to switch the site language.",
+    "continue": "Continue",
+    "englishOption": "English",
+    "englishDesc": "Professional CV in English",
+    "amharicOption": "አማርኛ (Amharic)",
+    "amharicDesc": "Professional CV in Amharic"
+  },
   "Header": {
     "logo": "DocuServe",
     "services": "Services",
     "howItWorks": "How it Works",
     "pricing": "Pricing",
     "contact": "Contact",
-    "cta": "Create Document"
+    "cta": "Create Document",
+    "telegramContact": "Contact Us",
+    "switchLanguage": "Change to Amharic",
+    "switchLanguageAria": "Switch site language to Amharic",
+    "otherLanguageName": "አማርኛ"
   },
   "Hero": {
     "title": "Create professional documents online. Fast, easy, and print-ready.",
@@ -300,5 +315,26 @@
     "title": "Resume Templates",
     "description": "Land your dream job with captivating CVs you can professionally customize to reflect your true potential.",
     "select": "Select a template to start building"
+  },
+  "CoverLetter": {
+    "title": "Cover Letter",
+    "description": "Write a persuasive cover letter to accompany your job application.",
+    "recipientDetails": "Recipient Details",
+    "recipientName": "Recipient Name",
+    "recipientPlaceholder": "e.g. Hiring Manager",
+    "companyName": "Company Name",
+    "companyPlaceholder": "e.g. Google",
+    "jobTitle": "Job Title",
+    "jobTitlePlaceholder": "e.g. Software Engineer",
+    "letterContent": "Letter Content",
+    "tone": "Tone",
+    "tones": {
+      "Formal": "Formal",
+      "Neutral": "Neutral",
+      "Confident": "Confident"
+    },
+    "toneHelp": "Choose the tone that best fits the company culture.",
+    "letterBody": "Letter Body",
+    "letterPlaceholder": "Dear Hiring Manager,\n\nI am writing to express my interest in the Software Engineer position at Google..."
   }
 }

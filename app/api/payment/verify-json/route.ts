@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { processOrderPdf } from "@/lib/pdf/process-order";
+import { generateAIContent, mergeAIContent } from "@/lib/ai-generator";
+import { CVData } from "@/types/cv";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -42,7 +44,55 @@ export async function GET(req: Request) {
     if (!pdfUrl) {
       try {
         console.log(`[VerifyJSON] Generating missing PDF for Order ${orderId}`);
-        const result = await processOrderPdf(orderId, order.form_data);
+
+        // Step 1: Generate AI content FIRST (if not already generated)
+        let formData = order.form_data as unknown as CVData;
+
+        console.log(
+          `[VerifyJSON] Form data documentLanguage: ${formData?.documentLanguage}`,
+        );
+        console.log(
+          `[VerifyJSON] Form data keys: ${Object.keys(formData || {}).join(", ")}`,
+        );
+
+        if (!formData?.aiMetadata?.generated) {
+          console.log(
+            `[VerifyJSON] Generating AI content for Order ${orderId}`,
+          );
+          console.log(
+            `[VerifyJSON] Using language: ${formData?.documentLanguage || "en (default)"}`,
+          );
+          try {
+            const aiContent = await generateAIContent(orderId, formData);
+            formData = mergeAIContent(formData, aiContent);
+
+            // Mark as AI-generated
+            formData.aiMetadata = {
+              generated: true,
+              generatedAt: aiContent.generatedAt,
+              orderId: orderId,
+            };
+
+            // Save AI-enhanced form data
+            await prisma.order.update({
+              where: { id: orderId },
+              data: {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                form_data: formData as unknown as any,
+                ai_generated: true,
+                ai_generated_at: new Date(aiContent.generatedAt),
+              },
+            });
+
+            console.log(`[VerifyJSON] AI content generated successfully`);
+          } catch (aiError) {
+            console.error("[VerifyJSON] AI generation failed:", aiError);
+            // Continue with original data if AI fails
+          }
+        }
+
+        // Step 2: Generate PDF with AI-enriched content
+        const result = await processOrderPdf(orderId, formData);
         if (result) {
           pdfUrl = result.pdfUrl;
           expiresAt = result.expiresAt;

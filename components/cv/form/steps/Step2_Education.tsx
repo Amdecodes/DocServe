@@ -1,33 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useCV, EducationItem } from "@/components/cv/CVContext"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/Input"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card"
-import { Plus, Trash2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useState } from "react";
+import { useCV, EducationItem } from "@/components/cv/CVContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/Input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/Card";
+import { Plus, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function Step2_Education() {
-  const { cvData, addItem, removeItem, updateItem } = useCV()
-  const t = useTranslations("Education")
-  
+  const { cvData, addItem, removeItem, updateItem } = useCV();
+  const t = useTranslations("Education");
+
   // Local state for the new item form
-  const [isAdding, setIsAdding] = useState(false)
-  const [newItem, setNewItem] = useState<Partial<EducationItem>>({})
+  const [isAdding, setIsAdding] = useState(false);
+  const [newItem, setNewItem] = useState<Partial<EducationItem>>({});
 
   const handleAdd = () => {
     if (newItem.school && newItem.degree) {
-      addItem("education", newItem)
-      setNewItem({})
-      setIsAdding(false)
+      addItem("education", newItem);
+      setNewItem({});
+      setIsAdding(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setNewItem({})
-    setIsAdding(false)
-  }
+    setNewItem({});
+    setIsAdding(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -45,13 +51,15 @@ export function Step2_Education() {
                 <div>
                   <h3 className="font-bold">{edu.school}</h3>
                   <p className="text-sm text-gray-600">{edu.degree}</p>
-                  <p className="text-xs text-gray-400">{edu.startDate} - {edu.endDate} | {edu.city}</p>
+                  <p className="text-xs text-gray-400">
+                    {edu.startDate} - {edu.endDate} | {edu.city}
+                  </p>
                 </div>
-                <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => removeItem("education", edu.id)}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => removeItem("education", edu.id)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -71,40 +79,74 @@ export function Step2_Education() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("school")}</label>
-                <Input value={newItem.school || ""} onChange={(e) => setNewItem({...newItem, school: e.target.value})} placeholder={t("placeholders.school")} />
+                <Input
+                  value={newItem.school || ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, school: e.target.value })
+                  }
+                  placeholder={t("placeholders.school")}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("degree")}</label>
-                <Input value={newItem.degree || ""} onChange={(e) => setNewItem({...newItem, degree: e.target.value})} placeholder={t("placeholders.degree")} />
+                <Input
+                  value={newItem.degree || ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, degree: e.target.value })
+                  }
+                  placeholder={t("placeholders.degree")}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("startDate")}</label>
-                <Input type="date" value={newItem.startDate || ""} onChange={(e) => setNewItem({...newItem, startDate: e.target.value})} placeholder="Select date" />
+                <Input
+                  type="date"
+                  value={newItem.startDate || ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, startDate: e.target.value })
+                  }
+                  placeholder="Select date"
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("endDate")}</label>
-                <Input type="date" value={newItem.endDate || ""} onChange={(e) => setNewItem({...newItem, endDate: e.target.value})} placeholder="Select date" />
+                <Input
+                  type="date"
+                  value={newItem.endDate || ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, endDate: e.target.value })
+                  }
+                  placeholder="Select date"
+                />
               </div>
               <div className="space-y-2 md:col-span-2">
                 <label className="text-sm font-medium">{t("city")}</label>
-                <Input value={newItem.city || ""} onChange={(e) => setNewItem({...newItem, city: e.target.value})} placeholder={t("placeholders.city")} />
+                <Input
+                  value={newItem.city || ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, city: e.target.value })
+                  }
+                  placeholder={t("placeholders.city")}
+                />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={handleCancel}>{t("cancel")}</Button>
+              <Button variant="outline" onClick={handleCancel}>
+                {t("cancel")}
+              </Button>
               <Button onClick={handleAdd}>{t("save")}</Button>
             </div>
           </CardContent>
         </Card>
       ) : (
-        <Button 
-            variant="outline" 
-            className="w-full border-dashed py-8"
-            onClick={() => setIsAdding(true)}
+        <Button
+          variant="outline"
+          className="w-full border-dashed py-8"
+          onClick={() => setIsAdding(true)}
         >
-            <Plus className="mr-2 h-4 w-4" /> {t("add")}
+          <Plus className="mr-2 h-4 w-4" /> {t("add")}
         </Button>
       )}
     </div>
-  )
+  );
 }

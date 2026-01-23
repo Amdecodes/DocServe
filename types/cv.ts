@@ -61,6 +61,9 @@ export interface VolunteerItem {
 
 export type CoverLetterTone = "Formal" | "Neutral" | "Confident";
 
+// Document language - English default, Amharic option
+export type DocumentLanguage = "en" | "am";
+
 export interface CoverLetterData {
   recipientName: string;
   companyName: string;
@@ -69,9 +72,17 @@ export interface CoverLetterData {
   tone: CoverLetterTone;
 }
 
+export interface AIMetadata {
+  generated: boolean;
+  generatedAt?: string;
+  orderId?: string;
+}
+
 export interface CVData {
+  documentLanguage: DocumentLanguage; // "en" or "am"
   personalInfo: PersonalInfo;
-  summary: string;
+  summary: string; // User's brief notes before payment, AI-generated after
+  summaryNotes?: string; // Original user input for AI context
   coreCompetencies: string[];
   experience: ExperienceItem[];
   education: EducationItem[];
@@ -79,4 +90,5 @@ export interface CVData {
   languages: LanguageItem[];
   volunteer: VolunteerItem[];
   coverLetter?: CoverLetterData;
+  aiMetadata?: AIMetadata; // Track AI generation status
 }

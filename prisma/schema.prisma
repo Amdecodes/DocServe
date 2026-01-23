@@ -9,19 +9,21 @@ datasource db {
 }
 
 model Order {
-  id             String      @id @default(uuid())
-  tx_ref         String      @unique
-  service_type   String
-  status         OrderStatus
-  form_data      Json?
-  created_at     DateTime    @default(now())
-  customer_name  String?
-  customer_phone String?
-  customer_email String?
-  chapa_ref      String?     @unique
-  paid_at        DateTime?
-  expires_at     DateTime?   @map("expires_at")
-  pdf_url        String?     @map("pdf_url")
+  id              String      @id @default(uuid())
+  tx_ref          String      @unique
+  service_type    String
+  status          OrderStatus
+  form_data       Json?
+  created_at      DateTime    @default(now())
+  customer_name   String?
+  customer_phone  String?
+  customer_email  String?
+  chapa_ref       String?     @unique
+  paid_at         DateTime?
+  expires_at      DateTime?   @map("expires_at")
+  pdf_url         String?     @map("pdf_url")
+  ai_generated    Boolean     @default(false) @map("ai_generated")
+  ai_generated_at DateTime?   @map("ai_generated_at")
 }
 
 enum OrderStatus {

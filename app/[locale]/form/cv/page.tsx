@@ -9,6 +9,7 @@ import { CVPreview } from "../../../../components/cv/preview/CVPreview";
 import { Stepper } from "../../../../components/ui/Stepper";
 import { Button } from "../../../../components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { LanguageSelection } from "../../../../components/cv/LanguageSelection";
 
 // Steps
 // Steps
@@ -24,10 +25,12 @@ function CVWizardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template");
-  const { setTemplate, cvData, selectedTemplate } = useCV();
+  const { setTemplate, cvData, selectedTemplate, setDocumentLanguage } =
+    useCV();
   const [currentStep, setCurrentStep] = useState(0);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+  const [languageSelected, setLanguageSelected] = useState(false);
   const t = useTranslations("ReviewStep");
 
   const navT = useTranslations("CVNavigation");
@@ -65,7 +68,11 @@ function CVWizardContent() {
   const gatherCVFormData = () => {
     // Phase 1: Ensure architecture consistency
     // We use the context state which is the single source of truth for the Preview and now the PDF
+    console.log(
+      `[CV Form] Gathering form data with language: ${cvData.documentLanguage}`,
+    );
     return {
+      documentLanguage: cvData.documentLanguage, // Include selected language for AI generation
       personalInfo: cvData.personalInfo,
       education: cvData.education,
       experience: cvData.experience,
@@ -140,6 +147,20 @@ function CVWizardContent() {
         return null;
     }
   };
+
+  if (!languageSelected) {
+    return (
+      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-linear-to-b from-gray-50 to-white">
+        <LanguageSelection
+          selectedLanguage={cvData.documentLanguage}
+          onLanguageSelect={setDocumentLanguage}
+          onContinue={() => {
+            setLanguageSelected(true);
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">

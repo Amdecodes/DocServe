@@ -15,6 +15,7 @@ import {
   LanguageItem,
   CVData,
   CoverLetterData,
+  DocumentLanguage,
 } from "@/types/cv";
 
 export type {
@@ -24,6 +25,7 @@ export type {
   SkillItem,
   CVData,
   CoverLetterData,
+  DocumentLanguage,
 };
 
 interface CVContextType {
@@ -43,6 +45,8 @@ interface CVContextType {
   ) => void;
   selectedTemplate: string;
   setTemplate: (id: string) => void;
+  // Language selection
+  setDocumentLanguage: (language: DocumentLanguage) => void;
   // Helpers for arrays
   addItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
@@ -62,6 +66,7 @@ interface CVContextType {
 }
 
 const defaultCVData: CVData = {
+  documentLanguage: "en", // Default to English
   personalInfo: {
     firstName: "",
     lastName: "",
@@ -94,15 +99,28 @@ const CVContext = createContext<CVContextType | undefined>(undefined);
 
 export function CVProvider({ children }: { children: React.ReactNode }) {
   const [cvData, setCvData] = useState<CVData>(defaultCVData);
-  const [selectedTemplate, setSelectedTemplate] = useState(() => {
-    const saved = localStorage.getItem("paperless.selectedTemplate");
-    return saved || "modern";
-  });
+  const [selectedTemplate, setSelectedTemplate] = useState("modern");
   const isMountedRef = useRef(false);
 
-  // Track mount state
+  // Track mount state and load persisted data
   useEffect(() => {
     isMountedRef.current = true;
+
+    // Load template
+    const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
+    if (savedTemplate) {
+      setSelectedTemplate(savedTemplate);
+    }
+
+    // Load cvData
+    try {
+      const savedCV = localStorage.getItem("paperless.cvData");
+      if (savedCV) {
+        setCvData(JSON.parse(savedCV));
+      }
+    } catch (e) {
+      console.error("Failed to load CV data", e);
+    }
   }, []);
 
   // Persist template selection to localStorage
@@ -111,6 +129,13 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("paperless.selectedTemplate", selectedTemplate);
     }
   }, [selectedTemplate]);
+
+  // Persist cvData to localStorage
+  useEffect(() => {
+    if (isMountedRef.current) {
+      localStorage.setItem("paperless.cvData", JSON.stringify(cvData));
+    }
+  }, [cvData]);
 
   const updateCVData = (
     section: keyof CVData,
@@ -182,6 +207,13 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
+  const setDocumentLanguage = (language: DocumentLanguage) => {
+    setCvData((prev) => ({
+      ...prev,
+      documentLanguage: language,
+    }));
+  };
+
   const setTemplate = (id: string) => {
     setSelectedTemplate(id);
   };
@@ -193,6 +225,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         updateCVData,
         selectedTemplate,
         setTemplate,
+        setDocumentLanguage,
         addItem,
         removeItem,
         updateItem,

@@ -108,13 +108,51 @@ export async function POST(req: Request) {
       verifyData.data;
     const verifyName = `${first_name || ""} ${last_name || ""}`.trim();
 
-    // 5. Generate PDF
+    // 5. Initialize PDF tracking variables
     let pdfUrl = order.pdf_url; // Keep existing if present
     let expiresAt = order.expires_at;
 
+    // 6. Generate AI Content (BEFORE PDF generation)
+    let enrichedFormData = order.form_data;
+
     if (!pdfUrl) {
       try {
-        const result = await processOrderPdf(order.id, order.form_data);
+        console.log(`[Webhook] Generating AI content for Order ${order.id}`);
+
+        // Call AI generation endpoint
+        const aiResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/ai/generate`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: order.id }),
+          },
+        );
+
+        if (aiResponse.ok) {
+          const aiResult = await aiResponse.json();
+          console.log(`[Webhook] AI generation completed:`, aiResult.aiContent);
+
+          // Reload order to get enriched data
+          const updatedOrder = await prisma.order.findUnique({
+            where: { id: order.id },
+          });
+          enrichedFormData = updatedOrder?.form_data || order.form_data;
+        } else {
+          console.warn(
+            `[Webhook] AI generation failed, continuing with original data`,
+          );
+        }
+      } catch (aiError) {
+        console.error("[Webhook] AI generation error:", aiError);
+        // Continue with original data if AI fails
+      }
+    }
+
+    // 7. Generate PDF with AI-enriched content
+    if (!pdfUrl) {
+      try {
+        const result = await processOrderPdf(order.id, enrichedFormData);
         if (result) {
           pdfUrl = result.pdfUrl;
           expiresAt = result.expiresAt;
@@ -127,7 +165,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 6. Update Database
+    // 8. Update Database
     await prisma.order.update({
       where: { id: order.id },
       data: {

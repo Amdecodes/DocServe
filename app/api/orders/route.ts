@@ -5,10 +5,14 @@ export async function POST(req: Request) {
   try {
     const { service_type, form_data } = await req.json();
 
+    console.log(
+      `[Orders API] Creating order with language: ${form_data?.documentLanguage}`,
+    );
+
     if (!service_type) {
       return NextResponse.json(
         { error: "service_type is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -34,7 +38,7 @@ export async function POST(req: Request) {
     console.error("[API] Error creating order:", error);
     return NextResponse.json(
       { error: "Failed to create order" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
