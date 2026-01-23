@@ -1,23 +1,39 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { processOrderPdf } from "@/lib/pdf/process-order";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
-    // 1. Validate Chapa Signature (Optional but recommended security step)
-    const secret = process.env.CHAPA_SECRET_KEY;
-    if (!secret) {
-      console.error("CHAPA_SECRET_KEY is missing");
-      return NextResponse.json(
-        { error: "Server configuration error" },
-        { status: 500 },
+    const secret =
+      process.env.CHAPA_WEBHOOK_SECRET || process.env.CHAPA_SECRET_KEY;
+    const signature =
+      req.headers.get("x-chapa-signature") ||
+      req.headers.get("chapa-signature");
+
+    // We consume text() first for signature verification
+    const rawBody = await req.text();
+
+    // 1. Validate Signature
+    if (secret && signature) {
+      const hash = crypto
+        .createHmac("sha256", secret)
+        .update(rawBody)
+        .digest("hex");
+      if (hash !== signature) {
+        console.error("[Webhook] Invalid signature. Ignoring request.");
+        return NextResponse.json(
+          { error: "Invalid signature" },
+          { status: 403 },
+        );
+      }
+    } else {
+      console.warn(
+        "[Webhook] Missing secret or signature. Proceeding with caution (DEV mode behavior).",
       );
     }
 
-    // Read the raw body to verify signature if needed, or just parse JSON
-    // Note: In Next.js App Router, verifying signature might require cloning the request or reading body text first.
-    // For now, we will follow the user's "Verify API" approach which is more robust than just trusting the webhook payload.
-
-    const body = await req.json();
+    const body = JSON.parse(rawBody);
 
     // Check if event is successful
     // Chapa webhook payload usually contains: { tx_ref: "...", status: "success", ... }
@@ -44,7 +60,8 @@ export async function POST(req: Request) {
     }
 
     // If already paid, standard idempotency check
-    if (order.status === "PAID") {
+    // BUT check if PDF is missing despite being PAID (retry scenario)
+    if (order.status === "PAID" && order.pdf_url) {
       return NextResponse.json({ ok: true, message: "Already processed" });
     }
 
@@ -71,17 +88,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. Confirm amount & currency (Basic check)
+    // Verify amount and currency
     const paymentAmount = Number(verifyData.data.amount);
     const expectedAmount = 500; // Fixed for premium_resume
 
     if (paymentAmount !== expectedAmount) {
-      console.error(
+      console.warn(
         `Amount mismatch. Expected ${expectedAmount}, got ${paymentAmount}`,
       );
-      // Depending on policy, you might flag this or reject it.
-      // For now, we log it but might still proceed or mark as 'PARTIAL' if we had that status.
-      // We will proceed for now but log error.
     }
 
     if (verifyData.data.currency !== "ETB") {
@@ -92,12 +106,28 @@ export async function POST(req: Request) {
     // Extract customer details from Chapa verification response
     const { first_name, last_name, email, phone_number, reference } =
       verifyData.data;
-
-    // 5. Update Database
-    // Use undefined for customer fields so Prisma ignores them if Chapa returns null/empty
-    // This preserves the data we captured during initialization
     const verifyName = `${first_name || ""} ${last_name || ""}`.trim();
 
+    // 5. Generate PDF
+    let pdfUrl = order.pdf_url; // Keep existing if present
+    let expiresAt = order.expires_at;
+
+    if (!pdfUrl) {
+      try {
+        const result = await processOrderPdf(order.id, order.form_data);
+        if (result) {
+          pdfUrl = result.pdfUrl;
+          expiresAt = result.expiresAt;
+        }
+      } catch (e) {
+        console.error(
+          "PDF Fail in Webhook (non-blocking for payment status):",
+          e,
+        );
+      }
+    }
+
+    // 6. Update Database
     await prisma.order.update({
       where: { id: order.id },
       data: {
@@ -107,6 +137,8 @@ export async function POST(req: Request) {
         customer_phone: phone_number || undefined,
         chapa_ref: reference, // Save Chapa reference
         paid_at: new Date(),
+        pdf_url: pdfUrl,
+        expires_at: expiresAt,
       },
     });
 

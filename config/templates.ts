@@ -4,7 +4,7 @@
 // 2. Add an entry to this registry
 
 import { ComponentType } from "react";
-import { CVData } from "@/types/cv";
+import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 
 export interface TemplateConfig {
   id: string;
@@ -18,6 +18,14 @@ export interface TemplateConfig {
     accent: string;
   };
   previewImage?: string;
+  // New: layout importers for both resume and cover letter
+  resumeComponent: () => Promise<{ default: ComponentType<{ data: CVData }> }>;
+  coverLetterComponent: () => Promise<{
+    default: ComponentType<{
+      coverLetter: CoverLetterData;
+      personalInfo: PersonalInfo;
+    }>;
+  }>;
 }
 
 // Template metadata for the gallery
@@ -33,6 +41,14 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#f3f4f6", // gray-100
       accent: "#111827", // gray-900
     },
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/Modern").then((m) => ({
+        default: m.ModernLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })),
   },
   {
     id: "professional",
@@ -45,6 +61,14 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#e5e7eb",
       accent: "#1f2937",
     },
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/Professional").then((m) => ({
+        default: m.ProfessionalLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })), // fallback for now
   },
   {
     id: "classic",
@@ -57,26 +81,60 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#ffffff",
       accent: "#374151",
     },
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/Classic").then((m) => ({
+        default: m.ClassicLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })), // fallback for now
   },
 ];
 
 // Dynamic import map for lazy loading (used by both Preview and PDF renderer)
 export const templateComponents: Record<
   string,
-  () => Promise<{ default: ComponentType<{ data: CVData }> }>
+  {
+    resume: () => Promise<{ default: ComponentType<{ data: CVData }> }>;
+    coverLetter: () => Promise<{
+      default: ComponentType<{
+        coverLetter: CoverLetterData;
+        personalInfo: PersonalInfo;
+      }>;
+    }>;
+  }
 > = {
-  modern: () =>
-    import("@/components/cv/preview/layouts/Modern").then((m) => ({
-      default: m.ModernLayout,
-    })),
-  professional: () =>
-    import("@/components/cv/preview/layouts/Professional").then((m) => ({
-      default: m.ProfessionalLayout,
-    })),
-  classic: () =>
-    import("@/components/cv/preview/layouts/Classic").then((m) => ({
-      default: m.ClassicLayout,
-    })),
+  modern: {
+    resume: () =>
+      import("@/components/cv/preview/layouts/Modern").then((m) => ({
+        default: m.ModernLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })),
+  },
+  professional: {
+    resume: () =>
+      import("@/components/cv/preview/layouts/Professional").then((m) => ({
+        default: m.ProfessionalLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })), // fallback for now
+  },
+  classic: {
+    resume: () =>
+      import("@/components/cv/preview/layouts/Classic").then((m) => ({
+        default: m.ClassicLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/ModernCoverLetter").then((m) => ({
+        default: m.ModernCoverLetter,
+      })), // fallback for now
+  },
 };
 
 // Helper to get template config by ID

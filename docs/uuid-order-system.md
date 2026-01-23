@@ -14,7 +14,9 @@ model Order {
   tx_ref       String      @unique
   service_type String
   status       OrderStatus
-  pdf_path     String?
+  pdf_url      String?   // Signed URL from Supabase
+  expires_at   DateTime? // When the signed URL expires
+  // Old: pdf_path String?
   created_at   DateTime    @default(now())
 }
 
@@ -32,7 +34,8 @@ enum OrderStatus {
 - **tx_ref**: Transaction reference sent to Chapa (equals `id`)
 - **service_type**: Type of service (e.g., "cv", "translation", "notarization")
 - **status**: Current order status (lifecycle: DRAFT → PENDING → PAID/FAILED)
-- **pdf_path**: Path to generated PDF (populated after successful payment)
+- **pdf_url**: Signed URL to generated PDF in Supabase Storage
+- **expires_at**: Expiration time for the signed URL
 - **created_at**: Timestamp of order creation
 
 ### Order Lifecycle
@@ -60,6 +63,7 @@ enum OrderStatus {
 Creates a new order with a server-generated UUID.
 
 **Request:**
+
 ```json
 {
   "service_type": "cv"
@@ -67,6 +71,7 @@ Creates a new order with a server-generated UUID.
 ```
 
 **Response (Success - 200):**
+
 ```json
 {
   "orderId": "a6e9d8b0-7b0b-4c6f-9a9e-1a6a88f6a123",
@@ -75,6 +80,7 @@ Creates a new order with a server-generated UUID.
 ```
 
 **Response (Error - 400):**
+
 ```json
 {
   "error": "service_type is required"
@@ -82,6 +88,7 @@ Creates a new order with a server-generated UUID.
 ```
 
 **Response (Error - 500):**
+
 ```json
 {
   "error": "Failed to create order"
@@ -89,6 +96,7 @@ Creates a new order with a server-generated UUID.
 ```
 
 **Implementation:**
+
 ```typescript
 // 1. Create order with auto-generated UUID
 const order = await prisma.order.create({
@@ -139,21 +147,21 @@ return NextResponse.json({
 
 ```typescript
 async function createOrder(serviceType: string) {
-  const response = await fetch('/api/orders', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ service_type: serviceType }),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create order');
+    throw new Error("Failed to create order");
   }
 
   const { orderId, tx_ref } = await response.json();
-  
+
   // Store for payment flow
-  localStorage.setItem('paperless.orderId', orderId);
-  
+  localStorage.setItem("paperless.orderId", orderId);
+
   return { orderId, tx_ref };
 }
 ```
@@ -162,12 +170,12 @@ async function createOrder(serviceType: string) {
 
 ```typescript
 // When initiating payment
-const orderId = localStorage.getItem('paperless.orderId');
+const orderId = localStorage.getItem("paperless.orderId");
 
 // Send to payment initialization endpoint
-const paymentResponse = await fetch('/api/payment/chapa/init', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const paymentResponse = await fetch("/api/payment/chapa/init", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ orderId }),
 });
 ```
@@ -176,7 +184,7 @@ const paymentResponse = await fetch('/api/payment/chapa/init', {
 
 ```typescript
 // After successful payment
-localStorage.removeItem('paperless.orderId');
+localStorage.removeItem("paperless.orderId");
 ```
 
 ## Database Operations
@@ -225,8 +233,8 @@ const order = await prisma.order.findUnique({
 ```typescript
 await prisma.order.update({
   where: { id: orderId },
-  data: { 
-    status: "PAID",
+  data: {
+    staturl: "https://project.supabase.co/storage/...
     pdf_path: "/uploads/cv_12345.pdf",
   },
 });
@@ -237,6 +245,7 @@ await prisma.order.update({
 ### Manual Testing
 
 **1. Create an order:**
+
 ```bash
 curl -X POST http://localhost:3000/api/orders \
   -H "Content-Type: application/json" \
@@ -244,15 +253,18 @@ curl -X POST http://localhost:3000/api/orders \
 ```
 
 **2. Verify in database:**
+
 ```bash
 psql -U amde -d local -c "SELECT * FROM \"Order\";"
 ```
 
 **3. Check UUID format:**
+
 - Should be 36 characters (8-4-4-4-12)
 - Example: `a6e9d8b0-7b0b-4c6f-9a9e-1a6a88f6a123`
 
 **4. Verify uniqueness:**
+
 ```bash
 # Create 3 orders
 curl -X POST http://localhost:3000/api/orders \
@@ -266,20 +278,20 @@ psql -U amde -d local -c "SELECT id, tx_ref FROM \"Order\";"
 ### Automated Testing (Future)
 
 ```typescript
-describe('POST /api/orders', () => {
-  it('should create order with matching id and tx_ref', async () => {
-    const response = await fetch('/api/orders', {
-      method: 'POST',
-      body: JSON.stringify({ service_type: 'cv' }),
+describe("POST /api/orders", () => {
+  it("should create order with matching id and tx_ref", async () => {
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      body: JSON.stringify({ service_type: "cv" }),
     });
-    
+
     const { orderId, tx_ref } = await response.json();
     expect(orderId).toBe(tx_ref);
   });
 
-  it('should generate unique UUIDs', async () => {
-    const order1 = await createOrder('cv');
-    const order2 = await createOrder('cv');
+  it("should generate unique UUIDs", async () => {
+    const order1 = await createOrder("cv");
+    const order2 = await createOrder("cv");
     expect(order1.orderId).not.toBe(order2.orderId);
   });
 });
@@ -290,6 +302,7 @@ describe('POST /api/orders', () => {
 ### Common Errors
 
 **Missing service_type:**
+
 ```json
 {
   "error": "service_type is required"
@@ -297,6 +310,7 @@ describe('POST /api/orders', () => {
 ```
 
 **Database connection error:**
+
 ```json
 {
   "error": "Failed to create order"
@@ -304,6 +318,7 @@ describe('POST /api/orders', () => {
 ```
 
 **Duplicate tx_ref (should never happen):**
+
 - This indicates a critical bug in UUID generation
 - Check Prisma client version
 - Verify database constraints
@@ -311,25 +326,28 @@ describe('POST /api/orders', () => {
 ### Debugging
 
 **Check order creation:**
+
 ```sql
-SELECT id, tx_ref, service_type, status, created_at 
-FROM "Order" 
-ORDER BY created_at DESC 
+SELECT id, tx_ref, service_type, status, created_at
+FROM "Order"
+ORDER BY created_at DESC
 LIMIT 10;
 ```
 
 **Verify UUID uniqueness:**
+
 ```sql
-SELECT tx_ref, COUNT(*) 
-FROM "Order" 
-GROUP BY tx_ref 
+SELECT tx_ref, COUNT(*)
+FROM "Order"
+GROUP BY tx_ref
 HAVING COUNT(*) > 1;
 ```
 
 **Check order status distribution:**
+
 ```sql
-SELECT status, COUNT(*) 
-FROM "Order" 
+SELECT status, COUNT(*)
+FROM "Order"
 GROUP BY status;
 ```
 
@@ -370,7 +388,7 @@ Once the UUID Order system is verified:
 
 3. **PDF Generation**
    - Generate PDF after successful payment
-   - Update `pdf_path` in order
+   - Update `pdf_url` in order
    - Send download link to user
 
 ## Troubleshooting
@@ -380,6 +398,7 @@ Once the UUID Order system is verified:
 **Symptom:** TypeScript errors about missing fields
 
 **Solution:**
+
 ```bash
 pnpm prisma generate
 ```
@@ -389,6 +408,7 @@ pnpm prisma generate
 **Symptom:** Runtime errors about missing columns
 
 **Solution:**
+
 ```bash
 pnpm prisma db push
 ```
@@ -398,6 +418,7 @@ pnpm prisma db push
 **Symptom:** UUIDs don't match expected format
 
 **Check:**
+
 - Prisma version (should support `@default(uuid())`)
 - Database supports UUID type
 - No manual UUID generation in code

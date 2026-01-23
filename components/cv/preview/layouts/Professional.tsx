@@ -1,5 +1,4 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
 import {
   Phone,
   Mail,
@@ -38,11 +37,10 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
           {/* Profile Photo - Overlapping */}
           <div className="absolute top-16 left-12 w-40 h-40 rounded-full border-[6px] border-[#e5e7eb] overflow-hidden z-10 bg-gray-300">
             {personalInfo.photo ? (
-              <Image
+              <img
                 src={personalInfo.photo}
                 alt="Profile"
-                fill
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-400 text-white text-4xl font-bold">

@@ -14,9 +14,17 @@ import {
   SkillItem,
   LanguageItem,
   CVData,
+  CoverLetterData,
 } from "@/types/cv";
 
-export type { PersonalInfo, ExperienceItem, EducationItem, SkillItem, CVData };
+export type {
+  PersonalInfo,
+  ExperienceItem,
+  EducationItem,
+  SkillItem,
+  CVData,
+  CoverLetterData,
+};
 
 interface CVContextType {
   cvData: CVData;
@@ -29,7 +37,8 @@ interface CVContextType {
       | ExperienceItem[]
       | EducationItem[]
       | SkillItem[]
-      | LanguageItem[] // Add this line
+      | LanguageItem[]
+      | CoverLetterData
       | { id: string },
   ) => void;
   selectedTemplate: string;
@@ -48,6 +57,8 @@ interface CVContextType {
     id: string,
     data: ExperienceItem | EducationItem | SkillItem | { id: string },
   ) => void;
+  // Cover Letter helpers
+  updateCoverLetter: (data: Partial<CoverLetterData>) => void;
 }
 
 const defaultCVData: CVData = {
@@ -70,6 +81,13 @@ const defaultCVData: CVData = {
   skills: [],
   languages: [],
   volunteer: [],
+  coverLetter: {
+    recipientName: "",
+    companyName: "",
+    jobTitle: "",
+    letterBody: "",
+    tone: "Neutral",
+  },
 };
 
 const CVContext = createContext<CVContextType | undefined>(undefined);
@@ -103,7 +121,8 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       | ExperienceItem[]
       | EducationItem[]
       | SkillItem[]
-      | LanguageItem[] // Add this line
+      | LanguageItem[]
+      | CoverLetterData
       | { id: string },
   ) => {
     setCvData((prev) => ({
@@ -156,6 +175,13 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
+  const updateCoverLetter = (data: Partial<CoverLetterData>) => {
+    setCvData((prev) => ({
+      ...prev,
+      coverLetter: { ...prev.coverLetter!, ...data },
+    }));
+  };
+
   const setTemplate = (id: string) => {
     setSelectedTemplate(id);
   };
@@ -170,6 +196,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         addItem,
         removeItem,
         updateItem,
+        updateCoverLetter,
       }}
     >
       {children}

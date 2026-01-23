@@ -8,14 +8,25 @@ export async function renderCvToHtml(
 ): Promise<string> {
   const { renderToStaticMarkup } = await import("react-dom/server");
 
-  // Dynamically load the template component
-  const loadComponent =
+  // Dynamically load the template components
+  const template =
     templateComponents[templateId] || templateComponents[DEFAULT_TEMPLATE];
-  const { default: TemplateComponent } = await loadComponent();
+  const { default: ResumeComponent } = await template.resume();
+  const { default: CoverLetterComponent } = await template.coverLetter();
 
-  const componentHtml = renderToStaticMarkup(
-    <TemplateComponent data={cvData} />,
-  );
+  // Render resume page
+  const resumeHtml = renderToStaticMarkup(<ResumeComponent data={cvData} />);
+
+  // Render cover letter page (if present)
+  let coverLetterHtml = "";
+  if (cvData.coverLetter) {
+    coverLetterHtml = renderToStaticMarkup(
+      <CoverLetterComponent
+        coverLetter={cvData.coverLetter}
+        personalInfo={cvData.personalInfo}
+      />,
+    );
+  }
 
   return `
     <!DOCTYPE html>
@@ -26,7 +37,7 @@ export async function renderCvToHtml(
         <style>
           @page { size: A4; margin: 0; }
           body { -webkit-print-color-adjust: exact; }
-          /* Fix for printing backgrounds/images opacity */
+          .pdf-page-break { page-break-before: always; }
         </style>
         <script>
             // Configure Tailwind to match your theme
@@ -44,7 +55,8 @@ export async function renderCvToHtml(
         </script>
       </head>
       <body>
-        ${componentHtml}
+        ${resumeHtml}
+        ${coverLetterHtml ? `<div class="pdf-page-break"></div>${coverLetterHtml}` : ""}
       </body>
     </html>
   `;

@@ -4,7 +4,7 @@
 export interface PersonalInfo {
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
   phone: string;
   city: string;
   country: string;
@@ -59,6 +59,16 @@ export interface VolunteerItem {
   description: string;
 }
 
+export type CoverLetterTone = "Formal" | "Neutral" | "Confident";
+
+export interface CoverLetterData {
+  recipientName: string;
+  companyName: string;
+  jobTitle: string;
+  letterBody: string;
+  tone: CoverLetterTone;
+}
+
 export interface CVData {
   personalInfo: PersonalInfo;
   summary: string;
@@ -68,4 +78,5 @@ export interface CVData {
   skills: SkillItem[];
   languages: LanguageItem[];
   volunteer: VolunteerItem[];
+  coverLetter?: CoverLetterData;
 }

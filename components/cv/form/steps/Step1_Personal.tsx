@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
@@ -19,6 +19,7 @@ import {
   type PersonalSchema,
 } from "@/validators/personal.schema";
 import { CoreCompetencies } from "../CoreCompetencies";
+import { PersonalInfo } from "@/types/cv";
 
 interface Step1Props {
   onNext: () => void;
@@ -45,7 +46,6 @@ export function Step1_Personal({ onNext }: Step1Props) {
           form.reset({
             ...cvData.personalInfo,
             ...parsed,
-            photo: cvData.personalInfo.photo,
           });
         } catch (e) {
           console.error("Failed to parse saved personal data", e);
@@ -60,25 +60,28 @@ export function Step1_Personal({ onNext }: Step1Props) {
   useEffect(() => {
     const subscription = form.watch((value) => {
       // Sync with Context (for Preview)
-      updateCVData("personalInfo", value);
+      updateCVData("personalInfo", {
+        ...cvData.personalInfo,
+        ...value,
+      } as PersonalInfo);
 
-      // Persist to LocalStorage (exclude photo)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { photo, ...toSave } = value;
-      localStorage.setItem("paperless.personal", JSON.stringify(toSave));
+      // Persist to LocalStorage (include photo now that it is a URL)
+      localStorage.setItem("paperless.personal", JSON.stringify(value));
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, updateCVData]);
+  }, [form, updateCVData, cvData.personalInfo]);
+
+  const [isUploading, setIsUploading] = useState(false);
 
   // Handle Valid Submission from Parent "Next" button
   const onSubmit = (data: PersonalSchema) => {
     // Double check we saved the latest valid data
     updateCVData("personalInfo", data);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { photo, ...toSave } = data;
-    localStorage.setItem("paperless.personal", JSON.stringify(toSave));
 
-    // Proceed
+    // Persist to LocalStorage
+    localStorage.setItem("paperless.personal", JSON.stringify(data));
+
+    // Proceed to next step
     onNext();
   };
 
@@ -98,6 +101,7 @@ export function Step1_Personal({ onNext }: Step1Props) {
             <div className="md:col-span-2 flex items-center gap-4">
               <div className="h-24 w-24 rounded-full bg-gray-100 border flex items-center justify-center overflow-hidden relative">
                 {formValues.photo ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={formValues.photo}
                     alt="Profile"
@@ -120,18 +124,39 @@ export function Step1_Personal({ onNext }: Step1Props) {
                   id="photo"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
+                  disabled={isUploading}
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const url = URL.createObjectURL(file);
-                      form.setValue("photo", url, {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                      });
+                      try {
+                        setIsUploading(true);
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        const res = await fetch("/api/upload/image", {
+                          method: "POST",
+                          body: formData,
+                        });
+
+                        if (!res.ok) throw new Error("Upload failed");
+
+                        const data = await res.json();
+                        form.setValue("photo", data.url, {
+                          shouldDirty: true,
+                          shouldTouch: true,
+                        });
+                      } catch (err) {
+                        console.error("Photo upload error", err);
+                        alert("Failed to upload photo. Please try again.");
+                      } finally {
+                        setIsUploading(false);
+                      }
                     }
                   }}
                 />
-                <p className="text-xs text-gray-500 mt-1">{t("photoHint")}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {isUploading ? "Uploading..." : t("photoHint")}
+                </p>
               </div>
             </div>
             <div className="space-y-2">
@@ -317,7 +342,7 @@ export function Step1_Personal({ onNext }: Step1Props) {
           <CardContent>
             <Textarea
               placeholder={t("placeholders.summary")}
-              className={`min-h-[120px] ${form.formState.errors.summary ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+              className={`min-h-30 ${form.formState.errors.summary ? "border-red-500 focus-visible:ring-red-500" : ""}`}
               {...form.register("summary")}
             />
             {form.formState.errors.summary && (

@@ -145,7 +145,7 @@ export default function CheckoutPage() {
         <Card className="border-0 shadow-xl ring-1 ring-gray-200 overflow-hidden bg-white">
           {/* Header Section */}
           <div className="bg-slate-900 text-white p-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-teal-400 via-blue-500 to-purple-600"></div>
 
             <div className="mx-auto w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
               <ShoppingBag className="w-6 h-6 text-teal-300" />
@@ -221,7 +221,7 @@ export default function CheckoutPage() {
                 className="w-full h-14 bg-[#2D2D2D] hover:bg-black text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden relative"
               >
                 {/* Abstract sheen effect */}
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <div className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
                 {isProcessing ? (
                   <div className="flex items-center gap-2">

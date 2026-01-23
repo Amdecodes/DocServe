@@ -17,6 +17,7 @@ import { Step2_Education } from "../../../../components/cv/form/steps/Step2_Educ
 import { Step3_Experience } from "../../../../components/cv/form/steps/Step3_Experience";
 import { Step4_Skills } from "../../../../components/cv/form/steps/Step4_Skills";
 import { Step5_Extras } from "../../../../components/cv/form/steps/Step5_Extras";
+import { Step6_CoverLetter } from "../../../../components/cv/form/steps/Step6_CoverLetter";
 import { Step5_Review } from "../../../../components/cv/form/steps/Step5_Review";
 
 function CVWizardContent() {
@@ -36,6 +37,7 @@ function CVWizardContent() {
     navT("steps.experience"),
     navT("steps.skills"),
     navT("steps.extras"),
+    navT("steps.coverLetter") || "Cover Letter",
     navT("steps.review"),
   ];
 
@@ -71,6 +73,7 @@ function CVWizardContent() {
       summary: cvData.summary,
       languages: cvData.languages, // Add languages
       volunteer: cvData.volunteer, // Add volunteer
+      coverLetter: cvData.coverLetter, // Add cover letter
       selectedTemplate: selectedTemplate, // Keep template selection
     };
   };
@@ -130,6 +133,8 @@ function CVWizardContent() {
       case 4:
         return <Step5_Extras />;
       case 5:
+        return <Step6_CoverLetter />;
+      case 6:
         return <Step5_Review />;
       default:
         return null;

@@ -1,13 +1,6 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { generatePdfFromHtml } from "@/lib/pdf/generator";
-import { renderCvToHtml } from "@/lib/pdf/renderer";
-import { CVData } from "@/types/cv";
-
-// Type for the stored form data which includes CVData + selectedTemplate
-interface StoredFormData extends CVData {
-  selectedTemplate?: string;
-}
+import { getSignedUrl } from "@/lib/upload";
 
 export async function GET(req: NextRequest) {
   const orderId = req.nextUrl.searchParams.get("orderId");
@@ -24,26 +17,42 @@ export async function GET(req: NextRequest) {
     return new Response("Unauthorized", { status: 403 });
   }
 
-  // 1. Get Data from DB
-  const formData = order.form_data as unknown as StoredFormData;
-  const cvData: CVData = formData;
-  const templateId = formData.selectedTemplate || "modern"; // Fallback to modern
-
-  // 2. Render to HTML (Using helper to avoid react-dom/server direct import issues)
-  const html = await renderCvToHtml(cvData, templateId);
-
-  // 3. Generate PDF
-  try {
-    const pdfBuffer = await generatePdfFromHtml(html);
-
-    return new Response(pdfBuffer as BodyInit, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="cv-${order.id}.pdf"`,
-      },
-    });
-  } catch (error) {
-    console.error("PDF Generation failed:", error);
-    return new Response("Failed to generate PDF", { status: 500 });
+  // STRICT TIME CHECK: If payment was > 6 hours ago, deny access permanently.
+  // This ensures that even if the cleanup job hasn't run yet, the file is inaccessible.
+  if (order.paid_at) {
+    const hoursSincePaid =
+      (Date.now() - new Date(order.paid_at).getTime()) / (1000 * 60 * 60);
+    if (hoursSincePaid > 6) {
+      return new Response("This download link has expired (6 hour limit).", {
+        status: 410,
+      });
+    }
   }
+
+  // 1. Always generate a fresh Signed URL with "download" disposition
+  // We do not rely on the cached DB URL here because we want to enforce the
+  // "Content-Disposition: attachment" header which is now default in getSignedUrl()
+  // and might not be present in older cached URLs.
+  try {
+    const predictablePath = `orders/${orderId}/cv.pdf`;
+    const freshLink = await getSignedUrl(predictablePath);
+
+    if (freshLink) {
+      // Update DB with the latest valid link (optional but good for caching elsewhere)
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { pdf_url: freshLink.signedUrl, expires_at: freshLink.expiresAt },
+      });
+      return NextResponse.redirect(freshLink.signedUrl);
+    }
+  } catch (e) {
+    console.log("Could not generate fresh link", e);
+  }
+
+  // 2. Fallback (if generating failed but we have a DB link?) - unlikely to help if generator failed.
+  // ...
+
+  return new Response("File not found or could not be accessed.", {
+    status: 404,
+  });
 }

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -8,20 +9,19 @@ datasource db {
 }
 
 model Order {
-  id           String      @id @default(uuid())
-  tx_ref       String      @unique
-  service_type String
-  status       OrderStatus
-  pdf_path     String?
-  form_data    Json?
-  created_at   DateTime    @default(now())
-  
-  // Payment Details
+  id             String      @id @default(uuid())
+  tx_ref         String      @unique
+  service_type   String
+  status         OrderStatus
+  form_data      Json?
+  created_at     DateTime    @default(now())
   customer_name  String?
-  customer_email String?
   customer_phone String?
-  chapa_ref      String?    @unique // The 'reference' from Chapa
+  customer_email String?
+  chapa_ref      String?     @unique
   paid_at        DateTime?
+  expires_at     DateTime?   @map("expires_at")
+  pdf_url        String?     @map("pdf_url")
 }
 
 enum OrderStatus {
