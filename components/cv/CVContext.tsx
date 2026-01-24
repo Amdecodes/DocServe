@@ -13,6 +13,8 @@ import {
   EducationItem,
   SkillItem,
   LanguageItem,
+  VolunteerItem,
+  AIMetadata,
   CVData,
   CoverLetterData,
   DocumentLanguage,
@@ -33,14 +35,16 @@ interface CVContextType {
   updateCVData: (
     section: keyof CVData,
     data:
-      | PersonalInfo
+      | Partial<PersonalInfo>
       | string
       | string[]
       | ExperienceItem[]
       | EducationItem[]
       | SkillItem[]
       | LanguageItem[]
-      | CoverLetterData
+      | VolunteerItem[]
+      | Partial<CoverLetterData>
+      | AIMetadata
       | { id: string },
   ) => void;
   selectedTemplate: string;
@@ -50,7 +54,13 @@ interface CVContextType {
   // Helpers for arrays
   addItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
-    item: ExperienceItem | EducationItem | SkillItem | { id: string },
+    item:
+      | Partial<ExperienceItem>
+      | Partial<EducationItem>
+      | Partial<SkillItem>
+      | Partial<LanguageItem>
+      | Partial<VolunteerItem>
+      | { id?: string },
   ) => void;
   removeItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
@@ -59,7 +69,13 @@ interface CVContextType {
   updateItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
-    data: ExperienceItem | EducationItem | SkillItem | { id: string },
+    data:
+      | Partial<ExperienceItem>
+      | Partial<EducationItem>
+      | Partial<SkillItem>
+      | Partial<LanguageItem>
+      | Partial<VolunteerItem>
+      | { id?: string },
   ) => void;
   // Cover Letter helpers
   updateCoverLetter: (data: Partial<CoverLetterData>) => void;
@@ -140,14 +156,16 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const updateCVData = (
     section: keyof CVData,
     data:
-      | PersonalInfo
+      | Partial<PersonalInfo>
       | string
       | string[]
       | ExperienceItem[]
       | EducationItem[]
       | SkillItem[]
       | LanguageItem[]
-      | CoverLetterData
+      | VolunteerItem[]
+      | Partial<CoverLetterData>
+      | AIMetadata
       | { id: string },
   ) => {
     setCvData((prev) => ({
@@ -155,23 +173,29 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       [section]:
         section === "personalInfo"
           ? { ...prev.personalInfo, ...(data as Partial<PersonalInfo>) }
-          : data,
+          : section === "coverLetter"
+            ? {
+                ...(prev.coverLetter || {}),
+                ...(data as Partial<CoverLetterData>),
+              }
+            : data,
     }));
   };
 
   const addItem = (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
-    item: ExperienceItem | EducationItem | SkillItem | { id: string },
+    item:
+      | Partial<ExperienceItem>
+      | Partial<EducationItem>
+      | Partial<SkillItem>
+      | Partial<LanguageItem>
+      | Partial<VolunteerItem>
+      | { id?: string },
   ) => {
     const newItem = { ...item, id: Date.now().toString() };
     setCvData((prev) => ({
       ...prev,
-      [section]: [
-        ...((prev[section] as Array<
-          ExperienceItem | EducationItem | SkillItem | { id: string }
-        >) ?? []),
-        newItem,
-      ],
+      [section]: [...((prev[section] as Array<any>) ?? []), newItem],
     }));
   };
 
@@ -190,7 +214,13 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const updateItem = (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
-    data: ExperienceItem | EducationItem | SkillItem | { id: string },
+    data:
+      | Partial<ExperienceItem>
+      | Partial<EducationItem>
+      | Partial<SkillItem>
+      | Partial<LanguageItem>
+      | Partial<VolunteerItem>
+      | { id?: string },
   ) => {
     setCvData((prev) => ({
       ...prev,

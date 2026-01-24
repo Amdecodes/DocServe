@@ -196,7 +196,7 @@ function CVWizardContent() {
           }`}
         >
           {/* Stepper Header (Fixed at top) */}
-          <div className="bg-white border-b px-4 py-4 md:px-6 overflow-x-auto shrink-0 z-10">
+          <div className="bg-white border-b px-6 py-6 md:px-10 overflow-x-auto shrink-0 z-10 shadow-sm">
             <Stepper
               steps={STEPS}
               currentStep={currentStep}
@@ -205,14 +205,17 @@ function CVWizardContent() {
           </div>
 
           {/* Form Content (Scrollable) */}
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="max-w-2xl mx-auto pb-10">{renderStep()}</div>
+          <div className="flex-1 overflow-y-auto p-6 md:p-12">
+            <div className="max-w-4xl mx-auto pb-20 space-y-8">
+              {renderStep()}
+            </div>
           </div>
 
           {/* Footer Navigation (Fixed at bottom) */}
-          <div className="bg-white border-t p-4 shrink-0 flex justify-between z-10">
+          <div className="bg-white border-t p-6 md:px-10 shrink-0 flex justify-between z-10">
             <Button
               variant="outline"
+              size="lg"
               onClick={prevStep}
               disabled={currentStep === 0}
             >
@@ -223,7 +226,8 @@ function CVWizardContent() {
               <Button
                 onClick={handleProceedToCheckout}
                 disabled={isCreatingOrder}
-                className="bg-green-600 hover:bg-green-700 text-white min-w-50"
+                size="lg"
+                className="bg-green-600 hover:bg-green-700 text-white min-w-50 text-base font-semibold"
               >
                 {isCreatingOrder ? <>Processing...</> : t("proceedButton")}
               </Button>
@@ -232,8 +236,10 @@ function CVWizardContent() {
                 onClick={currentFormId ? undefined : nextStep}
                 type={currentFormId ? "submit" : "button"}
                 form={currentFormId}
+                size="lg"
+                className="text-base font-medium px-8"
               >
-                {navT("next")} <ArrowRight className="ml-2 h-4 w-4" />
+                {navT("next")} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             )}
           </div>
@@ -241,11 +247,11 @@ function CVWizardContent() {
 
         {/* Right: Preview Area */}
         <div
-          className={`w-full lg:w-2/5 bg-gray-100 lg:bg-gray-200 p-4 lg:p-8 border-l border-gray-300 relative overflow-y-auto ${
+          className={`w-full lg:w-2/5 bg-gray-100 lg:bg-gray-200 p-8 lg:p-14 border-l border-gray-300 relative overflow-y-auto ${
             activeTab === "edit" ? "hidden lg:block" : "block"
           }`}
         >
-          <div className="min-h-full flex justify-center lg:block sticky lg:top-8">
+          <div className="min-h-full flex justify-center sticky lg:top-8 pb-8">
             <CVPreview />
           </div>
         </div>

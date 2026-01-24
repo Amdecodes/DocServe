@@ -92,8 +92,11 @@ export default function Header() {
                Since I don't have a specific Telegram link, I'll use a placeholder or the global contact link for now.
            */}
           {isLandingPage ? (
-            <Button className="hidden md:flex bg-primary hover:bg-primary-hover text-white rounded-full px-6">
-              {t("cta")}
+            <Button
+              asChild
+              className="hidden md:flex bg-primary hover:bg-primary-hover text-white rounded-full px-6"
+            >
+              <Link href="/resumes/templates">{t("cta")}</Link>
             </Button>
           ) : (
             <Button

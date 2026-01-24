@@ -175,7 +175,7 @@ export default function VAMonitor({
                           <div className="flex items-center text-xs">
                             <Mail className="w-3.5 h-3.5 mr-2 text-gray-400" />
                             <span
-                              className="truncate max-w-[150px] text-gray-600"
+                              className="truncate max-w-37.5 text-gray-600"
                               title={req.email}
                             >
                               {req.email}

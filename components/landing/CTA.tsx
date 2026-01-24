@@ -12,7 +12,7 @@ export default function CTA() {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-8">{t("text")}</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/form/cv">
+          <Link href="/resumes/templates">
             <Button
               size="lg"
               className="bg-white text-primary hover:bg-gray-100 font-semibold text-lg px-8 rounded-full"

@@ -113,12 +113,12 @@
   "ServicesPage": {
     "title": "Choose Your Service",
     "description": "Select the service that best fits your needs. We help you create professional documents that stand out.",
-    "cvTitle": "CV Writing",
-    "cvDescription": "Create a professional, Ethiopian-standardized CV in minutes.",
-    "cvPrice": "Starting from 199 ETB",
-    "letterTitle": "Cover Letter",
-    "letterDescription": "Write a persuasive cover letter to accompany your job application.",
-    "letterPrice": "Coming Soon",
+    "resumeTitle": "Resume Builder",
+    "resumeDescription": "Create a professional, standardized CV in minutes with our AI-powered builder.",
+    "resumePrice": "Starting from 199 ETB",
+    "vaTitle": "Virtual Assistance",
+    "vaDescription": "Get professional virtual assistance for your remote tasks and administrative needs.",
+    "vaPrice": "Request a Quote",
     "comingSoon": "More Services Coming Soon"
   },
   "ServiceCard": {
@@ -363,6 +363,8 @@
     "disclaimerAccept": "I understand and accept the above disclaimer",
     "submit": "Submit Request",
     "submitting": "Submitting...",
+    "source": "Where did you hear about us?",
+    "sourcePlaceholder": "e.g. LinkedIn, Telegram, Friend",
     "successTitle": "Request Received",
     "successMessage": "Your request has been received and will be reviewed.",
     "errorMessage": "There was an error submitting your request. Please try again.",
@@ -393,6 +395,77 @@
       "skilled_trades": "Skilled & Technical Trades",
       "hospitality_service": "Hospitality & Service",
       "other": "Other"
+    }
+  },
+  "Pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the right service for your career goals.",
+    "tabResume": "Resume Builder",
+    "tabVA": "Apply Assist",
+    "resume": {
+      "title": "Premium Builder",
+      "description": "One-time payment for lifetime value.",
+      "badge": "Best Value",
+      "cta": "Build My Resume",
+      "guarantee": "100% Satisfaction Guarantee",
+      "features": {
+        "1": "Professional Ethiopian Standard CV",
+        "2": "ATS-Optimized Formatting",
+        "3": "Instant PDF Download",
+        "4": "Mobile-Friendly Builder",
+        "5": "AI Content Suggestions"
+      }
+    },
+    "va": {
+      "cta": "Request Service",
+      "mostPopular": "Most Popular",
+      "outcomeLabel": "Outcome",
+      "notesTitle": "Important Notes",
+      "positioningLine": "We apply for jobs on your behalf—professionally, strategically, and consistently.",
+      "notes": {
+        "1": "CV writing is a separate service",
+        "2": "Client must provide CV details",
+        "3": "Authorization required before applying",
+        "4": "No job guarantees (employer decisions vary)"
+      },
+      "packages": {
+        "basic": {
+          "title": "Apply Assist – Basic",
+          "bestFor": "Best for: Fresh graduates & first-time job seekers",
+          "features": {
+            "1": "Apply to 10 job vacancies",
+            "2": "Use client’s existing CV",
+            "3": "Basic CV alignment",
+            "4": "Application tracking",
+            "5": "Weekly update (WhatsApp/Email)"
+          },
+          "outcome": "Consistent applications with minimal effort"
+        },
+        "professional": {
+          "title": "Apply Assist – Professional",
+          "bestFor": "Best for: Working professionals",
+          "features": {
+            "1": "Apply to 25 job vacancies",
+            "2": "Job-specific CV customization",
+            "3": "Tailored cover letter per role",
+            "4": "Application tracking",
+            "5": "Weekly detailed progress report"
+          },
+          "outcome": "Higher-quality applications with improved chances"
+        },
+        "elite": {
+          "title": "Apply Assist – Elite",
+          "bestFor": "Best for: Serious or urgent job seekers",
+          "features": {
+            "1": "Apply to 50 job vacancies",
+            "2": "Advanced CV tailoring per vacancy",
+            "3": "Priority handling",
+            "4": "Application strategy support",
+            "5": "Detailed application reports"
+          },
+          "outcome": "Maximum exposure with expert-managed applications"
+        }
+      }
     }
   }
 }

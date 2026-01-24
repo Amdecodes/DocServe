@@ -1,5 +1,10 @@
-import { redirect } from "@/lib/navigation";
+import { redirect } from "next/navigation";
 
-export default function AdminPage() {
-  redirect("/admin/resumes");
+export default async function AdminPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}/admin/resumes`);
 }

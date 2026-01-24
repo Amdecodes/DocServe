@@ -180,6 +180,7 @@ export function TemplateSkeletonLayout({ data }: { data: CVData }) {
  * Test your template with this sample data:
  */
 export const SAMPLE_CV_DATA: CVData = {
+  documentLanguage: "en",
   personalInfo: {
     firstName: "Alexandra",
     lastName: "Thompson",

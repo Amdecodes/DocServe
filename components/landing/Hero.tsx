@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 export default function Hero() {
   const t = useTranslations("Hero");
@@ -39,7 +38,7 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
             >
-              <Link href="/form/cv">
+              <Link href="/resumes/templates">
                 <Button
                   size="lg"
                   className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full sm:w-auto"
@@ -59,8 +58,8 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Visual / Image */}
-          <div className="flex-1 relative w-full max-w-md">
+          {/* Visual / Video */}
+          <div className="flex-1 relative w-full max-w-xl">
             {/* Abstract Background Shapes - Animated */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -69,36 +68,28 @@ export default function Hero() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-linear-to-tr from-secondary/20 to-primary/10 rounded-full blur-3xl -z-10"
             />
 
-            {/* Mockup Container - floating animation */}
+            {/* Video Container */}
             <motion.div
-              initial={{ opacity: 0, y: 50, rotate: -5 }}
-              animate={{ opacity: 1, y: 0, rotate: -2 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 type: "spring",
                 stiffness: 100,
                 damping: 20,
                 duration: 0.8,
               }}
-              style={{ rotate: -2 }}
+              className="relative bg-white p-2 rounded-xl shadow-2xl border border-gray-100"
             >
-              <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: "easeInOut",
-                }}
-                className="relative bg-white p-2 rounded-xl shadow-2xl border border-gray-100"
-              >
-                {/* Placeholder for the Document Preview */}
-                <Image
-                  src="/images/cv-preview.jpg"
-                  alt={t("imageAlt")}
-                  width={500}
-                  height={700}
-                  className="w-full h-full object-cover rounded-lg"
+              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-gray-100">
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src="https://www.youtube.com/embed/LXb3EKWsInQ?si=placeholder"
+                  title="Paperless Demo"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
                 />
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>

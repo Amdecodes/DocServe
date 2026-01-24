@@ -90,7 +90,9 @@ export default function Services() {
               </ul>
 
               <Link
-                href={category.id === "digital" ? "/form/cv" : "/contact"}
+                href={
+                  category.id === "digital" ? "/resumes/templates" : "/contact"
+                }
                 className="w-full"
               >
                 <Button
