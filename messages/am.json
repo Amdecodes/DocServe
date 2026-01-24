@@ -336,5 +336,63 @@
     "toneHelp": "ለድርጅቱ ባህል የሚመጥን የአጻጻፍ ስልት ይምረጡ።",
     "letterBody": "የደብዳቤው አካል",
     "letterPlaceholder": "የተከበሩ የስራ ሃላፊ፣\n\nበድርጅታችሁ ለወጣው የስራ ማስታወቂያ ለማመልከት ነው..."
+  },
+  "VirtualAssistance": {
+    "pageTitle": "ቨርቿል እርዳታ ይጠይቁ",
+    "pageDescription": "ለስራ ፍለጋ ቨርቿል እርዳታ ጥያቄ ያቅርቡ",
+    "title": "ቨርቿል እርዳታ ይጠይቁ",
+    "description": "ቨርቿል እርዳታ ለመጠየቅ ይህን ቅጽ ይሙሉ። እባክዎ ትክክለኛ መረጃ ያቅርቡ።",
+    "fullName": "ሙሉ ስም",
+    "fullNamePlaceholder": "ሙሉ ስምዎን ያስገቡ",
+    "phoneNumber": "ስልክ ቁጥር",
+    "phoneNumberPlaceholder": "+251 9XX XXX XXX",
+    "email": "ኢሜይል አድራሻ",
+    "emailPlaceholder": "your.email@example.com",
+    "telegramUsername": "የቴሌግራም ስም",
+    "telegramUsernamePlaceholder": "@yourusername",
+    "jobCategory": "የስራ ዘርፍ",
+    "selectJobCategory": "የስራ ዘርፍ ይምረጡ",
+    "experienceLevel": "የልምድ ደረጃ",
+    "selectExperienceLevel": "የልምድ ደረጃዎን ይምረጡ",
+    "location": "አድራሻ",
+    "locationPlaceholder": "ከተማ፣ ሀገር (ለምሳሌ፡ አዲስ አበባ፣ ኢትዮጵያ)",
+    "additionalNotes": "ተጨማሪ ማስታወሻ",
+    "additionalNotesPlaceholder": "ስለ ጥያቄዎ ማካፈል የሚፈልጉት ተጨማሪ መረጃ...",
+    "optional": "አማራጭ",
+    "disclaimerText": "ይህ ጥያቄ ግንኙነት፣ የስራ አቀማመጥ ወይም ምላሽ አይዋስትም። ይህ መድረክ ለውስጣዊ ግምገማ መረጃን ብቻ ይሰበስባል።",
+    "disclaimerAccept": "ከላይ ያለውን ማስጠንቀቂያ ተረድቼ ተቀብያለሁ",
+    "submit": "ጥያቄ ያቅርቡ",
+    "submitting": "በመላክ ላይ...",
+    "successTitle": "ጥያቄ ደርሷል",
+    "successMessage": "ጥያቄዎ ተቀብሎ ይገመገማል።",
+    "errorMessage": "ጥያቄዎን ሲያስገቡ ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ።",
+    "back": "ተመለስ",
+    "next": "ቀጥል",
+    "steps": {
+      "contact": "መረጃ",
+      "job": "ስራ",
+      "confirm": "አረጋግጥ",
+      "contactTitle": "የመገኛ መረጃ",
+      "jobTitle": "የስራ ዝርዝር",
+      "confirmTitle": "ገምግም እና ላክ"
+    },
+    "experienceLevels": {
+      "entry": "ጀማሪ ደረጃ",
+      "mid": "መካከለኛ ደረጃ",
+      "senior": "ከፍተኛ ደረጃ",
+      "executive": "አስፈፃሚ ደረጃ"
+    },
+    "jobs": {
+      "technology_it": "ቴክኖሎጂ እና IT",
+      "business_finance": "ቢዝነስ እና ፋይናንስ",
+      "design_creative": "ዲዛይን እና ክሪኤቲቭ",
+      "marketing_sales": "ማርኬቲንግ እና ሽያጭ",
+      "healthcare": "ጤና አጠባበቅ",
+      "education": "ትምህርት",
+      "administration": "አስተዳደር እና ቢሮ",
+      "skilled_trades": "ቴክኒካል ሙያዎች",
+      "hospitality_service": "ሆስፒታሊቲ እና አገልግሎት",
+      "other": "ሌላ"
+    }
   }
 }

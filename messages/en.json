@@ -336,5 +336,63 @@
     "toneHelp": "Choose the tone that best fits the company culture.",
     "letterBody": "Letter Body",
     "letterPlaceholder": "Dear Hiring Manager,\n\nI am writing to express my interest in the Software Engineer position at Google..."
+  },
+  "VirtualAssistance": {
+    "pageTitle": "Request Virtual Assistance",
+    "pageDescription": "Submit a request for virtual assistance with your job search",
+    "title": "Request Virtual Assistance",
+    "description": "Fill out this form to submit a request for virtual assistance. Please provide accurate information.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "phoneNumber": "Phone Number",
+    "phoneNumberPlaceholder": "+251 9XX XXX XXX",
+    "email": "Email Address",
+    "emailPlaceholder": "your.email@example.com",
+    "telegramUsername": "Telegram Username",
+    "telegramUsernamePlaceholder": "@yourusername",
+    "jobCategory": "Job Category",
+    "selectJobCategory": "Select a job category",
+    "experienceLevel": "Experience Level",
+    "selectExperienceLevel": "Select your experience level",
+    "location": "Location",
+    "locationPlaceholder": "City, Country (e.g., Addis Ababa, Ethiopia)",
+    "additionalNotes": "Additional Notes",
+    "additionalNotesPlaceholder": "Any additional information you would like to share about your request...",
+    "optional": "optional",
+    "disclaimerText": "This request does not guarantee contact, job placement, or response. This platform only collects information for internal review.",
+    "disclaimerAccept": "I understand and accept the above disclaimer",
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+    "successTitle": "Request Received",
+    "successMessage": "Your request has been received and will be reviewed.",
+    "errorMessage": "There was an error submitting your request. Please try again.",
+    "back": "Back",
+    "next": "Next",
+    "steps": {
+      "contact": "Contact",
+      "job": "Job Info",
+      "confirm": "Confirm",
+      "contactTitle": "Contact Information",
+      "jobTitle": "Job Details",
+      "confirmTitle": "Review & Submit"
+    },
+    "experienceLevels": {
+      "entry": "Entry Level",
+      "mid": "Mid Level",
+      "senior": "Senior Level",
+      "executive": "Executive Level"
+    },
+    "jobs": {
+      "technology_it": "Technology & IT",
+      "business_finance": "Business & Finance",
+      "design_creative": "Design & Creative",
+      "marketing_sales": "Marketing & Sales",
+      "healthcare": "Healthcare",
+      "education": "Education",
+      "administration": "Administration & Office",
+      "skilled_trades": "Skilled & Technical Trades",
+      "hospitality_service": "Hospitality & Service",
+      "other": "Other"
+    }
   }
 }

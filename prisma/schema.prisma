@@ -32,3 +32,28 @@ enum OrderStatus {
   PAID
   FAILED
 }
+
+model VirtualAssistanceRequest {
+  id                     String                       @id @default(uuid())
+  full_name              String
+  phone_number           String
+  email                  String?
+  telegram_username      String?
+  job_category           String
+  experience_level       String
+  location               String
+  notes                  String?
+  status                 VirtualAssistanceStatus      @default(PENDING)
+  language               String                       @default("en")
+  source                 String                       @default("dashboard")
+  disclaimer_accepted_at DateTime
+  created_at             DateTime                     @default(now())
+
+  @@map("virtual_assistance_requests")
+}
+
+enum VirtualAssistanceStatus {
+  PENDING
+  CONTACTED
+  CLOSED
+}
