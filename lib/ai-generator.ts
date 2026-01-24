@@ -11,12 +11,7 @@
  * - No placeholders / no assumptions → avoids hallucinations
  */
 
-import {
-  CVData,
-  ExperienceItem,
-  CoverLetterTone,
-  DocumentLanguage,
-} from "@/types/cv";
+import { CVData, ExperienceItem, CoverLetterTone } from "@/types/cv";
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -30,19 +25,10 @@ interface AIGenerationOutput {
 }
 
 // Tone mapping (UI dropdown → prompt language style)
-const TONE_MAP: Record<CoverLetterTone, Record<DocumentLanguage, string>> = {
-  Formal: {
-    en: "conservative, respectful wording",
-    am: "ባህላዊ እና አክብሮታዊ አጻጻፍ",
-  },
-  Neutral: {
-    en: "neutral, ATS-safe language",
-    am: "ገለልተኛ እና ሙያዊ ቋንቋ",
-  },
-  Confident: {
-    en: "strong verbs, assertive tone",
-    am: "ጠንካራ ግሦች፣ በራስ መተማመን ያለው ድምጽ",
-  },
+const TONE_MAP: Record<CoverLetterTone, string> = {
+  Formal: "conservative, respectful wording",
+  Neutral: "neutral, ATS-safe language",
+  Confident: "strong verbs, assertive tone",
 };
 
 // Input limits (backend-enforced safeguards)
@@ -60,37 +46,18 @@ const GEMINI_API_URL = process.env.GEMINI_API_URL;
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPTS: Record<DocumentLanguage, string> = {
-  en: `You are a professional career writer specializing in ATS-friendly resumes and cover letters.
+const SYSTEM_PROMPT = `You are a professional career writer specializing in ATS-friendly resumes and cover letters.
 Write concise, human-sounding, non-generic content.
 Do not invent facts.
 Do not mention AI, prompts, or templates.
-Follow the structure and limits exactly.`,
-
-  am: `ROLE: You are an expert CV writer for the Ethiopian market.
-  
-STRICT OUTPUT RULE: You MUST write ONLY in Amharic (አማርኛ).
-- If the user input is in English, you MUST translate it to Amharic.
-- Do NOT generate English sentences.
-- Use Amharic script (ፊደል) for the entire response.
-- Technical terms can remain in English if there is no common Amharic equivalent, but the sentence structure MUST be Amharic.
-- Use standard Amharic punctuation (። ፣ ፤ ፥ ፦ !).
-
-FORBIDDEN:
-- Do not respond in English.
-- Do not provide translations in brackets.
-- Do not include AI meta-talk ("Here is the summary in Amharic").`,
-};
+Follow the structure and limits exactly.`;
 
 // Experience level translations
-const EXPERIENCE_LEVEL_MAP: Record<
-  ExperienceLevel,
-  Record<DocumentLanguage, string>
-> = {
-  "Entry-level": { en: "Entry-level", am: "የመጀመሪያ ደረጃ" },
-  "Mid-level": { en: "Mid-level", am: "መካከለኛ ደረጃ" },
-  Senior: { en: "Senior", am: "ከፍተኛ ደረጃ" },
-  Executive: { en: "Executive", am: "አስተዳዳሪ ደረጃ" },
+const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
+  "Entry-level": "Entry-level",
+  "Mid-level": "Mid-level",
+  Senior: "Senior",
+  Executive: "Executive",
 };
 
 // Experience level type
@@ -154,37 +121,10 @@ function buildSummaryPrompt(
   experienceLevel: ExperienceLevel,
   industry: string,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Write a professional summary for a CV.
-
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
-- Industry: ${industry}
-- Notes: ${userNotes || "N/A"}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate any English concepts from inputs into Amharic.
-3. Length: 2-3 sentences.
-4. Focus: Impact, skills, professional value.
-5. Tone: Professional, formal.
-6. NO English sentences allowed.
-
-[OUTPUT]
-Write only the Amharic summary text now:`;
-  }
-
-  return `Write a professional summary for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+  return `Write a professional summary for a ${expLevelText} ${jobTitle} in the ${industry} industry.
 
 Rules:
 - 2-3 sentences only
@@ -210,41 +150,11 @@ function buildCoverLetterPrompt(
   industry: string,
   tone: CoverLetterTone,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const toneInstruction =
-    TONE_MAP[tone]?.[language] || TONE_MAP.Neutral[language];
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Write the body of a cover letter.
-
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
-- Industry: ${industry}
-- Tone: ${toneInstruction}
-- Notes: ${userNotes || "N/A"}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Structure: 3 short paragraphs.
-3. Content: Value proposition, skills, motivation.
-4. NO greetings ("Dear..."), NO sign-off ("Sincerely...").
-5. NO placeholders like [Company Name].
-6. Translate all English inputs to Amharic context.
-7. NO English sentences.
-
-[OUTPUT]
-Write only the 3 Amharic paragraphs now:`;
-  }
-
-  return `Write a one-page cover letter body for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+  return `Write a one-page cover letter body for a ${expLevelText} ${jobTitle} in the ${industry} industry.
 
 Tone: ${toneInstruction}
 
@@ -271,36 +181,8 @@ function buildBulletPrompt(
   bullets: string[],
   jobTitle: string,
   company: string,
-  language: DocumentLanguage,
 ): string {
   const bulletList = bullets.map((b, i) => `${i + 1}. ${b}`).join("\n");
-
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Rewrite these CV bullet points to be professional and impact-focused in Amharic.
-
-[CONTEXT]
-Role: ${jobTitle} at ${company}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate the input bullet points from English (if applicable) to Amharic.
-3. Start each bullet with a strong Amharic verb.
-4. Keep the meaning but improve the phrasing.
-5. Length: 1 line per bullet.
-6. Count: Exactly ${bullets.length} bullets.
-7. NO English sentences.
-
-[BULLETS TO REWRITE]
-${bulletList}
-
-[OUTPUT]
-Write only the Amharic bullets, one per line:`;
-  }
 
   return `Rewrite the following bullet points to be concise, results-oriented, and ATS-friendly.
 
@@ -324,12 +206,7 @@ Output only the rewritten bullets, one per line.`;
 // GEMINI API CALL
 // ============================================================================
 
-async function callGeminiAPI(
-  userPrompt: string,
-  language: DocumentLanguage,
-): Promise<string> {
-  const systemPrompt = SYSTEM_PROMPTS[language];
-
+async function callGeminiAPI(userPrompt: string): Promise<string> {
   const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
     method: "POST",
     headers: {
@@ -339,7 +216,7 @@ async function callGeminiAPI(
       contents: [
         {
           role: "user",
-          parts: [{ text: systemPrompt }, { text: userPrompt }],
+          parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
         },
       ],
       generationConfig: {
@@ -441,10 +318,10 @@ export async function generateAIContent(
   );
 
   // Get document language (default to English)
-  const language: DocumentLanguage = cvData?.documentLanguage || "en";
+  const language = "en" as const;
   console.log(`[AI Generator] Final language used: ${language}`);
   console.log(
-    `[AI Generator] System prompt preview: ${SYSTEM_PROMPTS[language].substring(0, 100)}...`,
+    `[AI Generator] System prompt preview: ${SYSTEM_PROMPT.substring(0, 100)}...`,
   );
 
   // Extract and sanitize inputs
@@ -469,9 +346,8 @@ export async function generateAIContent(
       experienceLevel,
       industry,
       userNotes,
-      language,
     );
-    const professionalSummary = await callGeminiAPI(summaryPrompt, language);
+    const professionalSummary = await callGeminiAPI(summaryPrompt);
 
     // 2. Generate Cover Letter (only if user has cover letter data)
     let coverLetterBody: string | undefined;
@@ -483,9 +359,8 @@ export async function generateAIContent(
         industry,
         tone,
         userNotes,
-        language,
       );
-      coverLetterBody = await callGeminiAPI(coverLetterPrompt, language);
+      coverLetterBody = await callGeminiAPI(coverLetterPrompt);
     }
 
     // 3. Optimize Experience Bullets (only if user provided bullets)
@@ -500,9 +375,8 @@ export async function generateAIContent(
           sanitizedBullets,
           exp.jobTitle,
           exp.company,
-          language,
         );
-        const optimized = await callGeminiAPI(bulletPrompt, language);
+        const optimized = await callGeminiAPI(bulletPrompt);
 
         // Parse output - one bullet per line
         const parsedBullets = optimized
@@ -524,7 +398,7 @@ export async function generateAIContent(
 
     return {
       professionalSummary:
-        professionalSummary || generateFallbackSummary(jobTitle, language),
+        professionalSummary || generateFallbackSummary(jobTitle),
       coverLetterBody,
       optimizedBullets,
       generatedAt: new Date().toISOString(),
@@ -534,9 +408,9 @@ export async function generateAIContent(
 
     // Return fallback content - never fail the order
     return {
-      professionalSummary: generateFallbackSummary(jobTitle, language),
+      professionalSummary: generateFallbackSummary(jobTitle),
       coverLetterBody: cvData.coverLetter
-        ? generateFallbackCoverLetter(language)
+        ? generateFallbackCoverLetter()
         : undefined,
       optimizedBullets: cvData.experience.map((exp) => exp.achievements),
       generatedAt: new Date().toISOString(),
@@ -548,26 +422,11 @@ export async function generateAIContent(
 // FALLBACK CONTENT (When AI fails)
 // ============================================================================
 
-function generateFallbackSummary(
-  jobTitle: string,
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `በ${jobTitle} መስክ ከፍተኛ ልምድ ያለው እና ለተቋማት ስኬት ጉልህ አስተዋጽኦ ያበረከተ ሙያተኛ። ስትራቴጂያዊ እቅዶችን በመንደፍ እና በመተግበር የላቀ ውጤት ማስመዝገብ የሚችል።`;
-  }
+function generateFallbackSummary(jobTitle: string): string {
   return `Results-driven ${jobTitle} with demonstrated expertise in delivering high-impact solutions. Proven ability to drive organizational success through strategic initiatives and collaborative leadership.`;
 }
 
-function generateFallbackCoverLetter(
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `ችሎታዬን እና ልምዴን ተጠቅሜ ለድርጅትዎ አስተዋጽኦ ለማበርከት ዝግጁ ነኝ። በሙያዬ ያካበትኩት ልምድ በተለያዩ የስራ ሁኔታዎች ውስጥ ውጤታማ እንድሆን አስችሎኛል።
-
-ጠንካራ የስራ ስነ-ምግባር ያለኝ ሲሆን፣ አዳዲስ ነገሮችን ለመማር እና ራሴን ለማሻሻል ሁሌም ትጉ ነኝ። ለድርጅትዎ እሴት የሚጨምር ስራ ለመስራት ቆርጫለሁ።
-
-ስለ ብቃቴ እና ልምዴ በዝርዝር ለመወያየት ዝግጁ ነኝ። ስለሰጡኝ ጊዜ ከልብ አመሰግናለሁ።`;
-  }
+function generateFallbackCoverLetter(): string {
   return `I am excited to bring my skills and experience to a role where I can make a meaningful contribution. My background has equipped me with the expertise needed to excel in challenging environments and deliver results.
 
 Throughout my career, I have consistently demonstrated the ability to adapt, learn, and grow. I take pride in my work ethic and commitment to continuous improvement, always seeking opportunities to add value.

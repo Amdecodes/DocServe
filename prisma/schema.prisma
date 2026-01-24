@@ -57,3 +57,54 @@ enum VirtualAssistanceStatus {
   CONTACTED
   CLOSED
 }
+
+model PrintProduct {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  base_price  Decimal  @map("base_price")
+  image_url   String?  @map("image_url")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+
+  orders      PrintOrder[]
+  variations  PrintProductVariation[]
+
+  @@map("print_products")
+}
+
+model PrintProductVariation {
+  id         String       @id @default(uuid())
+  product_id String       @map("product_id")
+  name       String
+  image_url  String       @map("image_url")
+  product    PrintProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@map("print_product_variations")
+}
+
+model PrintOrder {
+  id             String           @id @default(uuid())
+  product_id     String?          @map("product_id")
+  product_name   String           @map("product_name")
+  variation_id   String?          @map("variation_id")
+  variation_name String?          @map("variation_name")
+  full_name      String           @map("full_name")
+  phone          String
+  email          String?
+  location       String
+  quantity       Int
+  notes          String?
+  status         PrintOrderStatus @default(pending)
+  created_at     DateTime         @default(now()) @map("created_at")
+
+  product      PrintProduct?    @relation(fields: [product_id], references: [id], onDelete: SetNull)
+
+  @@map("print_orders")
+}
+
+enum PrintOrderStatus {
+  pending
+  contacted
+  completed
+}

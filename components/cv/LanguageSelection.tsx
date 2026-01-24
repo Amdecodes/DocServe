@@ -1,11 +1,11 @@
 "use client";
 
-import { DocumentLanguage } from "@/types/cv";
+import { Locale } from "@/config/i18n";
 import { useTranslations } from "next-intl";
 
 interface LanguageSelectionProps {
-  selectedLanguage: DocumentLanguage;
-  onLanguageSelect: (language: DocumentLanguage) => void;
+  selectedLanguage: Locale;
+  onLanguageSelect: (language: Locale) => void;
   onContinue: () => void;
 }
 
@@ -16,7 +16,7 @@ export function LanguageSelection({
 }: LanguageSelectionProps) {
   const t = useTranslations("LanguageSelection");
 
-  const handleLanguageSelect = (lang: DocumentLanguage) => {
+  const handleLanguageSelect = (lang: Locale) => {
     console.log(`[LanguageSelection] User selected: ${lang}`);
     onLanguageSelect(lang);
   };

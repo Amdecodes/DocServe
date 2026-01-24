@@ -17,7 +17,6 @@ import {
   AIMetadata,
   CVData,
   CoverLetterData,
-  DocumentLanguage,
 } from "@/types/cv";
 
 export type {
@@ -27,7 +26,6 @@ export type {
   SkillItem,
   CVData,
   CoverLetterData,
-  DocumentLanguage,
 };
 
 interface CVContextType {
@@ -49,8 +47,6 @@ interface CVContextType {
   ) => void;
   selectedTemplate: string;
   setTemplate: (id: string) => void;
-  // Language selection
-  setDocumentLanguage: (language: DocumentLanguage) => void;
   // Helpers for arrays
   addItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
@@ -132,7 +128,12 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     try {
       const savedCV = localStorage.getItem("paperless.cvData");
       if (savedCV) {
-        setCvData(JSON.parse(savedCV));
+        const parsed = JSON.parse(savedCV) as CVData;
+        setCvData({
+          ...parsed,
+          // Force English CV generation even if older data stored another value
+          documentLanguage: "en",
+        });
       }
     } catch (e) {
       console.error("Failed to load CV data", e);
@@ -237,13 +238,6 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
-  const setDocumentLanguage = (language: DocumentLanguage) => {
-    setCvData((prev) => ({
-      ...prev,
-      documentLanguage: language,
-    }));
-  };
-
   const setTemplate = (id: string) => {
     setSelectedTemplate(id);
   };
@@ -255,7 +249,6 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         updateCVData,
         selectedTemplate,
         setTemplate,
-        setDocumentLanguage,
         addItem,
         removeItem,
         updateItem,

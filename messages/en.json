@@ -397,6 +397,68 @@
       "other": "Other"
     }
   },
+  "PrintOrders": {
+    "pageTitle": "Print & Custom Orders",
+    "subtitle": "Menus, wedding cards, flyers, mugs, t-shirts, and more.",
+    "orderNow": "Order Now",
+    "basePrice": "Price",
+    "form": {
+      "title": "Order Request",
+      "fullName": "Full Name",
+      "phone": "Phone Number",
+      "location": "Location (City / Area)",
+      "quantity": "Quantity",
+      "email": "Email (Optional)",
+      "notes": "Notes / Instructions",
+      "notesPlaceholder": "Describe your design needs, size, or specific requirements...",
+      "disclaimer": "This is a request only. Final pricing, design confirmation, and payment are handled offline.",
+      "agreeCheckbox": "I understand and agree",
+      "submitButton": "Submit Order Request",
+      "submitting": "Submitting..."
+    },
+    "success": {
+      "title": "Order Received",
+      "message": "Thank you. Our team will contact you shortly to confirm details.",
+      "backButton": "Back to Services"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "PrintProducts": {
+    "menus": {
+      "name": "Restaurant Menus",
+      "description": "High-quality laminated menus, tri-fold or booklet styles."
+    },
+    "business-cards": {
+      "name": "Business Cards",
+      "description": "Premium matte or glossy finish business cards."
+    },
+    "flyers": {
+      "name": "Flyers & Brochures",
+      "description": "A5, A4 flyers for events and promotions."
+    },
+    "wedding-cards": {
+      "name": "Wedding Invitations",
+      "description": "Elegant custom designs with premium envelopes."
+    },
+    "banners": {
+      "name": "Roll-up Banners",
+      "description": "Standard 85x200cm roll-up banners with stand."
+    },
+    "stickers": {
+      "name": "Custom Stickers",
+      "description": "Die-cut labels for products or branding."
+    },
+    "tshirts": {
+      "name": "T-Shirt Printing",
+      "description": "Cotton t-shirts with heat press or screen printing."
+    },
+    "mugs": {
+      "name": "Custom Mugs",
+      "description": "Ceramic mugs with your logo or photo."
+    }
+  },
   "Pricing": {
     "title": "Simple, Transparent Pricing",
     "subtitle": "Choose the right service for your career goals.",

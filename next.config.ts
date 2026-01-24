@@ -4,7 +4,14 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
 const nextConfig: NextConfig = {
-  // Add future Next.js options here
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "zemfyznetvnfzfkzauyg.supabase.co",
+      },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);
