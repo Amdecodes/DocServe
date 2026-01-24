@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
-import { FileText, Printer, Megaphone, ArrowRight } from "lucide-react";
+import { FileText, Printer, Headset, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Services() {
@@ -27,19 +27,29 @@ export default function Services() {
       id: "printing",
       title: t("printing.title"),
       icon: Printer,
-      items: [],
-      comingSoon: true,
+      items: [
+        { label: t("printing.invitations") },
+        { label: t("printing.certificates") },
+        { label: t("printing.menus") },
+      ],
+      comingSoon: false,
       action: t("printing.action"),
       color: "bg-teal-50 text-teal-600",
+      href: "/print-orders",
     },
     {
-      id: "promotional",
-      title: t("promotional.title"),
-      icon: Megaphone,
-      items: [],
-      comingSoon: true,
-      action: t("promotional.action"),
+      id: "virtual-assistance",
+      title: t("virtualAssistance.title"),
+      icon: Headset,
+      items: [
+        { label: t("virtualAssistance.jobApplications") },
+        { label: t("virtualAssistance.emails") },
+        { label: t("virtualAssistance.admin") },
+      ],
+      comingSoon: false,
+      action: t("virtualAssistance.action"),
       color: "bg-purple-50 text-purple-600",
+      href: "/form/virtual-assistance",
     },
   ];
 
@@ -92,7 +102,10 @@ export default function Services() {
 
               <Link
                 href={
-                  category.id === "digital" ? "/resumes/templates" : "/contact"
+                  category.href ||
+                  (category.id === "digital"
+                    ? "/resumes/templates"
+                    : "/contact")
                 }
                 className={`w-full ${category.comingSoon ? "pointer-events-none opacity-50" : ""}`}
               >

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getPriceForService, PRICE_CURRENCY } from "@/config/pricing";
 
 export async function POST(req: Request) {
   try {
@@ -85,9 +86,12 @@ export async function POST(req: Request) {
     const payloadLastName = lastName || personal.lastName;
     const payloadPhone = phone || personal.phone;
 
+    // Get price based on service type
+    const amount = getPriceForService(order.service_type);
+
     const payload = {
-      amount: "500", // Fixed amount for now as per requirement (500 ETB in UI)
-      currency: "ETB",
+      amount: amount.toString(),
+      currency: PRICE_CURRENCY,
       email: payloadEmail,
       first_name: payloadFirstName,
       last_name: payloadLastName,

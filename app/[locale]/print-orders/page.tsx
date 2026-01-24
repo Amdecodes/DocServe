@@ -3,6 +3,9 @@ import { ProductCard } from "@/components/print/ProductCard";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { PrintProduct } from "@/types/print";
+import { Link } from "@/lib/navigation";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 interface PageProps {
   params: { locale: string };
@@ -32,6 +35,20 @@ export default async function PrintOrdersPage({
 
       <main className="grow py-12 px-4 md:px-8 lg:px-12">
         <div className="max-w-7xl mx-auto">
+          {/* Back Button */}
+          <div className="mb-6">
+            <Button
+              variant="ghost"
+              asChild
+              className="pl-0 hover:bg-transparent text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <Link href="/services" className="flex items-center gap-2">
+                <ChevronLeft className="w-4 h-4" />
+                {t("success.backButton")}
+              </Link>
+            </Button>
+          </div>
+
           {/* 2.1 Header */}
           <div className="text-center mb-12 max-w-2xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">

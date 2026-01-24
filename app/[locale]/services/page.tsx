@@ -1,4 +1,4 @@
-import { FileText, Headset } from "lucide-react";
+import { FileText, Headset, Printer } from "lucide-react";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import Header from "@/components/landing/Header"; // Reusing landing header for now
 import Footer from "@/components/landing/Footer"; // Reusing landing footer for now
@@ -38,6 +38,14 @@ export default function ServicesPage() {
               price={t("vaPrice")}
               href="/form/virtual-assistance"
               icon={<Headset className="h-6 w-6" />}
+            />
+
+            <ServiceCard
+              title={t("printTitle")}
+              description={t("printDescription")}
+              price={t("printPrice")}
+              href="/print-orders"
+              icon={<Printer className="h-6 w-6" />}
             />
           </div>
         </div>

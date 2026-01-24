@@ -57,13 +57,12 @@
       "academic": "ትምህርታዊ ሰነዶች",
       "action": "ጥያቄ ያቅርቡ"
     },
-    "promotional": {
-      "title": "ብራንዲንግ እና ፕሮሞሽናል",
-      "banners": "ባነሮች",
-      "tshirts": "ቲ-ሸርቶች",
-      "mugs": "ማጎች",
-      "stickers": "ስቲከሮች",
-      "action": "ዋጋ ይጠይቁ"
+    "virtualAssistance": {
+      "title": "ቨርቹዋል አሲስታንስ",
+      "jobApplications": "የስራ ማመልከቻዎች",
+      "emails": "ኢሜይል አስተዳደር",
+      "admin": "አስተዳደራዊ ድጋፍ",
+      "action": "አገልግሎት ይጠይቁ"
     }
   },
   "WhyChooseUs": {
@@ -119,6 +118,9 @@
     "vaTitle": "ቨርቹዋል አሲስታንስ",
     "vaDescription": "ለርቀት ስራዎችዎ እና ለአስተዳደራዊ ፍላጎቶችዎ የባለሙያ ድጋፍ ያግኙ።",
     "vaPrice": "ዋጋ ይጠይቁ",
+    "printTitle": "ህትመት እና ልዩ ትዕዛዞች",
+    "printDescription": "ሜኑዎች፣ ፖስተሮች፣ ቢዝነስ ካርዶች እና ሌሎች የህትመት ስራዎች እዘዙ።",
+    "printPrice": "በስምምነት",
     "comingSoon": "ተጨማሪ አገልግሎቶች በቅርብ ቀን"
   },
   "ServiceCard": {

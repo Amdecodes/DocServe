@@ -57,13 +57,12 @@
       "academic": "Academic Documents",
       "action": "Submit Request"
     },
-    "promotional": {
-      "title": "Branding & Promotional Items",
-      "banners": "Banners",
-      "tshirts": "T-Shirts",
-      "mugs": "Mugs",
-      "stickers": "Stickers",
-      "action": "Request a Quote"
+    "virtualAssistance": {
+      "title": "Virtual Assistance",
+      "jobApplications": "Job Applications",
+      "emails": "Email Management",
+      "admin": "Admin Support",
+      "action": "Request Service"
     }
   },
   "WhyChooseUs": {
@@ -119,6 +118,9 @@
     "vaTitle": "Virtual Assistance",
     "vaDescription": "Get professional virtual assistance for your remote tasks and administrative needs.",
     "vaPrice": "Request a Quote",
+    "printTitle": "Print & Custom Orders",
+    "printDescription": "Order menus, flyers, business cards, and other custom printed materials.",
+    "printPrice": "Custom Pricing",
     "comingSoon": "More Services Coming Soon"
   },
   "ServiceCard": {

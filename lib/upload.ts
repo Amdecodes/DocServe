@@ -105,6 +105,7 @@ export async function uploadPdf(
 
 export async function getSignedUrl(
   path: string,
+  downloadName: string = "document.pdf",
 ): Promise<{ signedUrl: string; expiresAt: Date } | null> {
   const client = getSupabaseClientId();
   if (!client) return null;
@@ -113,7 +114,7 @@ export async function getSignedUrl(
   const { data, error } = await client.storage
     .from(BUCKET_NAME)
     .createSignedUrl(path, expiresInSeconds, {
-      download: "Resume.pdf",
+      download: downloadName,
     });
 
   if (error || !data) {

@@ -325,8 +325,9 @@ export async function generateAIContent(
   );
 
   // Extract and sanitize inputs
+  const personalInfo = cvData.personalInfo || {};
   const jobTitle =
-    sanitize(cvData.personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
+    sanitize(personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
   const experienceLevel = calculateExperienceLevel(cvData.experience);
   const industry = sanitize(
     extractIndustry(cvData.experience),

@@ -34,8 +34,21 @@ export async function GET(req: NextRequest) {
   // "Content-Disposition: attachment" header which is now default in getSignedUrl()
   // and might not be present in older cached URLs.
   try {
-    const predictablePath = `orders/${orderId}/cv.pdf`;
-    const freshLink = await getSignedUrl(predictablePath);
+    let freshLink;
+    const downloadName = order.service_type.startsWith("agreement:")
+      ? "Agreement.pdf"
+      : "CV.pdf";
+
+    // 1. Try generic document path (New standard)
+    freshLink = await getSignedUrl(
+      `orders/${orderId}/document.pdf`,
+      downloadName,
+    );
+
+    // 2. Fallback to legacy path (Old CVs)
+    if (!freshLink) {
+      freshLink = await getSignedUrl(`orders/${orderId}/cv.pdf`, downloadName);
+    }
 
     if (freshLink) {
       // Update DB with the latest valid link (optional but good for caching elsewhere)
