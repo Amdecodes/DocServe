@@ -48,6 +48,9 @@ export async function PATCH(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(`/api/admin/print-orders/${params.id} PATCH error`, error);
-    return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update order" },
+      { status: 500 },
+    );
   }
 }

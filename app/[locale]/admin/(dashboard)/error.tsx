@@ -37,7 +37,8 @@ export default function Error({
           Something went wrong!
         </h2>
         <p className="text-gray-500 max-w-sm">
-          {error.message || "An unexpected error occurred while loading the dashboard."}
+          {error.message ||
+            "An unexpected error occurred while loading the dashboard."}
         </p>
       </div>
       <div className="flex gap-4">

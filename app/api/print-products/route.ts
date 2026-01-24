@@ -8,7 +8,10 @@ export async function GET(request: Request) {
   const productId = searchParams.get("id");
 
   // Guard against missing Supabase config in development to avoid noisy ECONNRESET errors
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
     return NextResponse.json({ products: [] }, { status: 200 });
   }
 
@@ -17,7 +20,9 @@ export async function GET(request: Request) {
 
     let query = supabase
       .from("print_products")
-      .select("id,name,description,base_price,image_url,active,created_at, variations:print_product_variations(id, product_id, name, image_url)")
+      .select(
+        "id,name,description,base_price,image_url,active,created_at, variations:print_product_variations(id, product_id, name, image_url)",
+      )
       .eq("active", true);
 
     if (productId) {
@@ -32,7 +37,10 @@ export async function GET(request: Request) {
     if (productId) {
       const product = data?.[0];
       if (!product) {
-        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 },
+        );
       }
       return NextResponse.json({ product });
     }

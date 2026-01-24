@@ -65,12 +65,13 @@ export async function getResumeOrders() {
   } catch (error: any) {
     console.error("Database Error in getResumeOrders:", error);
     if (error.message?.includes("Can't reach database server")) {
-      throw new Error("Unable to connect to the database. The server may be unreachable.");
+      throw new Error(
+        "Unable to connect to the database. The server may be unreachable.",
+      );
     }
     throw error;
   }
 }
-
 
 export async function getPrintOrders() {
   try {
@@ -82,7 +83,9 @@ export async function getPrintOrders() {
   } catch (error: any) {
     console.error("Database Error in getPrintOrders:", error);
     if (error.message?.includes("Can't reach database server")) {
-      throw new Error("Unable to connect to the database. The server may be unreachable.");
+      throw new Error(
+        "Unable to connect to the database. The server may be unreachable.",
+      );
     }
     throw error;
   }
@@ -104,7 +107,6 @@ export async function updatePrintOrderStatus(id: string, status: any) {
   }
 }
 
-
 export async function getVARequests() {
   try {
     await requireAdmin();
@@ -116,7 +118,9 @@ export async function getVARequests() {
   } catch (error: any) {
     console.error("Database Error in getVARequests:", error);
     if (error.message?.includes("Can't reach database server")) {
-      throw new Error("Unable to connect to the database. The server may be unreachable.");
+      throw new Error(
+        "Unable to connect to the database. The server may be unreachable.",
+      );
     }
     throw error;
   }
@@ -151,13 +155,13 @@ export async function getProducts() {
     orderBy: { created_at: "desc" },
     include: {
       _count: {
-        select: { orders: true }
+        select: { orders: true },
       },
       variations: true,
-    }
+    },
   });
 
-  return products.map(p => ({
+  return products.map((p) => ({
     ...p,
     base_price: p.base_price.toNumber(),
   }));
@@ -189,7 +193,10 @@ export async function createProduct(data: {
 
   revalidatePath("/admin/products");
   revalidatePath("/api/print-products");
-  return { success: true, product: { ...product, base_price: product.base_price.toNumber() } };
+  return {
+    success: true,
+    product: { ...product, base_price: product.base_price.toNumber() },
+  };
 }
 
 export async function updateProduct(
@@ -201,7 +208,7 @@ export async function updateProduct(
     image_url?: string;
     active?: boolean;
     variations?: { id?: string; name: string; image_url: string }[];
-  }
+  },
 ) {
   try {
     await requireAdmin();
@@ -210,127 +217,152 @@ export async function updateProduct(
 
     // Fetch current state to handle image cleanups
     const currentProduct = await prisma.printProduct.findUnique({
-        where: { id },
-        include: { variations: true }
+      where: { id },
+      include: { variations: true },
     });
 
     if (currentProduct) {
-        const imagesToDelete: string[] = [];
+      const imagesToDelete: string[] = [];
 
-        // 1. Check if main product image changed
-        if (data.image_url && currentProduct.image_url && data.image_url !== currentProduct.image_url) {
-            imagesToDelete.push(currentProduct.image_url);
-        }
+      // 1. Check if main product image changed
+      if (
+        data.image_url &&
+        currentProduct.image_url &&
+        data.image_url !== currentProduct.image_url
+      ) {
+        imagesToDelete.push(currentProduct.image_url);
+      }
 
-        // 2. Check variations
-        if (variations) {
-            const incomingIds = variations.map(v => v.id).filter(Boolean) as string[];
+      // 2. Check variations
+      if (variations) {
+        const incomingIds = variations
+          .map((v) => v.id)
+          .filter(Boolean) as string[];
 
-            // A. Identify deleted variations => Request deletion of their images
-            const varsToDelete = currentProduct.variations.filter(v => !incomingIds.includes(v.id));
-            varsToDelete.forEach(v => {
-                if (v.image_url) imagesToDelete.push(v.image_url);
-            });
+        // A. Identify deleted variations => Request deletion of their images
+        const varsToDelete = currentProduct.variations.filter(
+          (v) => !incomingIds.includes(v.id),
+        );
+        varsToDelete.forEach((v) => {
+          if (v.image_url) imagesToDelete.push(v.image_url);
+        });
 
-            // B. Identify updated variations => Check if image changed
-            variations.forEach(newVar => {
-                if (newVar.id) {
-                    const oldVar = currentProduct.variations.find(v => v.id === newVar.id);
-                    // If image URL differs, delete the old one
-                    if (oldVar && oldVar.image_url && oldVar.image_url !== newVar.image_url) {
-                         imagesToDelete.push(oldVar.image_url);
-                    }
-                }
-            });
-        }
+        // B. Identify updated variations => Check if image changed
+        variations.forEach((newVar) => {
+          if (newVar.id) {
+            const oldVar = currentProduct.variations.find(
+              (v) => v.id === newVar.id,
+            );
+            // If image URL differs, delete the old one
+            if (
+              oldVar &&
+              oldVar.image_url &&
+              oldVar.image_url !== newVar.image_url
+            ) {
+              imagesToDelete.push(oldVar.image_url);
+            }
+          }
+        });
+      }
 
-        // Process file system deletions
-        if (imagesToDelete.length > 0) {
-            // We don't await this to block the UI, but we log errors inside the helper
-            Promise.all(imagesToDelete.map(url => deleteFileFromUrl(url)));
-        }
+      // Process file system deletions
+      if (imagesToDelete.length > 0) {
+        // We don't await this to block the UI, but we log errors inside the helper
+        Promise.all(imagesToDelete.map((url) => deleteFileFromUrl(url)));
+      }
     }
 
     const product = await prisma.$transaction(async (tx) => {
-        const p = await tx.printProduct.update({
-            where: { id },
-            data: productData,
+      const p = await tx.printProduct.update({
+        where: { id },
+        data: productData,
+      });
+
+      if (variations) {
+        const existingVars = await tx.printProductVariation.findMany({
+          where: { product_id: id },
         });
+        const existingIds = existingVars.map((v) => v.id);
+        const incomingIds = variations
+          .map((v) => v.id)
+          .filter(Boolean) as string[];
 
-        if (variations) {
-            const existingVars = await tx.printProductVariation.findMany({ where: { product_id: id } });
-            const existingIds = existingVars.map(v => v.id);
-            const incomingIds = variations.map(v => v.id).filter(Boolean) as string[];
-
-            // Delete removed variations from DB
-            const toDelete = existingIds.filter(eid => !incomingIds.includes(eid));
-            if (toDelete.length > 0) {
-                await tx.printProductVariation.deleteMany({ where: { id: { in: toDelete } } });
-            }
-
-            // Update or Create rest
-            for (const v of variations) {
-                if (v.id) {
-                    await tx.printProductVariation.update({
-                        where: { id: v.id },
-                        data: { name: v.name, image_url: v.image_url }
-                    });
-                } else {
-                    await tx.printProductVariation.create({
-                        data: { product_id: id, name: v.name, image_url: v.image_url }
-                    });
-                }
-            }
+        // Delete removed variations from DB
+        const toDelete = existingIds.filter(
+          (eid) => !incomingIds.includes(eid),
+        );
+        if (toDelete.length > 0) {
+          await tx.printProductVariation.deleteMany({
+            where: { id: { in: toDelete } },
+          });
         }
-        return p;
+
+        // Update or Create rest
+        for (const v of variations) {
+          if (v.id) {
+            await tx.printProductVariation.update({
+              where: { id: v.id },
+              data: { name: v.name, image_url: v.image_url },
+            });
+          } else {
+            await tx.printProductVariation.create({
+              data: { product_id: id, name: v.name, image_url: v.image_url },
+            });
+          }
+        }
+      }
+      return p;
     });
 
     revalidatePath("/admin/products");
     revalidatePath("/api/print-products");
-    return { success: true, product: { ...product, base_price: product.base_price.toNumber() } };
+    return {
+      success: true,
+      product: { ...product, base_price: product.base_price.toNumber() },
+    };
   } catch (error) {
-      console.error("Failed to update product", error);
-      return { success: false };
+    console.error("Failed to update product", error);
+    return { success: false };
   }
 }
 
 export async function deleteProduct(id: string) {
-    try {
-        await requireAdmin();
-    
-        // 1. Fetch product and variations to get image URLs
-        const product = await prisma.printProduct.findUnique({
-             where: { id },
-             include: { variations: true }
-        });
+  try {
+    await requireAdmin();
 
-        if (!product) {
-             return { success: false };
-        }
+    // 1. Fetch product and variations to get image URLs
+    const product = await prisma.printProduct.findUnique({
+      where: { id },
+      include: { variations: true },
+    });
 
-        // 2. Delete files from storage
-        const urlsToDelete: string[] = [];
-        if (product.image_url) urlsToDelete.push(product.image_url);
-        product.variations.forEach(v => {
-             if (v.image_url) urlsToDelete.push(v.image_url);
-        });
-
-        // Execute deletions in parallel (fire and forget mostly, but we await to be nice)
-        await Promise.all(urlsToDelete.map(url => deleteFileFromUrl(url)));
-
-        // 3. Delete from DB
-        await prisma.printProduct.delete({
-            where: { id },
-        });
-    
-        revalidatePath("/admin/products");
-        return { success: true };
-    } catch (error) {
-        console.error("Failed to delete product", error);
-        return { success: false };
+    if (!product) {
+      return { success: false };
     }
+
+    // 2. Delete files from storage
+    const urlsToDelete: string[] = [];
+    if (product.image_url) urlsToDelete.push(product.image_url);
+    product.variations.forEach((v) => {
+      if (v.image_url) urlsToDelete.push(v.image_url);
+    });
+
+    // Execute deletions in parallel (fire and forget mostly, but we await to be nice)
+    await Promise.all(urlsToDelete.map((url) => deleteFileFromUrl(url)));
+
+    // 3. Delete from DB
+    await prisma.printProduct.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/products");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete product", error);
+    return { success: false };
+  }
 }
 
 export async function toggleProductStatus(id: string, currentStatus: boolean) {
-    return updateProduct(id, { active: !currentStatus });
+  return updateProduct(id, { active: !currentStatus });
 }

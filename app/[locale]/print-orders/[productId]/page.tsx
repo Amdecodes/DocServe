@@ -18,11 +18,14 @@ export default async function PrintOrderProductPage({
 }) {
   const { productId } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  
+
   // Fetch product data from our API (which includes variations now)
-  const response = await fetch(`${baseUrl}/api/print-products?id=${productId}`, {
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `${baseUrl}/api/print-products?id=${productId}`,
+    {
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
     notFound();
@@ -39,7 +42,7 @@ export default async function PrintOrderProductPage({
       <Header />
 
       <main className="grow py-8 px-4 md:px-8">
-         <ProductPageContainer product={product} /> 
+        <ProductPageContainer product={product} />
       </main>
 
       <Footer />

@@ -8,7 +8,11 @@ interface PageProps {
   params: { locale: string };
 }
 
-export default async function PrintOrdersPage({ params }: { params: Promise<PageProps["params"]> }) {
+export default async function PrintOrdersPage({
+  params,
+}: {
+  params: Promise<PageProps["params"]>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "PrintOrders" });
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

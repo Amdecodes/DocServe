@@ -42,7 +42,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between gap-4">
           <div className="text-sm">
-            <span className="text-gray-500 block text-xs">{t("basePrice")}</span>
+            <span className="text-gray-500 block text-xs">
+              {t("basePrice")}
+            </span>
             <span className="font-semibold text-teal-700">
               {product.base_price} ETB
             </span>

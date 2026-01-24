@@ -34,6 +34,9 @@ export async function GET() {
     return NextResponse.json({ orders: data ?? [] });
   } catch (error) {
     console.error("/api/admin/print-orders GET error", error);
-    return NextResponse.json({ error: "Failed to load orders" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to load orders" },
+      { status: 500 },
+    );
   }
 }

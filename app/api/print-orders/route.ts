@@ -31,10 +31,7 @@ export async function POST(request: Request) {
     const payload = parsed.data;
 
     // Confirm product exists and is active
-    const {
-      data: product,
-      error: productError,
-    } = await supabase
+    const { data: product, error: productError } = await supabase
       .from("print_products")
       .select("id,name")
       .eq("id", payload.product_id)
@@ -43,7 +40,10 @@ export async function POST(request: Request) {
 
     if (productError) {
       console.error("print-orders product lookup error", productError);
-      return NextResponse.json({ error: "Unable to verify product" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Unable to verify product" },
+        { status: 500 },
+      );
     }
 
     if (!product) {
@@ -52,14 +52,14 @@ export async function POST(request: Request) {
 
     let variationName = null;
     if (payload.variation_id) {
-       const { data: variation } = await supabase
-         .from("print_product_variations")
-         .select("name")
-         .eq("id", payload.variation_id)
-         .maybeSingle();
-       if (variation) {
-         variationName = variation.name;
-       }
+      const { data: variation } = await supabase
+        .from("print_product_variations")
+        .select("name")
+        .eq("id", payload.variation_id)
+        .maybeSingle();
+      if (variation) {
+        variationName = variation.name;
+      }
     }
 
     const { error: insertError } = await supabase.from("print_orders").insert({
@@ -79,12 +79,18 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error("print-orders insert error", insertError);
-      return NextResponse.json({ error: "Failed to submit order" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to submit order" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("/api/print-orders POST error", error);
-    return NextResponse.json({ error: "Failed to submit order" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to submit order" },
+      { status: 500 },
+    );
   }
 }

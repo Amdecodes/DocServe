@@ -20,7 +20,7 @@ export type PrintOrderState = {
 
 export async function submitPrintOrder(
   prevState: PrintOrderState,
-  formData: FormData
+  formData: FormData,
 ): Promise<PrintOrderState> {
   // Simulate delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
