@@ -19,6 +19,7 @@ export default function Services() {
         { label: t("digital.agreement") },
         { label: t("digital.editing") },
       ],
+      comingSoon: false,
       action: t("digital.action"),
       color: "bg-blue-50 text-blue-600",
     },
@@ -26,12 +27,8 @@ export default function Services() {
       id: "printing",
       title: t("printing.title"),
       icon: Printer,
-      items: [
-        { label: t("printing.invitations") },
-        { label: t("printing.certificates") },
-        { label: t("printing.menus") },
-        { label: t("printing.academic") },
-      ],
+      items: [],
+      comingSoon: true,
       action: t("printing.action"),
       color: "bg-teal-50 text-teal-600",
     },
@@ -39,12 +36,8 @@ export default function Services() {
       id: "promotional",
       title: t("promotional.title"),
       icon: Megaphone,
-      items: [
-        { label: t("promotional.banners") },
-        { label: t("promotional.tshirts") },
-        { label: t("promotional.mugs") },
-        { label: t("promotional.stickers") },
-      ],
+      items: [],
+      comingSoon: true,
       action: t("promotional.action"),
       color: "bg-purple-50 text-purple-600",
     },
@@ -80,27 +73,38 @@ export default function Services() {
                 {category.title}
               </h3>
 
-              <ul className="space-y-4 mb-8 flex-grow">
-                {category.items.map((item, idx) => (
-                  <li key={idx} className="flex items-center text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mr-3" />
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
+              {category.comingSoon ? (
+                <div className="mb-8 grow flex items-center justify-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                  <span className="text-gray-400 font-medium italic">
+                    Coming Soon
+                  </span>
+                </div>
+              ) : (
+                <ul className="space-y-4 mb-8 grow">
+                  {category.items.map((item, idx) => (
+                    <li key={idx} className="flex items-center text-gray-600">
+                      <div className="w-1.5 h-1.5 bg-secondary rounded-full mr-3" />
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <Link
                 href={
                   category.id === "digital" ? "/resumes/templates" : "/contact"
                 }
-                className="w-full"
+                className={`w-full ${category.comingSoon ? "pointer-events-none opacity-50" : ""}`}
               >
                 <Button
                   variant="outline"
+                  disabled={category.comingSoon}
                   className="w-full justify-between group"
                 >
-                  {category.action}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  {category.comingSoon ? "Not Available" : category.action}
+                  {!category.comingSoon && (
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  )}
                 </Button>
               </Link>
             </motion.div>
