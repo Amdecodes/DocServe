@@ -9,7 +9,7 @@ const intlMiddleware = createMiddleware({
   localePrefix: "always",
 });
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // 1. Run i18n middleware first to generate the base response (handling redirects, etc)
   const response = intlMiddleware(request);
 
