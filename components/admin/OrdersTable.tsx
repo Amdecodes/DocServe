@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updatePrintOrderStatus } from "@/actions/admin";
+import { PrintOrderStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { Search, MapPin, Phone, Loader2, Eye, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,7 +16,7 @@ interface PrintOrder {
   phone: string;
   location: string;
   quantity: number;
-  status: string;
+  status: PrintOrderStatus;
   created_at: Date;
   notes: string | null;
   email: string | null;
@@ -42,7 +43,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     return matchesStatus && matchesSearch;
   });
 
-  const handleStatusChange = async (id: string, newStatus: string) => {
+  const handleStatusChange = async (id: string, newStatus: PrintOrderStatus) => {
     setUpdatingId(id);
     await updatePrintOrderStatus(id, newStatus);
     setUpdatingId(null);
@@ -162,7 +163,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                           )}
                           value={order.status}
                           onChange={(e) =>
-                            handleStatusChange(order.id, e.target.value)
+                            handleStatusChange(order.id, e.target.value as PrintOrderStatus)
                           }
                           disabled={updatingId === order.id}
                         >
