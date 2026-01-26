@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { DEFAULT_TEMPLATE } from "@/config/templates";
 import { renderCvToHtml } from "@/lib/pdf/renderer";
 import { renderAgreementToHtml } from "@/lib/pdf/agreement-renderer";
 import { generatePdfFromHtml } from "@/lib/pdf/generator";
@@ -32,14 +33,28 @@ export async function processOrderPdf(
       const cvData = formData as unknown as CVData & {
         selectedTemplate?: string;
       };
-      const templateId = cvData.selectedTemplate || "modern";
+      const templateId = cvData.selectedTemplate || DEFAULT_TEMPLATE;
+      console.log(`[PDF Pipeline] Using template: ${templateId} (from cvData.selectedTemplate: ${cvData.selectedTemplate})`);
+      
+      // Store original photo URL for cleanup
+      const originalPhotoUrl = cvData.personalInfo?.photo;
+      
+      // Convert photo to base64 if present (fixes broken images in PDF)
+      if (originalPhotoUrl) {
+        const { imageUrlToBase64 } = await import("@/lib/pdf/image-utils");
+        cvData.personalInfo.photo = await imageUrlToBase64(originalPhotoUrl);
+        console.log(`[PDF Pipeline] Converted photo to base64 for PDF embedding`);
+      }
+      
       html = await renderCvToHtml(cvData as CVData, templateId);
 
       // 4. Cleanup Image (Privacy Rule: Delete user photo after PDF generation)
-      if (cvData.personalInfo?.photo) {
-        deleteFileFromUrl(cvData.personalInfo.photo).catch((err) =>
+      // Now that image is embedded in PDF as base64, delete the source file to save storage
+      if (originalPhotoUrl) {
+        deleteFileFromUrl(originalPhotoUrl).catch((err) =>
           console.error("Photo cleanup failed", err),
         );
+        console.log(`[PDF Pipeline] Deleted source image from storage: ${originalPhotoUrl}`);
       }
     }
 

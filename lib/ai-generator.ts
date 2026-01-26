@@ -206,59 +206,85 @@ Output only the rewritten bullets, one per line.`;
 // GEMINI API CALL
 // ============================================================================
 
+// Hardcode the model to ensure we use a supported version (gemini-2.5-flash)
+// process.env.GEMINI_API_URL might point to deprecated models
+const MODEL_ID = "gemini-2.5-flash";
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent`;
+
 async function callGeminiAPI(userPrompt: string): Promise<string> {
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+  const maxRetries = 3;
+  let attempt = 0;
+  
+  while (attempt < maxRetries) {
+    try {
+      const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ],
-      generationConfig: {
-        temperature: 0.4, // Lower = more consistent, less creative
-        maxOutputTokens: 512, // Limit output length
-        topP: 0.8,
-        topK: 40,
-      },
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_HARASSMENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_HATE_SPEECH",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-      ],
-    }),
-  });
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 512,
+            topP: 0.8,
+            topK: 40,
+          },
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+          ],
+        }),
+      });
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error("[Gemini API] Error response:", error);
-    throw new Error(`Gemini API failed: ${response.status}`);
+      if (response.status === 429) {
+        attempt++;
+        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+        console.warn(`[Gemini API] 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetries})`);
+        if (attempt >= maxRetries) throw new Error(`Gemini API 429 Quota Exceeded after ${maxRetries} retries`);
+        
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[Gemini API] Error response:", error);
+        throw new Error(`Gemini API failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      return cleanAIOutput(text);
+
+    } catch (e) {
+      if ((e as Error).message.includes("429")) throw e;
+      // If network error, maybe retry? For now only retry 429 explicitly handling loop
+      console.error("[Gemini API] Network/Unknown error:", e);
+      throw e;
+    }
   }
-
-  const result = await response.json();
-
-  // Extract text from response
-  const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-  // Clean up common AI artifacts
-  return cleanAIOutput(text);
+  
+  throw new Error("Gemini API failed after retries");
 }
 
 /**

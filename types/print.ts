@@ -27,4 +27,4 @@ export interface NewPrintOrderPayload {
   notes?: string | null;
 }
 
-export type PrintOrderStatus = "pending" | "contacted" | "completed";
+export type PrintOrderStatus = "pending" | "contacted" | "completed" | "cancelled";

@@ -23,6 +23,65 @@ const lazyTemplates: Record<
   classic: lazy(() =>
     import("./layouts/Classic").then((m) => ({ default: m.ClassicLayout })),
   ),
+  golden: lazy(() =>
+    import("./layouts/Golden").then((m) => ({ default: m.GoldenLayout })),
+  ),
+  elegant: lazy(() =>
+    import("./layouts/Elegant").then((m) => ({ default: m.ElegantLayout })),
+  ),
+  "modern-dark": lazy(() =>
+    import("./layouts/ModernDark").then((m) => ({ default: m.ModernDarkLayout })),
+  ),
+  "modern-sidebar": lazy(() =>
+    import("./layouts/ModernSidebar").then((m) => ({ default: m.ModernSidebarLayout })),
+  ),
+};
+
+const lazyCoverLetters: Record<
+  string,
+  React.LazyExoticComponent<
+    React.ComponentType<{
+      coverLetter: CoverLetterData;
+      personalInfo: PersonalInfo;
+    }>
+  >
+> = {
+  modern: lazy(() =>
+    import("./layouts/ModernCoverLetter").then((m) => ({
+      default: m.ModernCoverLetter,
+    })),
+  ),
+  golden: lazy(() =>
+    import("./layouts/GoldenCoverLetter").then((m) => ({
+      default: m.GoldenCoverLetter,
+    })),
+  ),
+  elegant: lazy(() =>
+    import("./layouts/ElegantCoverLetter").then((m) => ({
+      default: m.ElegantCoverLetter,
+    })),
+  ),
+  "modern-dark": lazy(() =>
+    import("./layouts/ModernDarkCoverLetter").then((m) => ({
+      default: m.ModernDarkCoverLetter,
+    })),
+  ),
+  "modern-sidebar": lazy(() =>
+    import("./layouts/ModernSidebarCoverLetter").then((m) => ({
+      default: m.ModernSidebarCoverLetter,
+    })),
+  ),
+  // Fallbacks for others to Modern or their own if created
+  professional: lazy(() =>
+    import("./layouts/ModernCoverLetter").then((m) => ({
+      default: m.ModernCoverLetter,
+    })),
+  ),
+  classic: lazy(() =>
+    import("./layouts/ModernCoverLetter").then((m) => ({
+      default: m.ModernCoverLetter,
+    })),
+  ),
 };
 
 // Cover Letter Preview Component
@@ -117,6 +176,12 @@ export function CVPreview() {
     return lazyTemplates[selectedTemplate] || lazyTemplates[DEFAULT_TEMPLATE];
   }, [selectedTemplate]);
 
+  const CoverLetterComponent = useMemo(() => {
+    return (
+      lazyCoverLetters[selectedTemplate] || lazyCoverLetters[DEFAULT_TEMPLATE]
+    );
+  }, [selectedTemplate]);
+
   return (
     <div className="w-full h-full flex flex-col items-center">
       {/* Preview Tabs */}
@@ -146,19 +211,26 @@ export function CVPreview() {
       </div>
 
       {/* Preview Content */}
-      <div className="bg-white shadow-2xl w-[210mm] min-h-[297mm] origin-top scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] transition-transform">
+      <div className="bg-white shadow-2xl w-[210mm] min-h-[297mm] origin-top scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] transition-transform relative">
         <Suspense
           fallback={
             <div className="p-10 text-gray-400">Loading template...</div>
           }
         >
+          {/* Visual Page Break Overlay */}
+          <div 
+            className="absolute inset-0 pointer-events-none z-50"
+            style={{
+              background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(297mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
+            }} 
+          />
+
           {activePreview === "resume" ? (
             <TemplateComponent data={cvData} />
           ) : (
-            <CoverLetterPreviewContent
-              coverLetter={cvData.coverLetter}
-              personalInfo={cvData.personalInfo}
-              aiGenerated={cvData.aiMetadata?.generated}
+            <CoverLetterComponent
+              coverLetter={(cvData.coverLetter || {}) as CoverLetterData}
+              personalInfo={cvData.personalInfo || {}}
             />
           )}
         </Suspense>

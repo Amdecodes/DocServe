@@ -60,10 +60,12 @@ function ImageUploader({
   value,
   onChange,
   label = "Image",
+  productId,
 }: {
   value: string | null;
   onChange: (url: string) => void;
   label?: string;
+  productId?: string;
 }) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -76,8 +78,15 @@ function ImageUploader({
     try {
       const formData = new FormData();
       formData.append("file", file);
+      
+      // Use product upload endpoint if productId is provided
+      let endpoint = "/api/upload/image";
+      if (productId) {
+        endpoint = "/api/upload/product";
+        formData.append("productId", productId);
+      }
 
-      const res = await fetch("/api/upload/image", {
+      const res = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
@@ -159,6 +168,9 @@ export default function ProductsTable({ products }: ProductsTableProps) {
 
   // Selected product
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
+  // Temp ID for new products (used for organizing uploads before product is created)
+  const [tempProductId] = useState(() => `temp-${Date.now()}`);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -503,6 +515,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
             <ImageUploader
               value={formData.image_url}
               onChange={(url) => setFormData({ ...formData, image_url: url })}
+              productId={selectedProduct?.id || tempProductId}
             />
           </div>
 
@@ -549,6 +562,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                       onChange={(url) =>
                         updateVariation(index, "image_url", url)
                       }
+                      productId={selectedProduct?.id || tempProductId}
                     />
                   </div>
                   <button

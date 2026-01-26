@@ -20,21 +20,14 @@ model Order {
   customer_email  String?
   chapa_ref       String?     @unique
   paid_at         DateTime?
-  expires_at      DateTime?   @map("expires_at")
+  expires_at      DateTime?
   pdf_url         String?     @map("pdf_url")
   ai_generated    Boolean     @default(false) @map("ai_generated")
   ai_generated_at DateTime?   @map("ai_generated_at")
 }
 
-enum OrderStatus {
-  DRAFT
-  PENDING
-  PAID
-  FAILED
-}
-
 model VirtualAssistanceRequest {
-  id                     String                       @id @default(uuid())
+  id                     String                  @id @default(uuid())
   full_name              String
   phone_number           String
   email                  String?
@@ -43,30 +36,23 @@ model VirtualAssistanceRequest {
   experience_level       String
   location               String
   notes                  String?
-  status                 VirtualAssistanceStatus      @default(PENDING)
-  language               String                       @default("en")
-  source                 String                       @default("dashboard")
+  status                 VirtualAssistanceStatus @default(PENDING)
+  language               String                  @default("en")
+  source                 String                  @default("dashboard")
   disclaimer_accepted_at DateTime
-  created_at             DateTime                     @default(now())
+  created_at             DateTime                @default(now())
 
   @@map("virtual_assistance_requests")
 }
 
-enum VirtualAssistanceStatus {
-  PENDING
-  CONTACTED
-  CLOSED
-}
-
 model PrintProduct {
-  id          String   @id @default(uuid())
+  id          String                  @id @default(uuid())
   name        String
   description String?
-  base_price  Decimal  @map("base_price")
-  image_url   String?  @map("image_url")
-  active      Boolean  @default(true)
-  created_at  DateTime @default(now()) @map("created_at")
-
+  base_price  Decimal                 @map("base_price")
+  image_url   String?                 @map("image_url")
+  active      Boolean                 @default(true)
+  created_at  DateTime                @default(now()) @map("created_at")
   orders      PrintOrder[]
   variations  PrintProductVariation[]
 
@@ -87,8 +73,6 @@ model PrintOrder {
   id             String           @id @default(uuid())
   product_id     String?          @map("product_id")
   product_name   String           @map("product_name")
-  variation_id   String?          @map("variation_id")
-  variation_name String?          @map("variation_name")
   full_name      String           @map("full_name")
   phone          String
   email          String?
@@ -97,14 +81,29 @@ model PrintOrder {
   notes          String?
   status         PrintOrderStatus @default(pending)
   created_at     DateTime         @default(now()) @map("created_at")
-
-  product      PrintProduct?    @relation(fields: [product_id], references: [id], onDelete: SetNull)
+  variation_id   String?          @map("variation_id")
+  variation_name String?          @map("variation_name")
+  product        PrintProduct?    @relation(fields: [product_id], references: [id])
 
   @@map("print_orders")
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING
+  PAID
+  FAILED
+}
+
+enum VirtualAssistanceStatus {
+  PENDING
+  CONTACTED
+  CLOSED
 }
 
 enum PrintOrderStatus {
   pending
   contacted
   completed
+  cancelled
 }

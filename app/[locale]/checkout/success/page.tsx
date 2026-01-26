@@ -17,9 +17,7 @@ export default function PaymentSuccessPage() {
   const [status, setStatus] = useState<"verifying" | "success" | "failed">(
     "verifying",
   );
-  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
-  const [timeLeft, setTimeLeft] = useState<string>("");
-  const [isExpired, setIsExpired] = useState(false);
+  // Removed expiration logic. Always allow download if order is paid.
 
   useEffect(() => {
     if (!orderId) {
@@ -28,72 +26,37 @@ export default function PaymentSuccessPage() {
     }
 
     let attempts = 0;
-    const maxAttempts = 10; // Increased attempts
+    const maxAttempts = 10;
     const intervalHandle: { current: NodeJS.Timeout | null } = {
       current: null,
     };
-
     const checkPayment = async () => {
       try {
         attempts++;
         const res = await fetch(`/api/payment/verify-json?orderId=${orderId}`);
         const data = await res.json();
-
         if (data.status === "PAID" || data.status === "success") {
           setStatus("success");
-          if (data.expiresAt) {
-            setExpiresAt(new Date(data.expiresAt));
-          } else if (data.paidAt) {
-            // Fallback if expiresAt not yet set but we know paidAt: 6 hours
-            setExpiresAt(
-              new Date(new Date(data.paidAt).getTime() + 6 * 60 * 60 * 1000),
-            );
-          }
           if (intervalHandle.current) clearInterval(intervalHandle.current);
         } else if (data.status === "failed") {
           router.push(`/checkout/failed?orderId=${orderId}`);
           if (intervalHandle.current) clearInterval(intervalHandle.current);
         } else if (attempts >= maxAttempts) {
-          setStatus("success"); // Give benefit of doubt, download link will enforce checks
+          setStatus("success");
           if (intervalHandle.current) clearInterval(intervalHandle.current);
         }
       } catch (e) {
         console.error("Verification error", e);
       }
     };
-
     intervalHandle.current = setInterval(checkPayment, 2000);
     checkPayment();
-
     return () => {
       if (intervalHandle.current) clearInterval(intervalHandle.current);
     };
   }, [orderId, router]);
 
-  // Countdown Logic
-  useEffect(() => {
-    if (!expiresAt) return;
-
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = expiresAt.getTime() - now;
-
-      if (distance < 0) {
-        setIsExpired(true);
-        setTimeLeft("EXPIRED");
-        clearInterval(timer);
-      } else {
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [expiresAt]);
+  // Removed countdown logic
 
   useEffect(() => {
     if (status === "success" && orderId) {
@@ -155,42 +118,16 @@ export default function PaymentSuccessPage() {
         </h1>
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
-          {!isExpired ? (
-            <>
-              <div className="text-center mb-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                <p className="text-sm text-blue-600 font-medium mb-1">
-                  Download Available For
-                </p>
-                <p className="text-2xl font-bold text-blue-800 font-mono">
-                  {timeLeft || "..."}
-                </p>
-              </div>
-
-              <Button
-                size="lg"
-                className="w-full gap-2"
-                onClick={() =>
-                  window.open(`/api/pdf/download?orderId=${orderId}`, "_blank")
-                }
-              >
-                <Download className="w-4 h-4" />
-                Download PDF Again
-              </Button>
-            </>
-          ) : (
-            <div className="text-center p-4 bg-red-50 rounded-lg border border-red-100">
-              <p className="text-red-600 font-bold mb-2">
-                Download Period Expired
-              </p>
-              <p className="text-sm text-red-500 mb-4">
-                Your 6-hour download window has closed. Need a copy?
-              </p>
-              <Button variant="outline" className="w-full" asChild>
-                <Link href="/">Create New Resume</Link>
-              </Button>
-            </div>
-          )}
-
+          <Button
+            size="lg"
+            className="w-full gap-2"
+            onClick={() =>
+              window.open(`/api/pdf/download?orderId=${orderId}`, "_blank")
+            }
+          >
+            <Download className="w-4 h-4" />
+            Download PDF
+          </Button>
           <Button variant="outline" size="lg" className="w-full gap-2" asChild>
             <Link href="/">
               <Home className="w-4 h-4" />

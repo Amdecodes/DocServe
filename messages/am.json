@@ -63,6 +63,13 @@
       "emails": "ኢሜይል አስተዳደር",
       "admin": "አስተዳደራዊ ድጋፍ",
       "action": "አገልግሎት ይጠይቁ"
+    },
+    "agreements": {
+      "title": "የውል አገልግሎቶች",
+      "car": "የመኪና ሽያጭ ውሎች",
+      "house": "የቤት ኪራይ ውሎች",
+      "business": "የቢዝነስ ውሎች",
+      "action": "ውል ይፃፉ"
     }
   },
   "WhyChooseUs": {
@@ -104,7 +111,7 @@
     "pricing": "ዋጋዎች",
     "contact": "ያግኙን",
     "addressLine1": "አዲስ አበባ፣ ኢትዮጵያ",
-    "addressLine2": "ፈረንሳይ፣ ጉራራ",
+    "addressLine2": "",
     "terms": "ደንቦች እና ሁኔታዎች",
     "privacyPolicy": "ፕራይቬሲ ፖሊሲ",
     "rightsReserved": "መብቱ በህግ የተጠበቀ ነው።"
@@ -121,6 +128,9 @@
     "printTitle": "ህትመት እና ልዩ ትዕዛዞች",
     "printDescription": "ሜኑዎች፣ ፖስተሮች፣ ቢዝነስ ካርዶች እና ሌሎች የህትመት ስራዎች እዘዙ።",
     "printPrice": "በስምምነት",
+    "agreementTitle": "የውል አገልግሎቶች",
+    "agreementDescription": "ለመኪና ሽያጭ፣ የቤት ኪራይ እና የቢዝነስ ውሎች ህጋዊ የሆኑ ውሎች።",
+    "agreementPrice": "ከ 150 ብር ይጀምራል",
     "comingSoon": "ተጨማሪ አገልግሎቶች በቅርብ ቀን"
   },
   "ServiceCard": {
@@ -245,7 +255,7 @@
       "lastName": "ምሳሌ: ከበደ",
       "jobTitle": "ምሳሌ: ሶፍትዌር ኢንጂነር",
       "email": "abebe@example.com",
-      "phone": "+251 911 234 567",
+      "phone": "+251 911 223 344",
       "city": "አዲስ አበባ",
       "country": "ኢትዮጵያ",
       "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
@@ -483,7 +493,7 @@
       "mostPopular": "በጣም ተፈላጊ",
       "outcomeLabel": "ውጤት",
       "notesTitle": "አስፈላጊ ማስታወሻዎች",
-      "positioningLine": "ስራዎችን በእርስዎ ስም እንጠይቃለን—በሙያዊ፣ በስልት እና በቋሚነት።",
+      "positioningLine": "ስራዎችን በእርስዎ ስም እንጠይቃለን በሙያዊ፣ በስልት እና በቋሚነት።",
       "notes": {
         "1": "የCV ማጻፍ አገልግሎት ለብቻ ነው",
         "2": "ደንበኛው የCV ዝርዝሮችን ማቅረብ አለበት",
@@ -492,19 +502,19 @@
       },
       "packages": {
         "basic": {
-          "title": "Apply Assist – Basic",
+          "title": "Basic",
           "bestFor": "ለጀማሪዎች እና ለመጀመሪያ ጊዜ ስራ ፈላጊዎች",
           "features": {
             "1": "ለ10 የስራ ቦታዎች ማመልከት",
             "2": "የደንበኛውን ያለ CV መጠቀም",
             "3": "መሰረታዊ የCV ማስተካከያ",
             "4": "የማመልከቻ ክትትል",
-            "5": "ሳምንታዊ ማሻሻያ (WhatsApp/Email)"
+            "5": "ሳምንታዊ ማሻሻያ (Telegram/Email)"
           },
           "outcome": "በትንሹ ጥረት ተከታታይ ማመልከቻዎች"
         },
         "professional": {
-          "title": "Apply Assist – Professional",
+          "title": "Professional",
           "bestFor": "ለስራ ለይ ላሉ ባለሙያዎች",
           "features": {
             "1": "ለ25 የስራ ቦታዎች ማመልከት",
@@ -516,7 +526,7 @@
           "outcome": "ከፍተኛ ጥራት ያላቸው ማመልከቻዎች"
         },
         "elite": {
-          "title": "Apply Assist – Elite",
+          "title": "Elite",
           "bestFor": "ለአስቸኳይ ስራ ፈላጊዎች",
           "features": {
             "1": "ለ50 የስራ ቦታዎች ማመልከት",

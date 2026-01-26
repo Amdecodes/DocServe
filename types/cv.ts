@@ -80,6 +80,7 @@ export interface AIMetadata {
 
 export interface CVData {
   documentLanguage: DocumentLanguage; // CVs are generated in English
+  selectedTemplate?: string; // Track which template was selected for this data
   personalInfo: PersonalInfo;
   summary: string; // User's brief notes before payment, AI-generated after
   summaryNotes?: string; // Original user input for AI context

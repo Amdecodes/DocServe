@@ -1,5 +1,6 @@
 import "server-only";
 import { CVData } from "@/types/cv";
+import { THEME } from "@/config/theme";
 import { templateComponents, DEFAULT_TEMPLATE } from "@/config/templates";
 
 export async function renderCvToHtml(
@@ -38,6 +39,20 @@ export async function renderCvToHtml(
           @page { size: A4; margin: 0; }
           body { -webkit-print-color-adjust: exact; }
           .pdf-page-break { page-break-before: always; }
+          
+          /* Golden, Elegant & Modern Dark template specific background for full-page persistence */
+          ${(templateId === 'golden' || templateId === 'elegant' || templateId === 'modern-dark') ? `
+            body {
+              background: ${
+                templateId === 'golden' 
+                  ? 'linear-gradient(to right, #f3f4f6 33.333333%, white 33.333333%) !important;'
+                  : templateId === 'modern-dark'
+                    ? '#000000 !important;'
+                    : 'white !important;'
+              }
+              min-height: 100vh;
+            }
+          ` : ''}
         </style>
         <script>
             // Configure Tailwind to match your theme
@@ -45,8 +60,10 @@ export async function renderCvToHtml(
               theme: {
                 extend: {
                   colors: {
+                    primary: '${THEME.colors.primary}',
+                    secondary: '${THEME.colors.secondary}',
                     teal: {
-                      600: '#0d9488', // Match your teal-600
+                      600: '${THEME.colors.teal[600]}', 
                     }
                   }
                 }

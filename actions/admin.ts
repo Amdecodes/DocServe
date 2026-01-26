@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { VirtualAssistanceStatus } from "@prisma/client";
+import { VirtualAssistanceStatus, PrintOrderStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { deleteFileFromUrl } from "@/lib/upload";
@@ -91,7 +91,10 @@ export async function getPrintOrders() {
   }
 }
 
-export async function updatePrintOrderStatus(id: string, status: any) {
+export async function updatePrintOrderStatus(
+  id: string,
+  status: PrintOrderStatus,
+) {
   try {
     await requireAdmin();
     await prisma.printOrder.update({

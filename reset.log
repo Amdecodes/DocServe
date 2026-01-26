@@ -1,0 +1,12 @@
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "postgres", schema "public" at "db.zemfyznetvnfzfkzauyg.supabase.co:5432"
+
+The PostgreSQL database "postgres" schema "public" at "db.zemfyznetvnfzfkzauyg.supabase.co:5432" was successfully reset.
+
+🚀  Your database is now in sync with your Prisma schema. Done in 5.23s
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v6.0.0) to ./node_modules/.prisma/client in 119ms
+

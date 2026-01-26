@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getPriceForService, PRICE_CURRENCY } from "@/config/pricing";
+import { AGREEMENT_TEMPLATES } from "@/config/agreements";
 
 export async function POST(req: Request) {
   try {
@@ -84,10 +85,29 @@ export async function POST(req: Request) {
     const payloadEmail = email || personal.email;
     const payloadFirstName = firstName || personal.firstName;
     const payloadLastName = lastName || personal.lastName;
-    const payloadPhone = phone || personal.phone;
+    // Phone number stored in DB but not sent to Chapa
 
     // Get price based on service type
     const amount = getPriceForService(order.service_type);
+
+    // Determine Display Info for Chapa
+    let title = "Service";
+    let description = "Paperless Service";
+
+    if (order.service_type === "cv_writing") {
+      title = "CV Service";
+      description = "Premium CV Design";
+    } else if (order.service_type.startsWith("agreement:")) {
+      const templateId = order.service_type.split(":")[1];
+      const template = AGREEMENT_TEMPLATES.find((t) => t.id === templateId);
+      if (template) {
+        title = template.title;
+        description = template.description;
+      } else {
+        title = "Agreement Service";
+        description = "Legal Document Preparation";
+      }
+    }
 
     const payload = {
       amount: amount.toString(),
@@ -95,13 +115,13 @@ export async function POST(req: Request) {
       email: payloadEmail,
       first_name: payloadFirstName,
       last_name: payloadLastName,
-      phone_number: payloadPhone,
+      // phone_number removed - not sending to Chapa to avoid validation errors
       tx_ref: order.tx_ref, // Use the existing tx_ref (which is order.id)
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
       customization: {
-        title: "CV Service",
-        description: "Premium CV Design",
+        title,
+        description,
       },
     };
 

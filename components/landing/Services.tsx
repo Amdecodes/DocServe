@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
-import { FileText, Printer, Headset, ArrowRight } from "lucide-react";
+import { FileText, Printer, Headset, ArrowRight, Scroll } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Services() {
@@ -22,6 +22,20 @@ export default function Services() {
       comingSoon: false,
       action: t("digital.action"),
       color: "bg-blue-50 text-blue-600",
+    },
+    {
+      id: "agreements",
+      title: t("agreements.title"),
+      icon: Scroll,
+      items: [
+        { label: t("agreements.car") },
+        { label: t("agreements.house") },
+        { label: t("agreements.business") },
+      ],
+      comingSoon: false,
+      action: t("agreements.action"),
+      color: "bg-orange-50 text-orange-600",
+      href: "/agreements",
     },
     {
       id: "printing",
@@ -63,7 +77,7 @@ export default function Services() {
           <div className="h-1 w-20 bg-secondary mx-auto rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}

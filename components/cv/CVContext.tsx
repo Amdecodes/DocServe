@@ -109,18 +109,24 @@ const defaultCVData: CVData = {
 
 const CVContext = createContext<CVContextType | undefined>(undefined);
 
+import { DEFAULT_TEMPLATE, TEMPLATES } from "@/config/templates";
+
 export function CVProvider({ children }: { children: React.ReactNode }) {
   const [cvData, setCvData] = useState<CVData>(defaultCVData);
-  const [selectedTemplate, setSelectedTemplate] = useState("modern");
+  const [selectedTemplate, setSelectedTemplate] = useState(DEFAULT_TEMPLATE);
   const isMountedRef = useRef(false);
 
   // Track mount state and load persisted data
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Load template
+    // Load template from dedicated key first
     const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
-    if (savedTemplate) {
+    // Validate that the saved template actually exists in our current list
+    // If not (e.g. we removed it), fall back to default
+    const isValid = TEMPLATES.some((t: any) => t.id === savedTemplate);
+    
+    if (savedTemplate && isValid) {
       setSelectedTemplate(savedTemplate);
     }
 
@@ -134,16 +140,24 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
           // Force English CV generation even if older data stored another value
           documentLanguage: "en",
         });
+        
+        // ALSO sync selectedTemplate from cvData if it exists and is valid
+        // This ensures parity between the two storage locations
+        if (parsed.selectedTemplate && TEMPLATES.some((t: any) => t.id === parsed.selectedTemplate)) {
+          setSelectedTemplate(parsed.selectedTemplate);
+        }
       }
     } catch (e) {
       console.error("Failed to load CV data", e);
     }
   }, []);
 
-  // Persist template selection to localStorage
+  // Persist template selection to localStorage and cvData
   useEffect(() => {
     if (isMountedRef.current) {
       localStorage.setItem("paperless.selectedTemplate", selectedTemplate);
+      // Sync to cvData as well so it travels with the payload
+      setCvData(prev => ({ ...prev, selectedTemplate }));
     }
   }, [selectedTemplate]);
 

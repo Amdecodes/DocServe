@@ -17,17 +17,8 @@ export async function GET(req: NextRequest) {
     return new Response("Unauthorized", { status: 403 });
   }
 
-  // STRICT TIME CHECK: If payment was > 6 hours ago, deny access permanently.
-  // This ensures that even if the cleanup job hasn't run yet, the file is inaccessible.
-  if (order.paid_at) {
-    const hoursSincePaid =
-      (Date.now() - new Date(order.paid_at).getTime()) / (1000 * 60 * 60);
-    if (hoursSincePaid > 6) {
-      return new Response("This download link has expired (6 hour limit).", {
-        status: 410,
-      });
-    }
-  }
+  // No time check needed. If file exists in DB/Storage (it should, as we stopped auto-cleanup), allow download.
+  // We generate a fresh link every time.
 
   // 1. Always generate a fresh Signed URL with "download" disposition
   // We do not rely on the cached DB URL here because we want to enforce the
@@ -45,9 +36,22 @@ export async function GET(req: NextRequest) {
       downloadName,
     );
 
-    // 2. Fallback to legacy path (Old CVs)
+    // 2. Fallback to temp path (for files uploaded before fix)
+    if (!freshLink) {
+      freshLink = await getSignedUrl(
+        `temp/orders/${orderId}/document.pdf`,
+        downloadName,
+      );
+    }
+
+    // 3. Fallback to legacy path (Old CVs)
     if (!freshLink) {
       freshLink = await getSignedUrl(`orders/${orderId}/cv.pdf`, downloadName);
+    }
+    
+    // 4. Fallback to temp legacy path
+    if (!freshLink) {
+      freshLink = await getSignedUrl(`temp/orders/${orderId}/cv.pdf`, downloadName);
     }
 
     if (freshLink) {

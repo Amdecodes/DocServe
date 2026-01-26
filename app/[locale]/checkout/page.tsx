@@ -17,6 +17,12 @@ export default function CheckoutPage() {
   // Order state
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<{
+    title: string;
+    description: string;
+    amount: number;
+    currency: string;
+  } | null>(null);
 
   // Prevent double firing in Strict Mode
   const isInitializedRef = useRef(false);
@@ -55,6 +61,23 @@ export default function CheckoutPage() {
 
       if (storedOrderId) {
         setOrderId(storedOrderId);
+        
+        // Fetch order details
+        try {
+          const res = await fetch(`/api/orders/${storedOrderId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setOrderDetails({
+              title: data.title,
+              description: data.description,
+              amount: data.amount,
+              currency: data.currency
+            });
+          }
+        } catch (error) {
+           console.error("Failed to fetch order details", error);
+        }
+
         setIsCreatingOrder(false);
         return;
       }
@@ -163,20 +186,20 @@ export default function CheckoutPage() {
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                 <div className="space-y-1">
                   <h3 className="font-semibold text-slate-900">
-                    Premium CV Service
+                    {orderDetails?.title || "Service"}
                   </h3>
                   <div className="flex items-center gap-2 text-xs text-slate-500">
                     {/* <span className="bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-medium">
                       PD
                     </span> */}
-                    <span>Professional Design</span>
+                    <span>{orderDetails?.description || "Service Description"}</span>
                   </div>
                 </div>
                 <div className="text-right">
                   <span className="block text-2xl font-bold text-slate-900">
-                    500{" "}
+                    {orderDetails?.amount || "..."}{" "}
                     <span className="text-sm font-medium text-slate-500">
-                      ETB
+                      {orderDetails?.currency || "ETB"}
                     </span>
                   </span>
                 </div>

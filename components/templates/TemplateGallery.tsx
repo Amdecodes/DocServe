@@ -16,8 +16,18 @@ export function TemplateGallery() {
 
   const handleSelect = (templateId: string) => {
     setTemplate(templateId);
-    router.push("/form/cv");
+    // Pass template ID as query param as backup in case localStorage doesn't sync in time
+    router.push(`/form/cv?template=${templateId}`);
   };
+
+  if (TEMPLATES.length === 0) {
+    return (
+      <div className="col-span-full py-20 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+        <p className="text-gray-500 font-medium">No templates available at the moment.</p>
+        <p className="text-sm text-gray-400 mt-2">Please check back later.</p>
+      </div>
+    );
+  }
 
   return (
     <>

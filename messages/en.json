@@ -43,11 +43,11 @@
   "Services": {
     "title": "Our Services",
     "digital": {
-      "title": "Digital Document Services",
-      "cv": "CV / Resume Writing",
-      "agreement": "Agreement Documents",
-      "editing": "Document Editing & Typing",
-      "action": "Order Online"
+      "title": "Resume Builder",
+      "cv": "Professional CV Templates",
+      "agreement": "ATS Optimization",
+      "editing": "Cover Letter Generation",
+      "action": "Build Resume"
     },
     "printing": {
       "title": "Printing Services",
@@ -63,6 +63,13 @@
       "emails": "Email Management",
       "admin": "Admin Support",
       "action": "Request Service"
+    },
+    "agreements": {
+      "title": "Agreement Services",
+      "car": "Car Sale Agreements",
+      "house": "House Rent Agreements",
+      "business": "Business Contracts",
+      "action": "Draft Agreement"
     }
   },
   "WhyChooseUs": {
@@ -104,7 +111,7 @@
     "pricing": "Pricing",
     "contact": "Contact",
     "addressLine1": "Addis Ababa, Ethiopia",
-    "addressLine2": "Ferensay legasion, Gurara",
+    "addressLine2": "",
     "terms": "Terms & Privacy",
     "privacyPolicy": "Privacy Policy",
     "rightsReserved": "All rights reserved."
@@ -118,9 +125,12 @@
     "vaTitle": "Virtual Assistance",
     "vaDescription": "Get professional virtual assistance for your remote tasks and administrative needs.",
     "vaPrice": "Request a Quote",
-    "printTitle": "Print & Custom Orders",
-    "printDescription": "Order menus, flyers, business cards, and other custom printed materials.",
-    "printPrice": "Custom Pricing",
+    "printTitle": "Premium Printing",
+    "printDescription": "Custom menus, flyers, business cards, and promotional materials printed with high quality.",
+    "printPrice": "Custom Quote",
+    "agreementTitle": "Agreement Services",
+    "agreementDescription": "Legally binding agreements for car sales, house rentals, and business contracts.",
+    "agreementPrice": "Starting from 150 ETB",
     "comingSoon": "More Services Coming Soon"
   },
   "ServiceCard": {
@@ -139,6 +149,22 @@
     "classic": {
       "name": "Timeless Classic",
       "description": "Traditional layout that never goes out of style."
+    },
+    "golden": {
+      "name": "Golden Executive",
+      "description": "Premium dark blue and gold design for executives."
+    },
+    "elegant": {
+      "name": "Elegant Sidebar",
+      "description": "Clean sidebar layout with serif typography."
+    },
+    "modern-dark": {
+      "name": "Modern Dark",
+      "description": "Bold black design with gold accents for creative professionals."
+    },
+    "modern-sidebar": {
+      "name": "Modern Sidebar",
+      "description": "Timeline-based design with gray sidebar and ribbon headers."
     },
     "useThisTemplate": "Use This Template",
     "previewNotAvailable": "Preview Not Available"
@@ -245,7 +271,7 @@
       "lastName": "e.g. Kebede",
       "jobTitle": "e.g. Software Engineer",
       "email": "abebe@example.com",
-      "phone": "+251 911 234 567",
+      "phone": "+251 911 223 344",
       "city": "Addis Ababa",
       "country": "Ethiopia",
       "summary": "e.g. Experienced software engineer with 5 years of experience..."
@@ -485,7 +511,7 @@
       "mostPopular": "Most Popular",
       "outcomeLabel": "Outcome",
       "notesTitle": "Important Notes",
-      "positioningLine": "We apply for jobs on your behalf—professionally, strategically, and consistently.",
+      "positioningLine": "We apply for jobs on your behalf,professionally, strategically, and consistently.",
       "notes": {
         "1": "CV writing is a separate service",
         "2": "Client must provide CV details",
@@ -494,7 +520,7 @@
       },
       "packages": {
         "basic": {
-          "title": "Apply Assist – Basic",
+          "title": "Basic",
           "bestFor": "Best for: Fresh graduates & first-time job seekers",
           "features": {
             "1": "Apply to 10 job vacancies",
@@ -506,7 +532,7 @@
           "outcome": "Consistent applications with minimal effort"
         },
         "professional": {
-          "title": "Apply Assist – Professional",
+          "title": "Professional",
           "bestFor": "Best for: Working professionals",
           "features": {
             "1": "Apply to 25 job vacancies",
@@ -518,7 +544,7 @@
           "outcome": "Higher-quality applications with improved chances"
         },
         "elite": {
-          "title": "Apply Assist – Elite",
+          "title": "Elite",
           "bestFor": "Best for: Serious or urgent job seekers",
           "features": {
             "1": "Apply to 50 job vacancies",

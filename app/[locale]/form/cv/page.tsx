@@ -102,7 +102,7 @@ function CVWizardContent() {
           service_type: "cv_writing",
           form_data: {
             ...cvData,
-            templateId: selectedTemplate || "modern",
+            selectedTemplate: selectedTemplate || "golden", // Must match key in process-order.ts
           },
         }),
       });
