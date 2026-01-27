@@ -3,18 +3,15 @@
 import prisma from "@/lib/prisma";
 import { VirtualAssistanceStatus, PrintOrderStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { deleteFileFromUrl } from "@/lib/upload";
 
 // Helper to enforce admin auth
 async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await currentUser();
   const adminEmail = process.env.ADMIN_EMAIL;
 
-  if (!user || (adminEmail && user.email !== adminEmail)) {
+  if (!user || !user.emailAddresses.some(e => e.emailAddress === adminEmail)) {
     throw new Error("Unauthorized access");
   }
 }

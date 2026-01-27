@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { createClient } from "@supabase/supabase-js";
+
 
 // This route can be called by a cron job service (like Vercel Cron, GitHub Actions, or manually)
 // It deletes PDF files from storage that have expired (link expired > 6 hours ago to be safe, or just expired)
