@@ -1,37 +1,23 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const user = await currentUser();
+    const adminEmail = process.env.ADMIN_EMAIL;
 
-    if (userError) {
-      console.error("admin print-orders auth error", userError);
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (!user || user.email !== process.env.SUPER_ADMIN_EMAIL) {
+    if (!user || !user.emailAddresses.some(e => e.emailAddress === adminEmail)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { data, error } = await supabase
-      .from("print_orders")
-      .select(
-        "id,product_id,product_name,full_name,phone,email,location,quantity,notes,status,created_at",
-      )
-      .order("created_at", { ascending: false });
+    const orders = await prisma.printOrder.findMany({
+      orderBy: { created_at: "desc" },
+    });
 
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json({ orders: data ?? [] });
+    return NextResponse.json({ orders });
   } catch (error) {
     console.error("/api/admin/print-orders GET error", error);
     return NextResponse.json(

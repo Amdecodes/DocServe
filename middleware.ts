@@ -12,7 +12,8 @@ const isAdminRoute = createRouteMatcher(["/(.*)/admin(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
-      await auth.protect();
+      const { userId, redirectToSignIn } = await auth();
+      if (!userId) return redirectToSignIn();
   }
   
   return intlMiddleware(req);

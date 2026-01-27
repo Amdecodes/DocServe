@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+import { PrintOrderStatus } from "@prisma/client";
 
-const statusSchema = z.enum(["pending", "contacted", "completed"]);
+const statusSchema = z.enum(["pending", "contacted", "completed", "cancelled"]);
 
 export const dynamic = "force-dynamic";
 
@@ -13,18 +15,10 @@ export async function PATCH(
   const params = await props.params;
 
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const user = await currentUser();
+    const adminEmail = process.env.ADMIN_EMAIL;
 
-    if (userError) {
-      console.error("admin print-orders auth error", userError);
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (!user || user.email !== process.env.SUPER_ADMIN_EMAIL) {
+    if (!user || !user.emailAddresses.some(e => e.emailAddress === adminEmail)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -35,15 +29,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const { error } = await supabase
-      .from("print_orders")
-      .update({ status: parsed.data })
-      .eq("id", params.id)
-      .single();
-
-    if (error) {
-      throw error;
-    }
+    await prisma.printOrder.update({
+      where: { id: params.id },
+      data: { status: parsed.data as PrintOrderStatus },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
