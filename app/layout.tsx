@@ -19,8 +19,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  if (!publishableKey) {
+    return (
+      <html lang="en" className={inter.variable}>
+        <body className="min-h-screen bg-lightbg text-charcoal font-sans antialiased">
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+    <ClerkProvider publishableKey={publishableKey}>
       <html lang="en" className={inter.variable}>
         <body className="min-h-screen bg-lightbg text-charcoal font-sans antialiased">
           {children}
