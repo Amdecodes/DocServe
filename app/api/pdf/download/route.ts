@@ -20,54 +20,73 @@ export async function GET(req: NextRequest) {
   // No time check needed. If file exists in DB/Storage (it should, as we stopped auto-cleanup), allow download.
   // We generate a fresh link every time.
 
-  // 1. Use the stored PDF URL if available (This is the correct path for UploadThing)
+  // 1. Determine target URL
   let targetUrl = order.pdf_url;
-  let downloadName = order.service_type.startsWith("agreement:")
+  const downloadName = order.service_type.startsWith("agreement:")
     ? "Agreement.pdf"
     : "CV.pdf";
 
-  // 2. Fallbacks for legacy files or failed updates
-  if (!targetUrl) {
-    try {
-      // Try generic document path (New standard)
-      const freshLink = await getSignedUrl(
-        `orders/${orderId}/document.pdf`,
-        downloadName,
-      );
-      if (freshLink) targetUrl = freshLink.signedUrl;
-      
-      // Fallback: Check older paths if needed, but for now we try the main one.
-      // If we really need legacy support we can restore the other checks here.
-    } catch (e) {
-      console.log("Could not generate fresh link", e);
-    }
-  }
+  let fileBuffer: ArrayBuffer | null = null;
 
+  // 2. Try fetching existing PDF if URL is present
   if (targetUrl) {
     try {
-      // Proxy the file to enforce download
       const fileResponse = await fetch(targetUrl);
-      if (!fileResponse.ok) {
-        throw new Error(`Failed to fetch file from storage: ${fileResponse.statusText}`);
+      if (fileResponse.ok) {
+        fileBuffer = await fileResponse.arrayBuffer();
+      } else {
+        console.warn(`[Download] Stored PDF URL returned status ${fileResponse.status}. Attempting regeneration.`);
       }
-      const fileBuffer = await fileResponse.arrayBuffer();
-
-      return new NextResponse(fileBuffer, {
-        headers: {
-          "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="${downloadName}"`,
-        },
-      });
     } catch (e) {
-      console.error("Proxy download failed", e);
-      return new NextResponse("Failed to download file", { status: 500 });
+      console.error("[Download] Error fetching stored PDF:", e);
     }
   }
 
-  // 2. Fallback (if generating failed but we have a DB link?) - unlikely to help if generator failed.
-  // ...
+  // 3. Fallback: Regenerate if fetch failed or URL was missing
+  if (!fileBuffer) {
+    try {
+      console.log(`[Download] Regenerating PDF for Order ${orderId}...`);
+      const { processOrderPdf } = await import("@/lib/pdf/process-order");
+      
+      const result = await processOrderPdf(
+        order.id,
+        order.form_data,
+        order.service_type
+      );
 
-  return new Response("File not found or could not be accessed.", {
+      if (result?.pdfUrl) {
+        // Fetch the newly generated PDF
+        const newResponse = await fetch(result.pdfUrl);
+        if (newResponse.ok) {
+          fileBuffer = await newResponse.arrayBuffer();
+          
+          // Update order status with new URL to fix future downloads
+          await prisma.order.update({
+            where: { id: orderId },
+            data: { 
+              pdf_url: result.pdfUrl,
+              expires_at: result.expiresAt
+            },
+          });
+        }
+      }
+    } catch (e) {
+      console.error("[Download] PDF regeneration failed:", e);
+    }
+  }
+
+  // 4. Return the file if we have a buffer
+  if (fileBuffer) {
+    return new NextResponse(fileBuffer, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${downloadName}"`,
+      },
+    });
+  }
+
+  return new Response("File not found or could not be generated.", {
     status: 404,
   });
 }
+
