@@ -16,9 +16,9 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
 
   return (
     <div 
-      className="min-h-[297mm] w-full font-sans text-white bg-black flex flex-col"
+      className="min-h-[297mm] w-full font-sans text-black bg-white flex flex-col"
       style={{
-        background: "#000000",
+        background: "#FFFFFF",
         WebkitPrintColorAdjust: "exact",
         printColorAdjust: "exact"
       }}
@@ -31,7 +31,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
             <img
               src={personalInfo.photo}
               alt={personalInfo.firstName}
-              className="w-48 h-56 object-cover border-[1px] border-[#333]"
+              className="w-48 h-56 object-cover border-[1px] border-gray-300"
             />
           </div>
         )}
@@ -49,7 +49,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {summary && (
             <div className="mb-6 max-w-2xl">
               <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
-                <p className="text-sm text-gray-300 leading-relaxed text-justify">
+                <p className="text-sm text-gray-700 leading-relaxed text-justify">
                   {typeof summary === "string" ? summary : ""}
                 </p>
               </AIBlurOverlay>
@@ -57,7 +57,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           )}
 
           {/* LinkedIn and Portfolio */}
-          <div className="flex flex-wrap gap-6 text-sm text-gray-400">
+          <div className="flex flex-wrap gap-6 text-sm text-gray-600">
             {personalInfo.linkedin && (
               <a 
                 href={personalInfo.linkedin.startsWith('http') ? personalInfo.linkedin : `https://${personalInfo.linkedin}`} 
@@ -84,7 +84,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
         </div>
       </div>
 
-      <div className="border-t border-gray-800 mx-12"></div>
+      <div className="border-t border-gray-200 mx-12"></div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-12 gap-10 p-12 pt-10 h-full">
@@ -95,15 +95,15 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {/* Education */}
           {education.length > 0 && (
             <section style={{ pageBreakInside: "avoid" }}>
-              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-800 pb-2">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-200 pb-2">
                 Education
               </h2>
               <div className="space-y-6">
                 {education.map((edu, idx) => (
                   <div key={idx} className="text-sm group">
-                    <p className="font-bold text-white text-base mb-1">{edu.school}</p>
+                    <p className="font-bold text-black text-base mb-1">{edu.school}</p>
                     <p className="text-[#D4AF37] text-xs mb-1 uppercase tracking-wider">{edu.startDate} - {edu.endDate}</p>
-                    <p className="text-gray-400">{edu.degree}</p>
+                    <p className="text-gray-600">{edu.degree}</p>
                   </div>
                 ))}
               </div>
@@ -113,15 +113,15 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {/* Languages */}
           {languages.length > 0 && (
             <section style={{ pageBreakInside: "avoid" }}>
-              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-800 pb-2">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-200 pb-2">
                 Language
               </h2>
               <ul className="space-y-2 text-sm">
                 {languages.map((lang, idx) => (
-                  <li key={idx} className="text-gray-300 flex items-center gap-2">
+                  <li key={idx} className="text-gray-700 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></span>
                     {lang.language}
-                    <span className="text-xs text-gray-400">{lang.proficiency}</span>
+                    <span className="text-xs text-gray-500">{lang.proficiency}</span>
                   </li>
                 ))}
               </ul>
@@ -130,15 +130,15 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {/* Volunteer & Community */}
           {volunteer.length > 0 && (
             <section style={{ pageBreakInside: "avoid" }}>
-              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-800 pb-2">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-200 pb-2">
                 Volunteer
               </h2>
               <ul className="space-y-2 text-sm">
                 {volunteer.map((vol, idx) => (
-                  <li key={idx} className="text-gray-300 flex items-center gap-2">
+                  <li key={idx} className="text-gray-700 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></span>
                     {vol.role}
-                    <span className="text-xs text-gray-400">{vol.organization}</span>
+                    <span className="text-xs text-gray-500">{vol.organization}</span>
                   </li>
                 ))}
               </ul>
@@ -148,12 +148,12 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {/* Hard Skills */}
           {skills.length > 0 && (
             <section style={{ pageBreakInside: "avoid" }}>
-              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-800 pb-2">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-5 border-b border-gray-200 pb-2">
                 Skills
               </h2>
               <ul className="space-y-2 text-sm">
                 {skills.map((skill, idx) => (
-                  <li key={idx} className="text-gray-300 flex items-center gap-2">
+                  <li key={idx} className="text-gray-700 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></span>
                     {skill.name}
                   </li>
@@ -168,17 +168,17 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           
           {/* Experience */}
           <section>
-            <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-800 pb-2">
+            <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-200 pb-2">
               Experience
             </h2>
             <div className="space-y-8">
               {experience.length === 0 ? (
-                <p className="text-sm text-gray-400 italic">No experience added yet.</p>
+                <p className="text-sm text-gray-500 italic">No experience added yet.</p>
               ) : (
                 experience.map((exp, idx) => (
                   <div key={idx} style={{ pageBreakInside: "avoid" }}>
                     <div className="mb-3">
-                      <h3 className="font-bold text-white text-lg">
+                      <h3 className="font-bold text-black text-lg">
                         {exp.jobTitle} <span className="text-[#D4AF37]">|</span> {exp.company}
                       </h3>
                       <p className="text-xs text-[#D4AF37] uppercase tracking-wider mt-1">
@@ -187,7 +187,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
                     </div>
                     
                     <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
-                      <ul className="space-y-2 text-sm text-gray-300 leading-relaxed">
+                      <ul className="space-y-2 text-sm text-gray-700 leading-relaxed">
                         {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
                           <li key={i} className="flex items-start gap-3">
                             <span className="text-[#D4AF37] mt-1.5 text-[10px]">●</span>
@@ -205,14 +205,14 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           {/* Key Highlights / Core Competencies */}
           {coreCompetencies.length > 0 && (
             <section style={{ pageBreakInside: "avoid" }} className="mt-8 pt-4">
-              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-800 pb-2">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-200 pb-2">
                 Key Highlights / Core Competencies
               </h2>
               <div className="flex flex-wrap gap-3">
                 {coreCompetencies.map((cert, idx) => (
                   <span 
                     key={idx}
-                    className="px-4 py-2 bg-[#1A1A1A] border border-[#333] rounded-full text-xs text-white tracking-wide shadow-sm"
+                    className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-full text-xs text-black tracking-wide shadow-sm"
                   >
                     {cert}
                   </span>
@@ -223,14 +223,14 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
         </div>
       </div>
 
-      <div className="border-t border-gray-800 mx-12 mt-auto"></div>
+      <div className="border-t border-gray-200 mx-12 mt-auto"></div>
 
       {/* Footer Contact */}
-      <div className="p-10 bg-black">
+      <div className="p-10 bg-white">
         <h2 className="text-lg font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-6 text-center">
           Contact Person
         </h2>
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 text-sm text-gray-300">
+        <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 text-sm text-gray-600">
           {personalInfo.phone && (
             <div className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-[#D4AF37]" />

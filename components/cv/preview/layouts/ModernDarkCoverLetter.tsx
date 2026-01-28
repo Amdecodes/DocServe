@@ -14,9 +14,9 @@ export function ModernDarkCoverLetter({
 
   return (
     <div 
-      className="min-h-[297mm] w-full font-sans text-white bg-black flex flex-col p-16"
+      className="min-h-[297mm] w-full font-sans text-black bg-white flex flex-col p-16"
       style={{
-        background: "#000000",
+        background: "#FFFFFF",
         WebkitPrintColorAdjust: "exact",
         printColorAdjust: "exact"
       }}
@@ -31,10 +31,10 @@ export function ModernDarkCoverLetter({
         </p>
       </div>
 
-      <div className="border-t border-gray-800 mb-8"></div>
+      <div className="border-t border-gray-200 mb-8"></div>
 
       {/* Contact Info Row */}
-      <div className="flex flex-wrap gap-8 text-sm text-gray-300 mb-12 items-center">
+      <div className="flex flex-wrap gap-8 text-sm text-gray-600 mb-12 items-center">
         {personalInfo.phone && (
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-[#D4AF37]" />
@@ -50,13 +50,13 @@ export function ModernDarkCoverLetter({
         {personalInfo.linkedin && (
           <div className="flex items-center gap-2">
             <Linkedin className="w-4 h-4 text-[#D4AF37]" />
-             <a href={personalInfo.linkedin} className="hover:text-white transition-colors">LinkedIn</a>
+             <a href={personalInfo.linkedin} className="hover:text-[#D4AF37] transition-colors">LinkedIn</a>
           </div>
         )}
          {personalInfo.website && (
           <div className="flex items-center gap-2">
             <Globe className="w-4 h-4 text-[#D4AF37]" />
-             <a href={personalInfo.website} className="hover:text-white transition-colors">Portfolio</a>
+             <a href={personalInfo.website} className="hover:text-[#D4AF37] transition-colors">Portfolio</a>
           </div>
         )}
         {(personalInfo.city || personalInfo.country) && (
@@ -78,9 +78,9 @@ export function ModernDarkCoverLetter({
 
       {/* Recipient */}
       <div className="mb-10 text-sm">
-        <p className="font-bold text-white text-lg mb-1">{coverLetter.recipientName || "Hiring Manager"}</p>
-        <p className="text-gray-400">{coverLetter.jobTitle}</p>
-        <p className="text-gray-400">{coverLetter.companyName}</p>
+        <p className="font-bold text-black text-lg mb-1">{coverLetter.recipientName || "Hiring Manager"}</p>
+        <p className="text-gray-500">{coverLetter.jobTitle}</p>
+        <p className="text-gray-500">{coverLetter.companyName}</p>
       </div>
 
       {/* Salutation */}
@@ -89,9 +89,9 @@ export function ModernDarkCoverLetter({
       </div>
 
       {/* Body */}
-      <div className="mb-10 whitespace-pre-wrap text-sm leading-8 text-gray-300 text-justify">
+      <div className="mb-10 whitespace-pre-wrap text-sm leading-8 text-gray-700 text-justify">
         {coverLetter.letterBody || (
-          <span className="text-gray-500 italic">
+          <span className="text-gray-400 italic">
             [Your cover letter body will appear here. Fill in the Cover Letter step to see your content.]
           </span>
         )}
@@ -99,7 +99,7 @@ export function ModernDarkCoverLetter({
 
       {/* Sign-off */}
       <div className="mt-auto pt-12 text-sm">
-        <p className="mb-4 text-gray-400">Sincerely,</p>
+        <p className="mb-4 text-gray-500">Sincerely,</p>
         <p className="font-bold text-[#D4AF37] text-xl tracking-wide">{senderName}</p>
       </div>
     </div>

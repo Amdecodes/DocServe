@@ -138,6 +138,7 @@
     "startNow": "ጀምር"
   },
   "Templates": {
+    "title": "የቴምፕሌት ምርጫ",
     "modern": {
       "name": "ዘመናዊ ፕሮፌሽናል",
       "description": "ለኮርፖሬት ሚናዎች ፍጹም የሆነ ንፁህ ፣ የተደራጀ አቀማመጥ።"
@@ -149,6 +150,42 @@
     "classic": {
       "name": "ጊዜ የማይሽረው ክላሲክ",
       "description": "በጭራሽ ጊዜ የማይሽረው ባህላዊ አቀማመጥ።"
+    },
+    "golden": {
+      "name": "Golden Executive",
+      "description": "Premium dark blue and gold design for executives."
+    },
+    "elegant": {
+      "name": "Elegant Sidebar",
+      "description": "Clean sidebar layout with serif typography."
+    },
+    "modern-dark": {
+      "name": "Modern Dark",
+      "description": "Bold black design with gold accents for creative professionals."
+    },
+    "modern-sidebar": {
+      "name": "Modern Sidebar",
+      "description": "Timeline-based design with gray sidebar and ribbon headers."
+    },
+    "corporate-focus": {
+      "name": "Corporate Focus",
+      "description": "Professional layout with deep blue styling."
+    },
+    "minimalist-teal": {
+      "name": "Minimalist Teal",
+      "description": "Clean design with fresh teal accents."
+    },
+    "creative-split": {
+      "name": "Creative Split",
+      "description": "Bold indigo layout with unique split header."
+    },
+    "executive-maroon": {
+      "name": "Executive Maroon",
+      "description": "Distinguished deep burgundy design."
+    },
+    "emerald-professional": {
+      "name": "Emerald Professional",
+      "description": "Fresh and airy design with green accents."
     },
     "useThisTemplate": "ይህንን ቅጽ ተጠቀም",
     "previewNotAvailable": "ቅድመ እይታ አይገኝም"

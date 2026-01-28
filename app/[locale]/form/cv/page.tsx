@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { CVProvider, useCV } from "@/components/cv/CVContext";
 import Header from "@/components/landing/Header";
 import { CVPreview } from "@/components/cv/preview/CVPreview";
+import { TemplateSelector } from "@/components/cv/preview/TemplateSelector";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -68,11 +69,6 @@ function CVWizardContent() {
     { title: navT("steps.review"), icon: CheckCircle },
   ];
 
-  useEffect(() => {
-    if (templateId) {
-      setTemplate(templateId);
-    }
-  }, [templateId, setTemplate]);
 
   const nextStep = () => {
     if (currentStep < stepsConfig.length - 1) {
@@ -186,7 +182,7 @@ function CVWizardContent() {
         {/* Left: Form Area */}
         <div
           className={cn(
-            "w-full lg:w-3/5 xl:w-[55%] flex flex-col h-full bg-white/50 backdrop-blur-sm transition-all duration-300",
+            "w-full lg:w-2/5 xl:w-[45%] flex flex-col h-full bg-white/50 backdrop-blur-sm transition-all duration-300",
             activeTab === "preview" ? "hidden lg:flex" : "flex",
           )}
         >
@@ -326,19 +322,47 @@ function CVWizardContent() {
         {/* Right: Preview Area */}
         <div
           className={cn(
-            "w-full lg:w-2/5 xl:w-[45%] bg-gray-100/80 p-4 lg:p-8 relative overflow-y-auto border-l border-gray-200 shadow-inner",
-            activeTab === "edit" ? "hidden lg:block" : "block",
+            "w-full lg:w-3/5 xl:w-[55%] lg:flex lg:flex-row bg-gray-100/80 relative border-l border-gray-200 shadow-inner flex flex-col",
+            activeTab === "edit" ? "hidden lg:flex" : "flex",
           )}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 mb-4 inline-flex items-center gap-2 lg:hidden mx-auto w-full justify-center text-sm text-gray-500">
+          {/* Mobile Preview Mode indicator */}
+          <div className="bg-white shrink-0 rounded-xl shadow-sm border border-gray-200 p-3 m-4 mb-2 lg:hidden flex items-center gap-2 justify-center text-sm text-gray-500">
             <Eye className="w-4 h-4" /> Live Preview Mode
           </div>
 
-          <div className="min-h-full flex justify-center pb-8 lg:sticky lg:top-8 scale-[0.85] section-mobile-preview origin-top md:scale-95 xl:scale-100 transition-transform duration-300">
-            <div className="shadow-2xl shadow-gray-300/50 rounded-sm overflow-hidden">
-              <CVPreview />
+          {/* 1. Main Preview Content (Scrollable) */}
+          <div className="flex-1 overflow-y-auto p-4 lg:p-12 relative scroll-smooth no-scrollbar">
+            <div className="flex flex-col items-center min-h-full">
+              {/* Live Preview Container */}
+              <div className="w-full flex justify-center section-mobile-preview origin-top transition-all duration-300 z-10 scale-[0.7] sm:scale-[0.8] md:scale-[0.85] lg:scale-[0.8] xl:scale-[0.85] 2xl:scale-95 mb-60 lg:mb-20">
+                <CVPreview />
+              </div>
             </div>
           </div>
+
+          {/* 2. PC-Only Integrated Vertical Sidebar */}
+          <div className="hidden lg:flex w-28 bg-white/50 backdrop-blur-sm border-l border-gray-200 p-3 flex-col gap-4 sticky top-0 h-screen overflow-y-auto no-scrollbar shrink-0">
+             <div className="flex items-center justify-center opacity-40 mb-2 mt-4">
+                <div className="w-1 h-8 bg-gray-300 rounded-full" />
+             </div>
+             <TemplateSelector layout="vertical" />
+          </div>
+
+          {/* 3. Mobile-Only Floating Bottom Dock */}
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
+            className="fixed bottom-10 left-4 right-4 z-[100] pointer-events-none lg:hidden"
+          >
+            <div className="max-w-md mx-auto bg-white/80 backdrop-blur-xl border border-white/40 shadow-2xl rounded-2xl p-2 px-3 flex flex-col gap-1 ring-1 ring-black/5 pointer-events-auto">
+              <div className="flex items-center justify-center gap-1.5 opacity-40 mb-1">
+                <div className="w-8 h-1 bg-gray-300 rounded-full" />
+              </div>
+              <TemplateSelector layout="horizontal" />
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

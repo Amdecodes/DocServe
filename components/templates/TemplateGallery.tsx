@@ -67,8 +67,8 @@ export function TemplateGallery() {
               </div>
             </div>
 
-            {/* Hover overlay with Action */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-6 backdrop-blur-[2px]">
+            {/* Hover overlay with Action - Hidden on mobile, visible on lg hover */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex items-center justify-center p-6 backdrop-blur-[2px]">
               <Button
                 onClick={() => handleSelect(template.id)}
                 size="lg"
@@ -90,6 +90,16 @@ export function TemplateGallery() {
               <p className="text-sm text-gray-500 line-clamp-2 mt-1">
                 {t(`${template.id}.description`)}
               </p>
+            </div>
+
+            {/* Mobile-only Action Button - Visible only on small/medium screens */}
+            <div className="lg:hidden mt-4">
+              <Button
+                onClick={() => handleSelect(template.id)}
+                className="w-full font-bold bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+              >
+                {t("useThisTemplate")}
+              </Button>
             </div>
 
             <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">

@@ -138,6 +138,7 @@
     "startNow": "Start Now"
   },
   "Templates": {
+    "title": "Template Selection",
     "modern": {
       "name": "Modern Professional",
       "description": "Clean, organized layout perfect for corporate roles."
@@ -165,6 +166,26 @@
     "modern-sidebar": {
       "name": "Modern Sidebar",
       "description": "Timeline-based design with gray sidebar and ribbon headers."
+    },
+    "corporate-focus": {
+      "name": "Corporate Focus",
+      "description": "Professional layout with deep blue styling."
+    },
+    "minimalist-teal": {
+      "name": "Minimalist Teal",
+      "description": "Clean design with fresh teal accents."
+    },
+    "creative-split": {
+      "name": "Creative Split",
+      "description": "Bold indigo layout with unique split header."
+    },
+    "executive-maroon": {
+      "name": "Executive Maroon",
+      "description": "Distinguished deep burgundy design."
+    },
+    "emerald-professional": {
+      "name": "Emerald Professional",
+      "description": "Fresh and airy design with green accents."
     },
     "useThisTemplate": "Use This Template",
     "previewNotAvailable": "Preview Not Available"

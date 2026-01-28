@@ -134,16 +134,16 @@ export const TEMPLATES: TemplateConfig[] = [
   },
   {
     id: "modern-dark",
-    name: "Modern Dark",
-    description: "Bold black design with gold accents for creative professionals.",
-    tags: ["Modern", "Dark", "Creative"],
+    name: "Modern Gold",
+    description: "Clean white design with bold black typography and gold accents.",
+    tags: ["Modern", "Gold", "Creative"],
     category: "creative",
     colorScheme: {
       primary: "#000000",
-      secondary: "#D4AF37",
-      accent: "#FFFFFF",
+      secondary: "#FFFFFF",
+      accent: "#D4AF37",
     },
-    previewImage: "/images/templates/modern-dark.png",
+    previewImage: "/images/templet-preview/modern-black.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/ModernDark").then((m) => ({
         default: m.ModernDarkLayout,
@@ -172,6 +172,112 @@ export const TEMPLATES: TemplateConfig[] = [
     coverLetterComponent: () =>
       import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then((m) => ({
         default: m.ModernSidebarCoverLetter,
+      })),
+  },
+  {
+    id: "corporate-focus",
+    name: "Corporate Focus",
+    description: "Professional deep blue layout with comprehensive data support.",
+    tags: ["Professional", "Corporate", "Blue"],
+    category: "professional",
+    colorScheme: {
+      primary: "#1a365d",
+      secondary: "#ffffff",
+      accent: "#90cdf4",
+    },
+    previewImage: "/images/templet-preview/corporate.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/CorporateFocus").then((m) => ({
+        default: m.CorporateFocusLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then((m) => ({
+        default: m.CorporateFocusCoverLetter,
+      })),
+  },
+  {
+    id: "minimalist-teal",
+    name: "Minimalist Teal",
+    description: "Modern, clean design with fresh teal accents.",
+    tags: ["Modern", "Minimalist", "Teal"],
+    category: "creative",
+    colorScheme: {
+      primary: "#0d9488",
+      secondary: "#f0fdfa",
+      accent: "#0f766e",
+    },
+    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-20-17.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/MinimalistTeal").then((m) => ({
+        default: m.MinimalistTealLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then((m) => ({
+        default: m.MinimalistTealCoverLetter,
+      })),
+  },
+  {
+    id: "creative-split",
+    name: "Creative Split",
+    description: "Bold indigo layout with a unique split-header design.",
+    tags: ["Creative", "Unique", "Indigo"],
+    category: "creative",
+    colorScheme: {
+      primary: "#312e81",
+      secondary: "#f5f3ff",
+      accent: "#4338ca",
+    },
+    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-24-07.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/CreativeSplit").then((m) => ({
+        default: m.CreativeSplitLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then((m) => ({
+        default: m.CreativeSplitCoverLetter,
+      })),
+  },
+  {
+    id: "executive-maroon",
+    name: "Executive Maroon",
+    description: "Distinguished deep burgundy design with classic typography.",
+    tags: ["Executive", "Classic", "Maroon"],
+    category: "executive",
+    colorScheme: {
+      primary: "#7f1d1d",
+      secondary: "#ffffff",
+      accent: "#991b1b",
+    },
+    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-24-44.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/ExecutiveMaroon").then((m) => ({
+        default: m.ExecutiveMaroonLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then((m) => ({
+        default: m.ExecutiveMaroonCoverLetter,
+      })),
+  },
+  {
+    id: "emerald-professional",
+    name: "Emerald Professional",
+    description: "Fresh and airy design with calming green accents.",
+    tags: ["Professional", "Nature", "Green"],
+    category: "professional",
+    colorScheme: {
+      primary: "#064e3b",
+      secondary: "#ffffff",
+      accent: "#059669",
+    },
+    // Using a placeholder image for now, as one doesn't exist yet
+    previewImage: "/images/templates/modern-sidebar.png", 
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/EmeraldProfessional").then((m) => ({
+        default: m.EmeraldProfessionalLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then((m) => ({
+        default: m.EmeraldProfessionalCoverLetter,
       })),
   },
 ];
@@ -257,6 +363,56 @@ export const templateComponents: Record<
     coverLetter: () =>
       import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then((m) => ({
         default: m.ModernSidebarCoverLetter,
+      })),
+  },
+  "corporate-focus": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/CorporateFocus").then((m) => ({
+        default: m.CorporateFocusLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then((m) => ({
+        default: m.CorporateFocusCoverLetter,
+      })),
+  },
+  "minimalist-teal": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/MinimalistTeal").then((m) => ({
+        default: m.MinimalistTealLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then((m) => ({
+        default: m.MinimalistTealCoverLetter,
+      })),
+  },
+  "creative-split": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/CreativeSplit").then((m) => ({
+        default: m.CreativeSplitLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then((m) => ({
+        default: m.CreativeSplitCoverLetter,
+      })),
+  },
+  "executive-maroon": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/ExecutiveMaroon").then((m) => ({
+        default: m.ExecutiveMaroonLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then((m) => ({
+        default: m.ExecutiveMaroonCoverLetter,
+      })),
+  },
+  "emerald-professional": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/EmeraldProfessional").then((m) => ({
+        default: m.EmeraldProfessionalLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then((m) => ({
+        default: m.EmeraldProfessionalCoverLetter,
       })),
   },
 };

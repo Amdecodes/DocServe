@@ -17,7 +17,7 @@ export default async function PrintOrderProductPage({
   params: Promise<PageProps["params"]>;
 }) {
   const { productId } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   // Fetch product data from our API (which includes variations now)
   const response = await fetch(

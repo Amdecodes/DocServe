@@ -6,7 +6,10 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useCallback,
+  Suspense,
 } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   PersonalInfo,
   ExperienceItem,
@@ -116,18 +119,25 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const [selectedTemplate, setSelectedTemplate] = useState(DEFAULT_TEMPLATE);
   const isMountedRef = useRef(false);
 
+  const searchParams = useSearchParams();
+  const templateFromUrl = searchParams.get("template");
+
   // Track mount state and load persisted data
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Load template from dedicated key first
-    const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
-    // Validate that the saved template actually exists in our current list
-    // If not (e.g. we removed it), fall back to default
-    const isValid = TEMPLATES.some((t: any) => t.id === savedTemplate);
-    
-    if (savedTemplate && isValid) {
-      setSelectedTemplate(savedTemplate);
+    // 1. Priority: URL Parameter
+    if (templateFromUrl && TEMPLATES.some((t: any) => t.id === templateFromUrl)) {
+      setSelectedTemplate(templateFromUrl);
+      localStorage.setItem("paperless.selectedTemplate", templateFromUrl);
+    } else {
+      // 2. Secondary: localStorage
+      const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
+      const isValid = TEMPLATES.some((t: any) => t.id === savedTemplate);
+      
+      if (savedTemplate && isValid) {
+        setSelectedTemplate(savedTemplate);
+      }
     }
 
     // Load cvData
@@ -137,20 +147,18 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         const parsed = JSON.parse(savedCV) as CVData;
         setCvData({
           ...parsed,
-          // Force English CV generation even if older data stored another value
           documentLanguage: "en",
         });
         
-        // ALSO sync selectedTemplate from cvData if it exists and is valid
-        // This ensures parity between the two storage locations
-        if (parsed.selectedTemplate && TEMPLATES.some((t: any) => t.id === parsed.selectedTemplate)) {
+        // Only sync selectedTemplate from cvData if URL param wasn't provided
+        if (!templateFromUrl && parsed.selectedTemplate && TEMPLATES.some((t: any) => t.id === parsed.selectedTemplate)) {
           setSelectedTemplate(parsed.selectedTemplate);
         }
       }
     } catch (e) {
       console.error("Failed to load CV data", e);
     }
-  }, []);
+  }, [templateFromUrl]); // Re-run if URL param changes (e.g. back button)
 
   // Persist template selection to localStorage and cvData
   useEffect(() => {
@@ -168,7 +176,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cvData]);
 
-  const updateCVData = (
+  const updateCVData = useCallback((
     section: keyof CVData,
     data:
       | Partial<PersonalInfo>
@@ -195,9 +203,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
               }
             : data,
     }));
-  };
+  }, []);
 
-  const addItem = (
+  const addItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     item:
       | Partial<ExperienceItem>
@@ -212,9 +220,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       ...prev,
       [section]: [...((prev[section] as Array<any>) ?? []), newItem],
     }));
-  };
+  }, []);
 
-  const removeItem = (
+  const removeItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
   ) => {
@@ -224,9 +232,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         (item) => item.id !== id,
       ),
     }));
-  };
+  }, []);
 
-  const updateItem = (
+  const updateItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
     data:
@@ -243,18 +251,18 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         item.id === id ? { ...item, ...data } : item,
       ),
     }));
-  };
+  }, []);
 
-  const updateCoverLetter = (data: Partial<CoverLetterData>) => {
+  const updateCoverLetter = useCallback((data: Partial<CoverLetterData>) => {
     setCvData((prev) => ({
       ...prev,
       coverLetter: { ...prev.coverLetter!, ...data },
     }));
-  };
+  }, []);
 
-  const setTemplate = (id: string) => {
+  const setTemplate = useCallback((id: string) => {
     setSelectedTemplate(id);
-  };
+  }, []);
 
   return (
     <CVContext.Provider
@@ -269,7 +277,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         updateCoverLetter,
       }}
     >
-      {children}
+      <Suspense fallback={null}>
+        {children}
+      </Suspense>
     </CVContext.Provider>
   );
 }

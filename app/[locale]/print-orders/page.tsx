@@ -18,7 +18,7 @@ export default async function PrintOrdersPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "PrintOrders" });
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const response = await fetch(`${baseUrl}/api/print-products`, {
     cache: "no-store",
   });
