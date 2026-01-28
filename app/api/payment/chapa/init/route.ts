@@ -99,24 +99,17 @@ export async function POST(req: Request) {
       description = "Premium CV Design";
     } else if (order.service_type.startsWith("agreement:")) {
       const templateId = order.service_type.split(":")[1];
-      const template = AGREEMENT_TEMPLATES.find((t) => t.id === templateId);
-      if (template) {
-        title = template.title;
-        description = template.description;
-      } else {
-        title = "Agreement Service";
-        description = "Legal Document Preparation";
-      }
+      // Use generic safe strings to satisfy Chapa validation
+      // Chapa title max 16 chars. description no special chars.
+      title = "Agreement";
+      description = `Template ${templateId}`;
     }
 
-    const payload = {
+    // Construct payload with optional fields
+    const payload: Record<string, any> = {
       amount: amount.toString(),
       currency: PRICE_CURRENCY,
-      email: payloadEmail,
-      first_name: payloadFirstName,
-      last_name: payloadLastName,
-      // phone_number removed - not sending to Chapa to avoid validation errors
-      tx_ref: order.tx_ref, // Use the existing tx_ref (which is order.id)
+      tx_ref: order.tx_ref,
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
       customization: {
@@ -124,6 +117,10 @@ export async function POST(req: Request) {
         description,
       },
     };
+
+    if (payloadEmail) payload.email = payloadEmail;
+    if (payloadFirstName) payload.first_name = payloadFirstName;
+    if (payloadLastName) payload.last_name = payloadLastName;
 
     // 5. Call Chapa Initialize API
     const response = await fetch(

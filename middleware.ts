@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { locales, defaultLocale } from "./config/i18n";
 
@@ -9,11 +10,16 @@ const intlMiddleware = createMiddleware({
 });
 
 const isAdminRoute = createRouteMatcher(["/(.*)/admin(.*)"]);
+const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
       const { userId, redirectToSignIn } = await auth();
       if (!userId) return redirectToSignIn();
+  }
+
+  if (isApiRoute(req)) {
+    return NextResponse.next();
   }
   
   return intlMiddleware(req);

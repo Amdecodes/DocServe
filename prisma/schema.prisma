@@ -24,6 +24,8 @@ model Order {
   pdf_url         String?     @map("pdf_url")
   ai_generated    Boolean     @default(false) @map("ai_generated")
   ai_generated_at DateTime?   @map("ai_generated_at")
+
+  @@map("orders")
 }
 
 model VirtualAssistanceRequest {

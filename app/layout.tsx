@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -9,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DocuServe - Professional Document Services",
+  title: "Bir Stationary - Professional Document Services",
   description: "Create professional documents online. Fast, easy, and print-ready.",
 };
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-lightbg text-charcoal font-sans antialiased">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={inter.variable}>
+        <body className="min-h-screen bg-lightbg text-charcoal font-sans antialiased">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

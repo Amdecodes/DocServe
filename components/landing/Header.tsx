@@ -54,8 +54,12 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-primary">
-          {t("logo")}
+        <Link href="/" className="flex items-center">
+          <img
+            src="/images/Logo/ela_Bir_stationary-removebg-preview.png"
+            alt="Bir Stationary"
+            className="h-12 md:h-14 w-auto"
+          />
         </Link>
 
         {/* Desktop Nav - Only for Landing Page */}

@@ -46,11 +46,17 @@ const GEMINI_API_URL = process.env.GEMINI_API_URL;
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPT = `You are a professional career writer specializing in ATS-friendly resumes and cover letters.
-Write concise, human-sounding, non-generic content.
-Do not invent facts.
-Do not mention AI, prompts, or templates.
-Follow the structure and limits exactly.`;
+const SYSTEM_PROMPT = `You are a senior career writer and ATS optimization specialist.
+Your output must be clear, concise, factual, and recruiter-readable.
+
+Hard rules:
+- Do NOT invent facts, tools, metrics, or achievements
+- Do NOT use clichés, buzzwords, or motivational language
+- Do NOT repeat the same sentence structure
+- Do NOT mention AI, prompts, or templates
+- Write in plain professional English suitable for ATS parsing
+- Optimize for clarity, relevance, and hiring manager scanning
+- Follow structure and limits exactly`;
 
 // Experience level translations
 const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
@@ -124,20 +130,21 @@ function buildSummaryPrompt(
 ): string {
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write a professional summary for a ${expLevelText} ${jobTitle} in the ${industry} industry.
+  return `Write a professional summary for a ${expLevelText} ${jobTitle} in the ${industry} field.
 
 Rules:
-- 2-3 sentences only
-- Focus on impact and skills, not responsibilities
-- Use clear, professional language
-- No buzzwords, no clichés
-- Do not mention years unless provided
-- Do not use first person ("I", "my")
+- 2–3 sentences only (60–80 words total)
+- Third person only (no "I", "my", "we")
+- Emphasize core skills, impact, and role focus
+- Avoid responsibilities; highlight outcomes and strengths
+- Use concrete language recruiters expect
+- No buzzwords, no clichés, no fluff
+- Do not assume years, tools, or certifications unless stated
 
-User notes:
-${userNotes || "None provided"}
+User-provided information:
+${userNotes || "No additional details provided"}
 
-Output only the summary text, nothing else.`;
+Output only the summary text.`;
 }
 
 /**
@@ -154,23 +161,39 @@ function buildCoverLetterPrompt(
   const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write a one-page cover letter body for a ${expLevelText} ${jobTitle} in the ${industry} industry.
+  return `Write the body of a one-page cover letter for a ${expLevelText} ${jobTitle} in the ${industry} field.
 
 Tone: ${toneInstruction}
 
-Rules:
-- 3 short paragraphs only
-- No company names or specific references
-- No placeholders like [Company Name]
-- No greetings or signatures
-- Focus on value, skills, and motivation
-- Avoid generic phrases like "I am writing to apply"
-- Each paragraph should be 2-3 sentences max
+Structure rules (strict):
+- Exactly 3 short paragraphs
+- Each paragraph: 2–3 sentences
+- No greetings, no closings, no company names
+- No placeholders or assumptions
 
-User notes:
-${userNotes || "None provided"}
+Content rules:
+Paragraph 1 — Role alignment:
+- State professional focus and role relevance
+- Avoid phrases like "I am writing to apply"
 
-Output only the 3 paragraphs, nothing else.`;
+Paragraph 2 — Value and capability:
+- Highlight strengths, skills, and transferable value
+- Reference impact or problem-solving (without metrics unless given)
+
+Paragraph 3 — Motivation and fit:
+- Express interest in contributing and growing
+- Keep professional and restrained
+
+General rules:
+- First person allowed
+- No clichés or generic enthusiasm
+- No buzzwords
+- No repetition of resume bullets
+
+User-provided information:
+${userNotes || "No additional details provided"}
+
+Output only the 3 paragraphs.`;
 }
 
 /**
@@ -182,22 +205,24 @@ function buildBulletPrompt(
   jobTitle: string,
   company: string,
 ): string {
-  const bulletList = bullets.map((b, i) => `${i + 1}. ${b}`).join("\n");
+  return `Rewrite the following resume bullets for ATS and recruiter review.
 
-  return `Rewrite the following bullet points to be concise, results-oriented, and ATS-friendly.
-
-Context: ${jobTitle} at ${company}
+Context:
+Role: ${jobTitle}
+Organization: ${company}
 
 Rules:
-- Keep meaning unchanged
-- Start each with a strong action verb
-- No exaggeration or invented metrics
-- Max 1 line per bullet (under 100 characters)
+- Preserve original meaning exactly
+- Start each bullet with a strong action verb
+- Emphasize ownership, contribution, or outcome
+- Remove filler words and vague phrasing
+- No invented metrics, tools, or scope
+- One concise sentence per bullet (max 100 characters)
 - Return exactly ${bullets.length} bullets
-- No numbering in output
+- No numbering, symbols, or extra text
 
-Bullets:
-${bulletList}
+Original bullets:
+${bullets.map((b) => `- ${b}`).join("\n")}
 
 Output only the rewritten bullets, one per line.`;
 }

@@ -20,50 +20,48 @@ export async function GET(req: NextRequest) {
   // No time check needed. If file exists in DB/Storage (it should, as we stopped auto-cleanup), allow download.
   // We generate a fresh link every time.
 
-  // 1. Always generate a fresh Signed URL with "download" disposition
-  // We do not rely on the cached DB URL here because we want to enforce the
-  // "Content-Disposition: attachment" header which is now default in getSignedUrl()
-  // and might not be present in older cached URLs.
-  try {
-    let freshLink;
-    const downloadName = order.service_type.startsWith("agreement:")
-      ? "Agreement.pdf"
-      : "CV.pdf";
+  // 1. Use the stored PDF URL if available (This is the correct path for UploadThing)
+  let targetUrl = order.pdf_url;
+  let downloadName = order.service_type.startsWith("agreement:")
+    ? "Agreement.pdf"
+    : "CV.pdf";
 
-    // 1. Try generic document path (New standard)
-    freshLink = await getSignedUrl(
-      `orders/${orderId}/document.pdf`,
-      downloadName,
-    );
-
-    // 2. Fallback to temp path (for files uploaded before fix)
-    if (!freshLink) {
-      freshLink = await getSignedUrl(
-        `temp/orders/${orderId}/document.pdf`,
+  // 2. Fallbacks for legacy files or failed updates
+  if (!targetUrl) {
+    try {
+      // Try generic document path (New standard)
+      const freshLink = await getSignedUrl(
+        `orders/${orderId}/document.pdf`,
         downloadName,
       );
+      if (freshLink) targetUrl = freshLink.signedUrl;
+      
+      // Fallback: Check older paths if needed, but for now we try the main one.
+      // If we really need legacy support we can restore the other checks here.
+    } catch (e) {
+      console.log("Could not generate fresh link", e);
     }
+  }
 
-    // 3. Fallback to legacy path (Old CVs)
-    if (!freshLink) {
-      freshLink = await getSignedUrl(`orders/${orderId}/cv.pdf`, downloadName);
-    }
-    
-    // 4. Fallback to temp legacy path
-    if (!freshLink) {
-      freshLink = await getSignedUrl(`temp/orders/${orderId}/cv.pdf`, downloadName);
-    }
+  if (targetUrl) {
+    try {
+      // Proxy the file to enforce download
+      const fileResponse = await fetch(targetUrl);
+      if (!fileResponse.ok) {
+        throw new Error(`Failed to fetch file from storage: ${fileResponse.statusText}`);
+      }
+      const fileBuffer = await fileResponse.arrayBuffer();
 
-    if (freshLink) {
-      // Update DB with the latest valid link (optional but good for caching elsewhere)
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { pdf_url: freshLink.signedUrl, expires_at: freshLink.expiresAt },
+      return new NextResponse(fileBuffer, {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="${downloadName}"`,
+        },
       });
-      return NextResponse.redirect(freshLink.signedUrl);
+    } catch (e) {
+      console.error("Proxy download failed", e);
+      return new NextResponse("Failed to download file", { status: 500 });
     }
-  } catch (e) {
-    console.log("Could not generate fresh link", e);
   }
 
   // 2. Fallback (if generating failed but we have a DB link?) - unlikely to help if generator failed.
