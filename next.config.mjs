@@ -11,6 +11,10 @@ const nextConfig = {
         hostname: 'zemfyznetvnfzfkzauyg.supabase.co',
         pathname: '/storage/v1/object/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+      },
     ],
     // Disable image optimization for Supabase signed URLs since they already include tokens
     unoptimized: process.env.NODE_ENV === 'production' ? false : true,
