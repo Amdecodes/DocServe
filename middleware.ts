@@ -9,20 +9,27 @@ const intlMiddleware = createMiddleware({
   localePrefix: "always",
 });
 
-const isAdminRoute = createRouteMatcher(["/(.*)/admin(.*)"]);
+const isAdminRoute = createRouteMatcher(["/admin(.*)", "/:locale/admin(.*)"]);
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
-      const { userId, redirectToSignIn } = await auth();
-      if (!userId) return redirectToSignIn();
-  }
+  try {
+    if (isAdminRoute(req)) {
+      const { userId } = await auth();
+      if (!userId) {
+        return (await auth()).redirectToSignIn();
+      }
+    }
 
-  if (isApiRoute(req)) {
-    return NextResponse.next();
+    if (isApiRoute(req)) {
+      return NextResponse.next();
+    }
+
+    return intlMiddleware(req);
+  } catch (error) {
+    console.error("Clerk Middleware Error:", error);
+    return intlMiddleware(req);
   }
-  
-  return intlMiddleware(req);
 });
 
 export const config = {
