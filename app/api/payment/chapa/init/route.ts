@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     }
 
     // Get the base URL for callbacks
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
     // Extract customer info from stored form_data to pass to Chapa
     // formatting relies on the expected structure of form_data.personal

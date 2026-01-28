@@ -18,7 +18,7 @@ export async function PATCH(
     const user = await currentUser();
     const adminEmail = process.env.ADMIN_EMAIL;
 
-    if (!user || !user.emailAddresses.some(e => e.emailAddress === adminEmail)) {
+    if (!user || !adminEmail || !user.emailAddresses.some(e => e.emailAddress.toLowerCase() === adminEmail.toLowerCase())) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
