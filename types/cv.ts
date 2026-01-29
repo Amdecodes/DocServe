@@ -13,6 +13,7 @@ export interface PersonalInfo {
   linkedin?: string;
   website?: string;
   photo?: string;
+  dateOfBirth?: string;
   summary?: string; // Added summary here if it's sometimes part of personal info, though context separates it
 }
 

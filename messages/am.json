@@ -25,7 +25,7 @@
   "Hero": {
     "title": "ፕሮፌሽናል ዶክመንቶችን በመስመር ላይ በፍጥነት እና በቀላሉ ያዘጋጁ።",
     "subtitle": "CV፣ ውሎች እና ሌሎች ሰነዶች ቅጹን ይሙሉ፣ ይክፈሉ፣ እና ወዲያውኑ ያውርዱ ወይም ቢሮአችን ውስጥ ያትሙ።",
-    "ctaPrimary": "አሁን ይጀምሩ",
+    "ctaPrimary": "CV ይፍጠሩ",
     "ctaSecondary": "አገልግሎቶችን ይመልከቱ",
     "imageAlt": "የዶክመንት ምሳሌ"
   },
@@ -187,6 +187,10 @@
       "name": "Emerald Professional",
       "description": "Fresh and airy design with green accents."
     },
+    "freshman-entry": {
+      "name": "የጀማሪ ሲቪ (Freshman)",
+      "description": "ለተማሪዎች እና ለጀማሪዎች ተስማሚ የሆነ፣ ከስራ ልምድ ይልቅ ችሎታን እና ትምህርትን የሚያጎላ ዲዛይን።"
+    },
     "useThisTemplate": "ይህንን ቅጽ ተጠቀም",
     "previewNotAvailable": "ቅድመ እይታ አይገኝም"
   },
@@ -285,6 +289,7 @@
     "phone": "ስልክ ቁጥር",
     "city": "ከተማ",
     "country": "ሀገር",
+    "dateOfBirth": "የልደት ቀን (አማራጭ)",
     "summaryTitle": "ስለ እርስዎ",
     "summaryDescription": "ስለ እርስዎ ልምድ እና ብቃት የሚገልጽ ከ2-4 ዓረፍተ ነገር ይጻፉ።",
     "placeholders": {
@@ -295,6 +300,7 @@
       "phone": "+251 911 223 344",
       "city": "አዲስ አበባ",
       "country": "ኢትዮጵያ",
+      "dateOfBirth": "ምሳሌ: 1990-01-01",
       "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
     }
   },
@@ -432,6 +438,22 @@
       "senior": "ከፍተኛ ደረጃ",
       "executive": "አስፈፃሚ ደረጃ"
     },
+    "educationLevel": "የትምህርት ደረጃ",
+    "selectEducationLevel": "የትምህርት ደረጃዎን ይምረጡ",
+    "educationLevels": {
+      "high_school_certificate": "የሁለተኛ ደረጃ ትምህርት ማጠናቀቂያ ሰርተፊኬት (12ኛ ክፍል)",
+      "tvet_level_1": "TVET ደረጃ 1",
+      "tvet_level_2": "TVET ደረጃ 2",
+      "tvet_level_3": "TVET ደረጃ 3",
+      "tvet_level_4": "TVET ደረጃ 4",
+      "tvet_level_5_diploma": "TVET ደረጃ 5 (ዲፕሎማ)",
+      "bachelors_degree": "የመጀመሪያ ዲግሪ (Bachelor's Degree)",
+      "masters_degree": "የሁለተኛ ዲግሪ (Master's Degree)",
+      "doctorate_phd": "የዶክትሬት ዲግሪ (PhD)"
+    },
+    "resumeUpload": "CV/Resume መ ስቀል",
+    "uploadDescription": "የእርስዎን CV ያስቀምጡ (PDF, DOC, DOCX - ከ4MB በታች)",
+    "uploadError": "ፋይሉን ማስቀመጥ አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
     "jobs": {
       "technology_it": "ቴክኖሎጂ እና IT",
       "business_finance": "ቢዝነስ እና ፋይናንስ",
@@ -462,7 +484,40 @@
       "disclaimer": "ይህ ጥያቄ ብቻ ነው። የመጨረሻ ዋጋ፣ የዲዛይን ማረጋገጫ እና ክፍያ ከመስመር ውጭ ይከናወናሉ።",
       "agreeCheckbox": "ተረድቻለሁ እና እስማማለሁ",
       "submitButton": "ትዕዛዙን ላክ",
-      "submitting": "በመላክ ላይ..."
+      "submitting": "በመላክ ላይ...",
+      "productDetails": "የምርት ዝርዝሮች",
+      "selectOption": "እባክዎ ይምረጡ",
+      "dynamic": {
+        "brideName": "የሙሽሪት ስም",
+        "groomName": "የሙሽራ ስም",
+        "eventDate": "ቀን",
+        "eventTime": "ሰዓት",
+        "eventPlace": "ቦታ",
+        "birthdayPerson": "የልደት ባለቤት ስም",
+        "location": "ቦታ",
+        "deceasedName": "የሟች ስም",
+        "purpose": "የካርዱ ዓላማ",
+        "fullName": "ሙሉ ስም",
+        "jobTitle": "የስራ መደብ",
+        "phone": "ስልክ ቁጥር",
+        "email": "ኢሜይል",
+        "address": "አድራሻ",
+        "website": "ድህረ ገጽ",
+        "size": "መጠን",
+        "paperType": "የወረቀት አይነት",
+        "quantity": "ብዛት",
+        "lamination": "ላሚኔሽን",
+        "width": "ስፋት",
+        "height": "ቁመት",
+        "eyelets": "Eyelets (ቀዳዳ)",
+        "foldType": "የታጠፈ አይነት",
+        "mugType": "የኩባያ አይነት",
+        "color": "ቀለም",
+        "gender": "ፆታ",
+        "style": "ስታይል",
+        "shape": "ቅርጽ",
+        "cover": "ሽፋን"
+      }
     },
     "success": {
       "title": "ትዕዛዞ ደርሷል",
@@ -471,7 +526,22 @@
     },
     "errors": {
       "generic": "ችግር አጋጥሟል። እባክዎ እንደገና ይሞክሩ።"
-    }
+    },
+    "categories": {
+      "Cards": "ካርዶች",
+      "Marketing": "ማርኬቲንግ",
+      "Merchandise": "ምርቶች",
+      "Stationery": "የቢሮ መገልገያዎች",
+      "desc_Cards": "የቢዝነስ ካርዶች፣ የሰርግ እና የልደት ካርዶች",
+      "desc_Marketing": "ፍላየሮች፣ ፖስተሮች፣ ባነሮች እና ማስታወቂያዎች",
+      "desc_Merchandise": "ቲሸርቶች፣ ኩባያዎች፣ ኮፍያዎች እና ብራንዲንግ",
+      "desc_Stationery": "ስቲከሮች፣ ደብዳቤዎች፣ ኤንቨሎፖች እና ማስታወሻ ደብተሮች"
+    },
+    "viewing": "እየታየ ነው",
+    "explore": "ይመልከቱ",
+    "collection": "ስብስብ",
+    "noProducts": "ምንም ምርት አልተገኘም",
+    "checkBackLater": "እባክዎ ለሚከተለው ምድብ በኋላ ተመልሰው ያረጋግጡ፦"
   },
   "PrintProducts": {
     "menus": {

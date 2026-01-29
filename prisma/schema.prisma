@@ -35,8 +35,10 @@ model VirtualAssistanceRequest {
   telegram_username      String?
   job_category           String
   experience_level       String
+  education_level        String
   location               String
   notes                  String?
+  resume_url             String?
   status                 VirtualAssistanceStatus @default(PENDING)
   language               String                  @default("en")
   source                 String                  @default("dashboard")
@@ -52,6 +54,8 @@ model PrintProduct {
   description String?
   base_price  Decimal                 @map("base_price")
   image_url   String?                 @map("image_url")
+  category    String                  @default("Marketing")
+  sub_category String?                @map("sub_category")
   active      Boolean                 @default(true)
   created_at  DateTime                @default(now()) @map("created_at")
   orders      PrintOrder[]

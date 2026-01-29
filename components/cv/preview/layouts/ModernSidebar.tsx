@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
 export function ModernSidebarLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -101,7 +101,7 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
                   <Linkedin size={14} /> LinkedIn
                 </p>
                 <a href={formatUrl(personalInfo.linkedin)} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:underline break-all">
-                  linkedin.com/in/...
+                  {personalInfo.linkedin.replace(/^https?:\/\//, '')}
                 </a>
               </div>
             )}
@@ -113,6 +113,14 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
                 <a href={formatUrl(personalInfo.website)} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:underline break-all">
                   {personalInfo.website.replace(/^https?:\/\//, '')}
                 </a>
+              </div>
+            )}
+            {personalInfo.dateOfBirth && (
+              <div className="mt-4">
+                <p className="font-bold text-black mb-1 flex items-center gap-2">
+                   <Cake size={14} /> Date of Birth
+                </p>
+                <p className="text-gray-700">{personalInfo.dateOfBirth}</p>
               </div>
             )}
           </div>
@@ -187,14 +195,14 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
             {personalInfo.firstName} <br /> {personalInfo.lastName}
           </h1>
           <p className="text-xl uppercase tracking-[0.2em] text-gray-600 font-medium">
-            {personalInfo.jobTitle || "Professional Title"}
+            {personalInfo.jobTitle}
           </p>
         </div>
 
         {/* Summary (Mapped from About Me requirement) */}
         {summary && (
            <div className="mb-10">
-             <h2 className="text-xl font-bold text-[#1F1F1F] mb-4 uppercase tracking-wide">Professional Summary</h2>
+             <h2 className="text-xl font-bold text-[#1F1F1F] mb-4 uppercase tracking-wide">About Me</h2>
              <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
                 <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   {typeof summary === "string" ? summary : ""}

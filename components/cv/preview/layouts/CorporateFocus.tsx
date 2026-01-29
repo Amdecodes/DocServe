@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
 export function CorporateFocusLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -73,6 +73,12 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
                     ? `${personalInfo.city}, ${personalInfo.country}`
                     : personalInfo.city || personalInfo.country}
                 </span>
+              </div>
+            )}
+            {personalInfo.dateOfBirth && (
+              <div className="flex items-center gap-3">
+                <Cake size={14} className="shrink-0 text-[#90cdf4]" />
+                <span>Date of Birth: {personalInfo.dateOfBirth}</span>
               </div>
             )}
             {personalInfo.linkedin && (
@@ -158,7 +164,7 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
            <div className="mb-10">
              <h2 className="text-lg font-bold text-[#1a365d] mb-3 uppercase flex items-center gap-2">
                <span className="w-8 h-1 bg-[#1a365d] inline-block"></span>
-               Profile
+               About Me
              </h2>
              <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
                 <p className="text-sm text-slate-600 leading-relaxed text-justify">

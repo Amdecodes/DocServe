@@ -93,6 +93,7 @@ const defaultCVData: CVData = {
     headline: "",
     linkedin: "",
     website: "",
+    dateOfBirth: "",
   },
   summary: "",
   coreCompetencies: [],

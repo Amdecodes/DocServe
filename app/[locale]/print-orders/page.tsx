@@ -1,11 +1,11 @@
 import { getTranslations } from "next-intl/server";
-import { ProductCard } from "@/components/print/ProductCard";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { PrintProduct } from "@/types/print";
 import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { PrintCatalog } from "@/components/print/PrintCatalog";
 
 interface PageProps {
   params: { locale: string };
@@ -49,7 +49,7 @@ export default async function PrintOrdersPage({
             </Button>
           </div>
 
-          {/* 2.1 Header */}
+          {/* Header */}
           <div className="text-center mb-12 max-w-2xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               {t("pageTitle")}
@@ -57,18 +57,8 @@ export default async function PrintOrdersPage({
             <p className="text-gray-600 text-lg">{t("subtitle")}</p>
           </div>
 
-          {/* 2.2 Product Grid */}
-          {products.length === 0 ? (
-            <div className="text-center text-gray-500 bg-white border border-dashed border-gray-200 rounded-xl p-10">
-              No products available right now.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+          {/* Catalog UI */}
+          <PrintCatalog products={products} />
         </div>
       </main>
 

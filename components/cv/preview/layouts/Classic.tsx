@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import { Cake } from "lucide-react";
 
 export function ClassicLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -15,7 +16,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-lg italic text-gray-600 mb-2">
-          {personalInfo.jobTitle || "Professional Title"}
+          {personalInfo.jobTitle}
         </p>
         <div className="flex justify-center gap-3 text-sm text-gray-600">
           <span>{personalInfo.email}</span>
@@ -23,8 +24,16 @@ export function ClassicLayout({ data }: { data: CVData }) {
           <span>{personalInfo.phone}</span>
           <span>•</span>
           <span>
-            {personalInfo.city}, {personalInfo.country}
+            {personalInfo.city && personalInfo.country
+              ? `${personalInfo.city}, ${personalInfo.country}`
+              : personalInfo.city || personalInfo.country}
           </span>
+          {personalInfo.dateOfBirth && (
+            <>
+              <span>•</span>
+              <span><Cake size={12} className="inline mr-1" />Date of Birth: {personalInfo.dateOfBirth}</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -33,7 +42,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
         {summary && (
           <section>
             <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase text-sm tracking-wider">
-              Professional Profile
+              About Me
             </h3>
             <p className="text-sm text-justify">{summary}</p>
           </section>

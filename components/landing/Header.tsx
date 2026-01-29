@@ -38,8 +38,7 @@ export default function Header() {
 
   const navLinks = [
     { label: t("services"), href: "#services" },
-    { label: t("howItWorks"), href: "#how-it-works" },
-    { label: t("pricing"), href: "#pricing" },
+    { label: t("pricing"), href: "/prices" },
     { label: t("contact"), href: "#contact" },
   ];
 
@@ -65,15 +64,26 @@ export default function Header() {
         {/* Desktop Nav - Only for Landing Page */}
         {isLandingPage && (
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-charcoal hover:text-primary transition-colors font-medium"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isExternal = link.href.startsWith("/");
+              return isExternal ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-charcoal hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-charcoal hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
         )}
 
@@ -149,16 +159,28 @@ export default function Header() {
             className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden p-4 border-t"
           >
             <nav className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-lg font-medium text-charcoal"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isExternal = link.href.startsWith("/");
+                return isExternal ? (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-lg font-medium text-charcoal"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="text-lg font-medium text-charcoal"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               <hr />
               <button
                 onClick={() => {

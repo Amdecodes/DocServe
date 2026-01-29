@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
 export function ModernDarkLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -16,7 +16,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
 
   return (
     <div 
-      className="w-full font-sans text-black bg-white flex flex-col"
+      className="min-h-[297mm] w-full font-sans text-black bg-white flex flex-col"
       style={{
         background: "#FFFFFF",
         WebkitPrintColorAdjust: "exact",
@@ -42,7 +42,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
             {personalInfo.firstName} <span className="font-light">{personalInfo.lastName}</span>
           </h1>
           <p className="text-xl tracking-[0.2em] uppercase text-[#D4AF37] font-medium mb-6">
-            {personalInfo.jobTitle || "Professional Title"}
+            {personalInfo.jobTitle}
           </p>
           
           {/* Summary moved to Header to match Image clone style */}
@@ -241,6 +241,12 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
             <div className="flex items-center gap-3">
               <Mail className="w-4 h-4 text-[#D4AF37]" />
               <span>{personalInfo.email}</span>
+            </div>
+          )}
+          {personalInfo.dateOfBirth && (
+            <div className="flex items-center gap-3">
+              <Cake className="w-4 h-4 text-[#D4AF37]" />
+              <span>Date of Birth: {personalInfo.dateOfBirth}</span>
             </div>
           )}
           {(personalInfo.city || personalInfo.country) && (

@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
 export function CreativeSplitLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -37,7 +37,7 @@ export function CreativeSplitLayout({ data }: { data: CVData }) {
               {personalInfo.firstName} <br /> {personalInfo.lastName}
             </h1>
             <p className="text-xl text-[#c7d2fe] tracking-widest font-medium uppercase mt-2">
-              {personalInfo.jobTitle || "Professional Title"}
+              {personalInfo.jobTitle}
             </p>
          </div>
          
@@ -84,6 +84,12 @@ export function CreativeSplitLayout({ data }: { data: CVData }) {
                     ? `${personalInfo.city}, ${personalInfo.country}`
                     : personalInfo.city || personalInfo.country}
                 </span>
+              </div>
+            )}
+            {personalInfo.dateOfBirth && (
+              <div className="flex items-center gap-2">
+                <Cake size={14} className="text-[#818cf8]" />
+                <span>Date of Birth: {personalInfo.dateOfBirth}</span>
               </div>
             )}
              {personalInfo.linkedin && (

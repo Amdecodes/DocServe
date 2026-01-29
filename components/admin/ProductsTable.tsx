@@ -23,6 +23,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { PRINT_CATEGORIES, CATEGORY_LABELS, ALL_SUB_CATEGORIES } from "@/config/print-categories";
 
 // --- Types ---
 
@@ -39,6 +40,8 @@ interface Product {
   description: string | null;
   base_price: number;
   image_url: string | null;
+  category: string;
+  sub_category?: string | null;
   active: boolean;
   _count: { orders: number };
   variations: ProductVariation[];
@@ -178,6 +181,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
     description: "",
     base_price: "",
     image_url: "",
+    category: "Marketing",
+    sub_category: "",
     active: true,
   });
 
@@ -194,6 +199,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       description: "",
       base_price: "",
       image_url: "",
+      category: "Marketing",
+      sub_category: "",
       active: true,
     });
     setVariations([]);
@@ -212,6 +219,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       description: product.description || "",
       base_price: product.base_price.toString(),
       image_url: product.image_url || "",
+      category: product.category || "Marketing",
+      sub_category: product.sub_category || "",
       active: product.active,
     });
     setVariations(
@@ -266,6 +275,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         description: formData.description || undefined,
         base_price: parseFloat(formData.base_price),
         image_url: formData.image_url || undefined,
+        category: formData.category,
+        sub_category: formData.sub_category || undefined,
         active: formData.active,
         variations: validVariations,
       };
@@ -335,6 +346,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                 <th className="px-6 py-3 w-20">Image</th>
                 <th className="px-6 py-3">Product Name</th>
                 <th className="px-6 py-3">Price</th>
+                <th className="px-6 py-3">Category</th>
                 <th className="px-6 py-3 text-center">Variations</th>
                 <th className="px-6 py-3 text-center">Active</th>
                 <th className="px-6 py-3 text-center">Orders</th>
@@ -384,6 +396,11 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                     </td>
                     <td className="px-6 py-4 text-gray-600 font-medium">
                       {product.base_price.toFixed(2)} ETB
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        {product.category || "—"}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
@@ -464,7 +481,51 @@ export default function ProductsTable({ products }: ProductsTableProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Category
+                </label>
+                <select
+                  className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
+                >
+                  {Object.values(PRINT_CATEGORIES).map((cat) => (
+                    <option key={cat} value={cat}>
+                      {CATEGORY_LABELS[cat as keyof typeof CATEGORY_LABELS]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Dynamic Sub-Category Dropdown */}
+              {ALL_SUB_CATEGORIES[formData.category as keyof typeof ALL_SUB_CATEGORIES] && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sub-Category / Type
+                  </label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.sub_category || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sub_category: e.target.value })
+                    }
+                  >
+                    <option value="">Select Type (Optional)</option>
+                    {Object.values(
+                      ALL_SUB_CATEGORIES[formData.category as keyof typeof ALL_SUB_CATEGORIES]
+                    ).map((sub) => (
+                      <option key={sub} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Base Price (ETB)

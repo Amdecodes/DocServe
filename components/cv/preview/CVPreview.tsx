@@ -6,6 +6,7 @@ import { DEFAULT_TEMPLATE, templateComponents } from "@/config/templates";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 import { FileText, Mail } from "lucide-react";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
+import { CV_DUMMY_DATA } from "@/config/dummy-data";
 
 // Dynamically generate lazy-loaded components from the registry
 const lazyTemplates = Object.fromEntries(
@@ -128,6 +129,31 @@ export function CVPreview() {
     );
   }, [selectedTemplate]);
 
+  // Helper to merge dummy data for preview
+  const previewData = useMemo(() => {
+    const mergePersonalInfo = (raw?: Partial<PersonalInfo>, dummy?: Partial<PersonalInfo>) => {
+      if (!raw) return dummy;
+      return {
+        ...dummy,
+        ...Object.fromEntries(
+          Object.entries(raw).filter(([_, v]) => v !== undefined && v !== "")
+        ),
+      };
+    };
+
+    return {
+      ...cvData,
+      personalInfo: mergePersonalInfo(cvData.personalInfo, CV_DUMMY_DATA.personalInfo),
+      summary: cvData.summary || CV_DUMMY_DATA.summary,
+      experience: cvData.experience?.length ? cvData.experience : CV_DUMMY_DATA.experience,
+      education: cvData.education?.length ? cvData.education : CV_DUMMY_DATA.education,
+      skills: cvData.skills?.length ? cvData.skills : CV_DUMMY_DATA.skills,
+      languages: cvData.languages?.length ? cvData.languages : CV_DUMMY_DATA.languages,
+      volunteer: cvData.volunteer?.length ? cvData.volunteer : CV_DUMMY_DATA.volunteer,
+      coreCompetencies: cvData.coreCompetencies?.length ? cvData.coreCompetencies : CV_DUMMY_DATA.coreCompetencies,
+    } as CVData;
+  }, [cvData]);
+
   return (
     <div className="w-full h-full flex flex-col items-center">
       {/* Preview Tabs */}
@@ -172,11 +198,11 @@ export function CVPreview() {
           />
 
           {activePreview === "resume" ? (
-            <TemplateComponent data={cvData} />
+            <TemplateComponent data={previewData} />
           ) : (
             <CoverLetterComponent
-              coverLetter={(cvData.coverLetter || {}) as CoverLetterData}
-              personalInfo={cvData.personalInfo || {}}
+              coverLetter={(previewData.coverLetter || {}) as CoverLetterData}
+              personalInfo={previewData.personalInfo || {}}
             />
           )}
         </Suspense>

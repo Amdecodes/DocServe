@@ -68,27 +68,33 @@ export default function Hero() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-linear-to-tr from-secondary/20 to-primary/10 rounded-full blur-3xl -z-10"
             />
 
-            {/* Video Container */}
+            {/* Image Container */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 100,
-                damping: 20,
-                duration: 0.8,
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ 
+                opacity: 1, 
+                y: [0, -15, 0],
+                transition: {
+                  y: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  },
+                  opacity: { duration: 0.8 },
+                  scale: { duration: 0.8 }
+                }
               }}
-              className="relative bg-white p-2 rounded-xl shadow-2xl border border-gray-100"
+              className="relative bg-white p-3 rounded-2xl shadow-2xl border border-gray-100 group overflow-hidden"
             >
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-gray-100">
-                <iframe
-                  className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube.com/embed/LXb3EKWsInQ?si=placeholder"
-                  title="Paperless Demo"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0" />
+              <div className="relative aspect-auto max-h-[500px] w-full overflow-hidden rounded-xl bg-gray-50 z-10 flex justify-center">
+                <img
+                  className="h-full w-auto max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
+                  src="/images/templet-previev/crative-split.png"
+                  alt="Creative Split Resume Template"
                 />
+                {/* Subtle overlay blur on edges */}
+                <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]" />
               </div>
             </motion.div>
           </div>

@@ -24,8 +24,13 @@ import {
   AtSign,
   Phone,
   Send,
+  Upload,
+  FileText,
+  X,
+  GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UploadButton } from "@/lib/uploadthing";
 
 type FormValues = z.infer<typeof virtualAssistanceSchema>;
 
@@ -61,6 +66,9 @@ export function VirtualAssistanceForm({
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const STEPS = [
     { id: 0, label: t("steps.contact"), icon: User },
@@ -77,8 +85,10 @@ export function VirtualAssistanceForm({
       telegram_username: "",
       job_category: undefined as unknown as FormValues["job_category"],
       experience_level: undefined as unknown as FormValues["experience_level"],
+      education_level: undefined as unknown as FormValues["education_level"],
       location: "",
       notes: "",
+      resume_url: "",
       disclaimer_accepted: undefined as unknown as true,
       language: locale,
       source: source,
@@ -98,7 +108,7 @@ export function VirtualAssistanceForm({
         fieldsToValidate = ["full_name", "phone_number"];
         break;
       case 1: // Job Details
-        fieldsToValidate = ["job_category", "experience_level", "location"];
+        fieldsToValidate = ["job_category", "experience_level", "education_level", "location"];
         break;
       case 2: // Confirmation
         fieldsToValidate = ["disclaimer_accepted"];
@@ -430,6 +440,48 @@ export function VirtualAssistanceForm({
                     </div>
                   </div>
 
+                  {/* Education Level */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700 ml-1">
+                        {t("educationLevel")} <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-gray-400 pointer-events-none z-10" />
+                        <Select
+                          {...form.register("education_level")}
+                          className={cn(
+                            "pl-10 h-11 border-gray-200 focus-visible:ring-teal-500 rounded-xl bg-gray-50/50 focus:bg-white",
+                            form.formState.errors.education_level &&
+                              "border-red-500 bg-red-50/50",
+                          )}
+                        >
+                          <option value="">{t("selectEducationLevel")}</option>
+                          {[
+                            "high_school_certificate",
+                            "tvet_level_1",
+                            "tvet_level_2",
+                            "tvet_level_3",
+                            "tvet_level_4",
+                            "tvet_level_5_diploma",
+                            "bachelors_degree",
+                            "masters_degree",
+                            "doctorate_phd",
+                          ].map((edu) => (
+                            <option key={edu} value={edu}>
+                              {t(`educationLevels.${edu}`)}
+                            </option>
+                          ))}
+                        </Select>
+                      </div>
+                      {form.formState.errors.education_level && (
+                        <p className="text-xs text-red-500 ml-1">
+                          {form.formState.errors.education_level.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Location */}
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 ml-1">
@@ -475,6 +527,66 @@ export function VirtualAssistanceForm({
                     <div className="text-right text-xs text-gray-400">
                       {notesValue.length}/700
                     </div>
+                  </div>
+
+                  {/* File Upload */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700 ml-1 flex justify-between">
+                      {t("resumeUpload")}
+                      <span className="text-gray-400 text-xs font-normal">
+                        {t("optional")}
+                      </span>
+                    </label>
+                    {!uploadedFile ? (
+                      <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-teal-300 transition-colors bg-gray-50/50">
+                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600 mb-3">
+                          {t("uploadDescription")}
+                        </p>
+                        <UploadButton
+                          endpoint="virtualAssistanceResume"
+                          onClientUploadComplete={(res) => {
+                            if (res && res[0]) {
+                              const fileUrl = res[0].url;
+                              const fileName = res[0].name;
+                              setUploadedFile(fileUrl);
+                              setUploadedFileName(fileName);
+                              form.setValue("resume_url", fileUrl);
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            alert(t("uploadError"));
+                            console.error(error);
+                          }}
+                          appearance={{
+                            button:
+                              "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium ut-ready:bg-teal-600 ut-uploading:bg-teal-500",
+                            allowedContent: "text-xs text-gray-500 mt-2",
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-xl">
+                        <FileText className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-teal-900 truncate">
+                            {uploadedFileName || "Resume uploaded"}
+                          </p>
+                          <p className="text-xs text-teal-600">Upload successful</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUploadedFile(null);
+                            setUploadedFileName(null);
+                            form.setValue("resume_url", "");
+                          }}
+                          className="p-1 hover:bg-teal-100 rounded-full transition-colors"
+                        >
+                          <X className="w-4 h-4 text-teal-700" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

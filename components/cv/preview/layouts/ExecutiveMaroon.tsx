@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe, GripVertical } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, GripVertical, Cake } from "lucide-react";
 
 export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -37,7 +37,7 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
                   {personalInfo.firstName} <span className="text-[#fecaca]">{personalInfo.lastName}</span>
                 </h1>
                 <p className="text-xl tracking-widest text-[#fecaca] uppercase font-medium">
-                  {personalInfo.jobTitle || "Professional Title"}
+                  {personalInfo.jobTitle}
                 </p>
              </div>
              
@@ -82,6 +82,12 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
                 <a href={formatUrl(personalInfo.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors truncate">LinkedIn</a>
               </div>
             )}
+            {personalInfo.dateOfBirth && (
+              <div className="flex items-center gap-2">
+                <Cake size={14} className="text-[#fecaca]" />
+                <span>Date of Birth: {personalInfo.dateOfBirth}</span>
+              </div>
+            )}
          </div>
       </div>
 
@@ -95,7 +101,7 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
              <section>
                <h3 className="text-xl font-bold text-[#7f1d1d] uppercase mb-4 border-b border-[#7f1d1d] pb-2 flex items-center gap-2">
                  <span className="w-2 h-2 bg-[#7f1d1d]"></span>
-                 Executive Profile
+                 About Me
                </h3>
                <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
                   <p className="text-slate-700 leading-7 text-justify font-sans">

@@ -312,6 +312,17 @@ export function Step1_Personal({ onNext }: Step1Props) {
               )}
             </div>
             <div className="space-y-2">
+              <label htmlFor="dateOfBirth" className="text-sm font-medium">
+                {t("dateOfBirth")}
+              </label>
+              <Input
+                id="dateOfBirth"
+                type="date"
+                placeholder={t("placeholders.dateOfBirth")}
+                {...form.register("dateOfBirth")}
+              />
+            </div>
+            <div className="space-y-2">
               <label htmlFor="linkedin" className="text-sm font-medium">
                 LinkedIn URL (Optional)
               </label>

@@ -1,8 +1,6 @@
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
-import HowItWorks from "@/components/landing/HowItWorks";
 import Services from "@/components/landing/Services";
-import Pricing from "@/components/landing/Pricing";
 import WhyChooseUs from "@/components/landing/WhyChooseUs";
 import Preview from "@/components/landing/Preview";
 import PaymentTrust from "@/components/landing/PaymentTrust";
@@ -15,8 +13,6 @@ export default function HomePage() {
       <Header />
       <Hero />
       <Services />
-      <HowItWorks />
-      <Pricing />
       <WhyChooseUs />
       <Preview />
       <PaymentTrust />

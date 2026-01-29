@@ -11,6 +11,8 @@ export interface PrintProduct {
   description?: string | null;
   base_price: number;
   image_url?: string | null;
+  category?: string; // Optional for backward compatibility in UI, but DB has default
+  sub_category?: string | null;
   active?: boolean | null;
   created_at?: string | null;
   variations?: PrintProductVariation[];

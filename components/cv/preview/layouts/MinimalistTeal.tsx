@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
 export function MinimalistTealLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -46,7 +46,7 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-xl uppercase tracking-[0.3em] text-[#0d9488] font-light mb-6">
-          {personalInfo.jobTitle || "Professional Title"}
+          {personalInfo.jobTitle}
         </p>
 
         {/* Contact Info - Centered Row */}
@@ -71,6 +71,12 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
                     ? `${personalInfo.city}, ${personalInfo.country}`
                     : personalInfo.city || personalInfo.country}
                 </span>
+              </div>
+            )}
+            {personalInfo.dateOfBirth && (
+              <div className="flex items-center gap-2">
+                <Cake size={14} className="text-[#0d9488]" />
+                <span>Date of Birth: {personalInfo.dateOfBirth}</span>
               </div>
             )}
              {personalInfo.linkedin && (
@@ -164,7 +170,7 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
                  <span className="p-2 bg-[#0d9488] text-white rounded-md">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                  </span>
-                 Profile
+                 About Me
                </h3>
                <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
                   <p className="text-sm text-slate-600 leading-7 text-justify">

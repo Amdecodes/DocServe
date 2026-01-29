@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/navigation";
 import { PrintProduct } from "@/types/print";
 import { Minus, Plus, User, Phone, MapPin, Mail, Sparkles } from "lucide-react";
+import { CATEGORY_FIELDS, PRINT_CATEGORIES, PrintCategory, SUB_CATEGORY_FIELDS } from "@/config/print-categories";
 
 interface OrderFormProps {
   product: PrintProduct;
@@ -34,6 +35,39 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
 
     const formData = new FormData(event.currentTarget);
 
+    // Collect dynamic fields
+    const dynamicData: Record<string, string> = {};
+    const dynamicFieldsInstructions: string[] = [];
+    
+    // Find dynamic fields config
+    // 1. Check if there's a sub-category config (e.g. Wedding, Birthday)
+    // 2. Fallback to main category config (e.g. Marketing, Merchandise)
+    let categoryConfig = product.sub_category 
+      ? SUB_CATEGORY_FIELDS[product.sub_category]
+      : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
+
+    // If still undefined (shouldn't happen if configured correctly), default empty
+    if (!categoryConfig && product.category === "Cards") {
+        // Fallback for generic cards if sub-category missing
+        categoryConfig = CATEGORY_FIELDS["Cards"]; 
+    }
+    
+    if (categoryConfig) {
+      categoryConfig.forEach(field => {
+        const val = formData.get(`dynamic_${field.name}`) as string;
+        if (val) {
+          const label = field.label;
+          dynamicFieldsInstructions.push(`${label}: ${val}`);
+        }
+      });
+    }
+
+    const baseNotes = ((formData.get("notes") as string) || "").trim();
+    const finalNotes = [
+      baseNotes,
+      dynamicFieldsInstructions.length > 0 ? "\n--- Specification ---\n" + dynamicFieldsInstructions.join("\n") : ""
+    ].filter(Boolean).join("\n");
+
     const payload = {
       product_id: product.id,
       variation_id: selectedVariationId ?? null,
@@ -42,7 +76,7 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
       email: ((formData.get("email") as string) || "").trim() || null,
       location: (formData.get("location") as string) ?? "",
       quantity: quantity,
-      notes: ((formData.get("notes") as string) || "").trim() || null,
+      notes: finalNotes || null,
     };
 
     try {
@@ -73,6 +107,18 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
     (v) => v.id === selectedVariationId,
   );
 
+  // Determine which fields to show
+  // 1. Check sub-category fields (Wedding, Birthday, etc.)
+  // 2. Fallback to category fields (Text only for Cards, Size for Merchandise, etc.)
+  let displayFields = product.sub_category 
+    ? SUB_CATEGORY_FIELDS[product.sub_category]
+    : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
+
+  // Safety fallback for Cards if sub-category is missing but category is Cards
+  if (!displayFields && product.category === "Cards") {
+      displayFields = CATEGORY_FIELDS["Cards"];
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Selected Item Summary */}
@@ -87,6 +133,11 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
               <Sparkles className="w-3 h-3" />
               {selectedVariation.name}
             </div>
+          )}
+          {product.sub_category && (
+             <div className="text-xs text-gray-500 mt-1 italic">
+               {product.sub_category}
+             </div>
           )}
         </div>
         <div className="text-right">
@@ -165,6 +216,67 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
           startIcon={<Mail className="w-4 h-4" />}
           className="bg-white"
         />
+
+        {/* Dynamic Fields Section */}
+        {displayFields && displayFields.length > 0 && (
+          <div className="pt-4 border-t border-gray-100">
+            <h4 className="text-sm font-medium text-gray-900 mb-4 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-teal-600" />
+              {t("productDetails")}
+            </h4>
+            <div className="space-y-4">
+              {displayFields.map((field) => (
+                <div key={field.name} className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-500 uppercase">
+                    {field.label.startsWith("dynamic.") ? t(field.label) : field.label}{" "}
+                    {field.required && <span className="text-red-500">*</span>}
+                  </label>
+                  {field.type === "select" ? (
+                    <select
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                    >
+                      <option value="">{t("selectOption")}</option>
+                      {field.options?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <Textarea
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      className="bg-white"
+                      rows={3}
+                    />
+                  ) : field.type === "file" ? (
+                    <div className="relative">
+                      <Input
+                        type="file"
+                        accept=".pdf,.png,.jpg,.jpeg,.ai,.psd"
+                        className="bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                      />
+                      <p className="text-[10px] text-gray-400 mt-1 pl-1">
+                        Max 8MB. PDF, PNG, JPG accepted.
+                      </p>
+                    </div>
+                  ) : (
+                    <Input
+                      type={field.type}
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      className="bg-white"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <Textarea
           id="notes"

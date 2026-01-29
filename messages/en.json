@@ -25,7 +25,7 @@
   "Hero": {
     "title": "Create professional documents online. Fast, easy, and print-ready.",
     "subtitle": "CVs, agreements, and documents fill the form, pay online, and download instantly or print in our office.",
-    "ctaPrimary": "Start Now",
+    "ctaPrimary": "Build CV",
     "ctaSecondary": "View Services",
     "imageAlt": "Document Preview"
   },
@@ -187,6 +187,10 @@
       "name": "Emerald Professional",
       "description": "Fresh and airy design with green accents."
     },
+    "freshman-entry": {
+      "name": "Freshman Entry",
+      "description": "Ideal for students and entry-level professionals, highlighting skills and education over work history."
+    },
     "useThisTemplate": "Use This Template",
     "previewNotAvailable": "Preview Not Available"
   },
@@ -285,6 +289,7 @@
     "phone": "Phone",
     "city": "City",
     "country": "Country",
+    "dateOfBirth": "Date of Birth (Optional)",
     "summaryTitle": "Professional Summary",
     "summaryDescription": "Write 2-4 sentences that highlight your value and years of experience.",
     "placeholders": {
@@ -295,6 +300,7 @@
       "phone": "+251 911 223 344",
       "city": "Addis Ababa",
       "country": "Ethiopia",
+      "dateOfBirth": "e.g. 1990-01-01",
       "summary": "e.g. Experienced software engineer with 5 years of experience..."
     }
   },
@@ -434,6 +440,22 @@
       "senior": "Senior Level",
       "executive": "Executive Level"
     },
+    "educationLevel": "Education Level",
+    "selectEducationLevel": "Select your education level",
+    "educationLevels": {
+      "high_school_certificate": "High School Leaving Certificate (Grade 12 Complete)",
+      "tvet_level_1": "TVET Certificate Level 1",
+      "tvet_level_2": "TVET Certificate Level 2",
+      "tvet_level_3": "TVET Certificate Level 3",
+      "tvet_level_4": "TVET Certificate Level 4",
+      "tvet_level_5_diploma": "TVET Level 5 (Diploma)",
+      "bachelors_degree": "Bachelor's Degree",
+      "masters_degree": "Master's Degree",
+      "doctorate_phd": "Doctorate (PhD)"
+    },
+    "resumeUpload": "Resume Upload",
+    "uploadDescription": "Upload your resume (PDF, DOC, DOCX - max 4MB)",
+    "uploadError": "Failed to upload file. Please try again.",
     "jobs": {
       "technology_it": "Technology & IT",
       "business_finance": "Business & Finance",
@@ -464,7 +486,40 @@
       "disclaimer": "This is a request only. Final pricing, design confirmation, and payment are handled offline.",
       "agreeCheckbox": "I understand and agree",
       "submitButton": "Submit Order Request",
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "productDetails": "Product Details",
+      "selectOption": "Select an option",
+      "dynamic": {
+        "brideName": "Bride's Name",
+        "groomName": "Groom's Name",
+        "eventDate": "Date",
+        "eventTime": "Time",
+        "eventPlace": "Place / Venue",
+        "birthdayPerson": "Birthday Person's Name",
+        "location": "Location",
+        "deceasedName": "Deceased Person's Name",
+        "purpose": "Purpose of Card",
+        "fullName": "Full Name",
+        "jobTitle": "Job Title",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "address": "Address",
+        "website": "Website",
+        "size": "Size",
+        "paperType": "Paper Type",
+        "quantity": "Quantity",
+        "lamination": "Lamination",
+        "width": "Width",
+        "height": "Height",
+        "eyelets": "Eyelets",
+        "foldType": "Fold Type",
+        "mugType": "Mug Type",
+        "color": "Color",
+        "gender": "Gender",
+        "style": "Style",
+        "shape": "Shape",
+        "cover": "Cover Material"
+      }
     },
     "success": {
       "title": "Order Received",
@@ -473,7 +528,22 @@
     },
     "errors": {
       "generic": "Something went wrong. Please try again."
-    }
+    },
+    "categories": {
+      "Cards": "Cards",
+      "Marketing": "Marketing",
+      "Merchandise": "Merchandise",
+      "Stationery": "Stationery",
+      "desc_Cards": "Business cards, Wedding & Birthday invitations",
+      "desc_Marketing": "Flyers, Posters, Banners & Promotional materials",
+      "desc_Merchandise": "T-Shirts, Mugs, Caps & Custom branding",
+      "desc_Stationery": "Stickers, Letterheads, Envelopes & Notebooks"
+    },
+    "viewing": "Viewing",
+    "explore": "Explore",
+    "collection": "Collection",
+    "noProducts": "No products found",
+    "checkBackLater": "Check back later for"
   },
   "PrintProducts": {
     "menus": {

@@ -27,77 +27,57 @@ export const AGREEMENT_TEMPLATES: AgreementTemplate[] = [
     language: "am",
     version: "v1",
     category: "Vehicle",
-    content: `የውል ቀን፡ {AGREEMENT_DATE} ዓ.ም
+    content: `{AGREEMENT_DATE} የመኪና ሽያጭ ውል ስምምነት
 
-1. የሻጭ መረጃ
-• ሙሉ ስም፡ {SELLER_FULL_NAME}
-• የአባት ስም፡ {SELLER_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {SELLER_ID_NUMBER}
-• አድራሻ፡ {SELLER_ADDRESS}
+ሻጭ ----------- {SELLER_FULL_NAME} /ዜግነት {SELLER_NATIONALITY}/ {SELLER_REPRESENTATION} {SELLER_AGENT_NAME} የውክልና ስልጣን ቁጥር {SELLER_PO_NUMBER} በቀን {SELLER_PO_DATE} አድራሻ {SELLER_ADDRESS}
+ገዢ ----------- {BUYER_FULL_NAME} /ዜግነት {BUYER_NATIONALITY}/ {BUYER_REPRESENTATION} {BUYER_AGENT_NAME} የውክልና ስልጣን ቁጥር {BUYER_PO_NUMBER} በቀን {BUYER_PO_DATE} አድራሻ {BUYER_ADDRESS}
 
-ውክልና፡ {SELLER_REPRESENTATION}
+እኔ ሻጭ {SELLER_REPRESENTATION} {REPRESENTED_NAME} ስም ተመዝግቦ የሚገኘውን የሰሌዳ ቁጥር {VEHICLE_PLATE}፣ የተሸከርካሪው ዓይነት {VEHICLE_TYPE}፣ የተሠራበት አገር {VEHICLE_COUNTRY}፣ የሻንሲ ቁጥር {VEHICLE_CHASSIS}፣ የሞተር ቁጥር {VEHICLE_ENGINE} የሆነውን ተሸከርካሪ ለገዢ በዛሬው ዕለት በብር {SALE_PRICE} ({SALE_PRICE_WORDS}) የሸጥኩላቸው ሲሆን የገንዘብ አከፋፈል በተመለከተ በዚህ ውል ደረሰኝነት አማካኝነት ሙሉ ክፍያ ብር {SALE_PRICE} ተቀብዬ ተሸከርካሪውን እና ኦርጅናል ማስረጃዎችን አስረክቤ ተስማምቼ መሸጤን በፊርማዬ አረጋግጣለሁ፡፡
 
-2. የገዢ መረጃ
-• ሙሉ ስም፡ {BUYER_FULL_NAME}
-• የአባት ስም፡ {BUYER_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {BUYER_ID_NUMBER}
-• አድራሻ፡ {BUYER_ADDRESS}
+ይህ ተሸከርካሪ ከመሸጡ በፊት የነበረ ዕዳ ዕገዳ ቢኖር ተከራክሬ ለመመለስ እና ማንኛውም የመንግስት ዕዳ ካለ እኔ ሻጭ የምከፍል መሆኑን አረጋግጣለሁ:: ገዢም ተሸከርካሪውን በተገለጸው ሁኔታ ተረክበው መግዛታቸውን በፊርማቸው ያረጋግጣሉ::
 
-3. የመኪና መግለጫ
-• የመኪና ዓይነት / ሞዴል፡ {CAR_MAKE_MODEL}
-• የመኪና ቀለም፡ {CAR_COLOR}
-• የሞተር ቁጥር፡ {ENGINE_NUMBER}
-• የሻሲ ቁጥር፡ {CHASSIS_NUMBER}
-• የሰሌዳ ቁጥር፡ {PLATE_NUMBER}
-• የማምረቻ ዓመት፡ {MANUFACTURE_YEAR}
+እኛ ምስክሮች ሁለቱ ወገኖች ተስማምተው ሲሸጡና ሲገዙ አይተናል፡፡
+1. የምስክር ስም {WITNESS1_NAME}  አድራሻ፡- {WITNESS1_ADDRESS}
+2. የምስክር ስም {WITNESS2_NAME} አድራሻ፡- {WITNESS2_ADDRESS}
 
-4. የሽያጭ ዋጋ እና ክፍያ
-• ጠቅላላ ዋጋ፡ {SALE_PRICE} ብር
-• በፊደል፡ {SALE_PRICE_WORDS}
+          የሻጭ ፊርማ ________________              የገዢ ፊርማ ________________
 
-የክፍያ ሁኔታ፡ {PAYMENT_STATUS}
-• የክፍያ ዘዴ፡ {PAYMENT_METHOD}
-• የመጀመሪያ ክፍያ፡ {DOWN_PAYMENT}
-• የቀሪ ክፍያ ቀን፡ {REMAINING_PAYMENT_DATE}
+          የምስክሮች ፊርማ
+1. ________________
 
-5. የሻጭ መግለጫ
-እኔ {SELLER_FULL_NAME} መኪናው የእኔ ሙሉ ንብረት መሆኑን፣ ከማንኛውም እገዳ ወይም ክስ ነፃ መሆኑን እና ለ {BUYER_FULL_NAME} በፈቃዴ መሸጤን አረጋግጣለሁ።
+2. ________________
 
-6. የገዢ መግለጫ
-እኔ {BUYER_FULL_NAME} መኪናውን በተገለጸው ሁኔታ ተቀብዬ መግዛቴን እና ክፍያውን መፈጸሜን አረጋግጣለሁ።
-
-7. ምስክሮች
-ምስክር 1: {WITNESS1_NAME} – ፊርማ __________
-ምስክር 2: {WITNESS2_NAME} – ፊርማ __________
-
-8. ፊርማ
-• የሻጭ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}
-• የገዢ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}`,
+`,
     variables: [
       { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
       { key: "SELLER_FULL_NAME", label: "የሻጭ ሙሉ ስም", type: "text", required: true },
-      { key: "SELLER_FATHER_NAME", label: "የሻጭ የአባት ስም", type: "text", required: true },
-      { key: "SELLER_ID_NUMBER", label: "የሻጭ መታወቂያ ቁጥር", type: "text", required: true },
-      { key: "SELLER_ADDRESS", label: "የሻጭ አድራሻ", type: "text", required: true },
+      { key: "SELLER_NATIONALITY", label: "የሻጭ ዜግነት", type: "text", required: true },
       { key: "SELLER_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
+      { key: "SELLER_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
+      { key: "SELLER_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
+      { key: "SELLER_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
+      { key: "SELLER_ADDRESS", label: "የሻጭ አድራሻ", type: "text", required: true },
       { key: "BUYER_FULL_NAME", label: "የገዢ ሙሉ ስም", type: "text", required: true },
-      { key: "BUYER_FATHER_NAME", label: "የገዢ የአባት ስም", type: "text", required: true },
-      { key: "BUYER_ID_NUMBER", label: "የገዢ መታወቂያ ቁጥር", type: "text", required: true },
+      { key: "BUYER_NATIONALITY", label: "የገዢ ዜግነት", type: "text", required: true },
+      { key: "BUYER_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
+      { key: "BUYER_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
+      { key: "BUYER_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
+      { key: "BUYER_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
       { key: "BUYER_ADDRESS", label: "የገዢ አድራሻ", type: "text", required: true },
-      { key: "CAR_MAKE_MODEL", label: "የመኪና ዓይነት / ሞዴል", type: "text", required: true, placeholder: "ለምሳሌ፡ Toyota Vitz 2010" },
-      { key: "CAR_COLOR", label: "የመኪና ቀለም", type: "text", required: true },
-      { key: "ENGINE_NUMBER", label: "የሞተር ቁጥር", type: "text", required: true },
-      { key: "CHASSIS_NUMBER", label: "የሻሲ ቁጥር", type: "text", required: true },
-      { key: "PLATE_NUMBER", label: "የሰሌዳ ቁጥር", type: "text", required: true },
-      { key: "MANUFACTURE_YEAR", label: "የማምረቻ ዓመት", type: "text", required: true },
-      { key: "SALE_PRICE", label: "ጠቅላላ ዋጋ (ብር)", type: "number", required: true },
+      { key: "REPRESENTED_NAME", label: "በማን ስም የተመዘገበ", type: "text", required: true },
+      { key: "VEHICLE_PLATE", label: "የሰሌዳ ቁጥር", type: "text", required: true },
+      { key: "VEHICLE_TYPE", label: "የተሸከርካሪው ዓይነት", type: "text", required: true },
+      { key: "VEHICLE_COUNTRY", label: "የተሠራበት አገር", type: "text", required: true },
+      { key: "VEHICLE_CHASSIS", label: "የሻንሲ ቁጥር", type: "text", required: true },
+      { key: "VEHICLE_ENGINE", label: "የሞተር ቁጥር", type: "text", required: true },
+      { key: "SALE_PRICE", label: "ጠቅላላ የሽያጭ ዋጋ (ብር)", type: "number", required: true },
       { key: "SALE_PRICE_WORDS", label: "የሽያጭ ዋጋ (በፊደል)", type: "text", required: true },
-      { key: "PAYMENT_STATUS", label: "የክፍያ ሁኔታ", type: "text", required: true, placeholder: "ሙሉ በሙሉ ተከፍሏል ወይም በክፍያ መደብ" },
-      { key: "PAYMENT_METHOD", label: "የክፍያ ዘዴ", type: "text", required: true },
-      { key: "DOWN_PAYMENT", label: "የመጀመሪያ ክፍያ", type: "text", required: false },
-      { key: "REMAINING_PAYMENT_DATE", label: "የቀሪ ክፍያ ቀን", type: "text", required: false },
+      { key: "PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለወገን)", type: "number", required: true },
+      { key: "GOVT_PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለመንግስት)", type: "number", required: true },
       { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
       { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
       { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },
@@ -109,79 +89,50 @@ export const AGREEMENT_TEMPLATES: AgreementTemplate[] = [
     language: "am",
     version: "v1",
     category: "Vehicle",
-    content: `የውል ቀን፡ {AGREEMENT_DATE} ዓ.ም
+    content: `{AGREEMENT_DATE} የመኪና ኪራይ ውል ስምምነት
 
-1. የአከራይ መረጃ
-• ሙሉ ስም፡ {OWNER_FULL_NAME}
-• የአባት ስም፡ {OWNER_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {OWNER_ID_NUMBER}
-• አድራሻ፡ {OWNER_ADDRESS}
+አከራይ ----------- {LANDLORD_FULL_NAME} /ዜግነት {LANDLORD_NATIONALITY}/ {LANDLORD_REPRESENTATION} {LANDLORD_AGENT_NAME} የውክልና ስልጣን ቁጥር {LANDLORD_PO_NUMBER} በቀን {LANDLORD_PO_DATE} አድራሻ {LANDLORD_ADDRESS}
+ተከራይ ----------- {TENANT_FULL_NAME} /ዜግነት {TENANT_NATIONALITY}/ አድራሻ {TENANT_ADDRESS}
 
-2. የተከራይ መረጃ
-• ሙሉ ስም፡ {RENTER_FULL_NAME}
-• የአባት ስም፡ {RENTER_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {RENTER_ID_NUMBER}
-• አድራሻ፡ {RENTER_ADDRESS}
+እኔ አከራይ {LANDLORD_REPRESENTATION} {REPRESENTED_NAME} ስም ተመዝግቦ የሚገኘውን የሰሌዳ ቁጥር {VEHICLE_PLATE}፣ የተሸከርካሪው ዓይነት {VEHICLE_TYPE}፣ የተሠራበት አገር {VEHICLE_COUNTRY}፣ የሻንሲ ቁጥር {VEHICLE_CHASSIS} የሆነውን ለተከራይ ለ{VEHICLE_PURPOSE} እንዲጠቀሙበት ከዛሬ {RENT_START_DATE} ጀምሮ እስከ {RENT_END_DATE} ድረስ ለ{RENT_DURATION} ጊዜ በወር ብር {MONTHLY_RENT} ያከራየኋቸው ሲሆን የገንዘቡም አከፋፈል በተመለከተ የ{ADVANCE_PAYMENT_MONTHS} ወር ቅድሚያ ክፍያ ብር {ADVANCE_PAYMENT_AMOUNT} ተቀብያለሁ:: ቀጣዩንም በየወሩ ቅድሚያ ሊከፍሉኝ ተስማምተናል::
 
-3. የመኪና መግለጫ
-• የመኪና ዓይነት / ሞዴል፡ {CAR_MAKE_MODEL}
-• የመኪና ቀለም፡ {CAR_COLOR}
-• የሞተር ቁጥር፡ {ENGINE_NUMBER}
-• የሻሲ ቁጥር፡ {CHASSIS_NUMBER}
-• የሰሌዳ ቁጥር፡ {PLATE_NUMBER}
+ተከራይ የተከራዩትን ተሸከርካሪ በሚገባ ተጠንቅቀው እንዲሰሩበት: የውል ጊዜ ሲጠናቀቅ ብንስማማ ውሉን አድሰን ልንቀጥል ካልተስማማን ግን ተከራይ ተሸከርካሪውን በተረከቡት ዓይነት ሊያስረክቡኝ ተስማምተናል:: ተከራይ ከተረከቡበት ጊዜ ጀምሮ የሚፈጠር ማንኛውም የትራፊክ ክስ: ህገወጥ ጭነት ወይም በንብረትና በሰው ላይ ለሚደርሰው ችግር ኃላፊነቱ የተከራይ ይሆናል:: በተጨማሪም አከራይም ሆነ ተከራይ ውል ለማቋረጥ ቢፈልጉ የ{TERMINATION_NOTICE_PERIOD} ቀናት ቅድመ ማስጠንቀቂያ በመስጠት ውሉ ሊቋረጥ ይችላል::
 
-4. የኪራይ ጊዜ
-• የመጀመሪያ ቀን፡ {RENT_START_DATE}
-• የመጨረሻ ቀን፡ {RENT_END_DATE}
-• የኪራይ ቆይታ፡ {RENT_DURATION}
+ይህም ውል በፍ/ብ/ሕ/ቁ 1731/2005 በሚያዘው መሠረት በሕግ ፊት የፀና ነው፡፡ ይህንን ውል እንደውሉ የማይፈፅም ወገን ቢኖር ውሉን ላከበረ ወገን ብር {PENALTY_AMOUNT} ለመንግስት ብር {GOVT_PENALTY_AMOUNT} ከፍሎ ውሉና ገደቡ በፍ/ብ/ሕ/ቁ 1889/1890 በሚያዘው መሠረት በህግ ፊት የፀና ይሆናል፡፡ ውሉም አይፈርስም ስንል ተስማምተን ተዋውለናል፡፡
 
-5. የኪራይ ክፍያ
-• የቀን / ወር ኪራይ፡ {RENT_AMOUNT} ብር
-• የተቀማጭ ገንዘብ፡ {DEPOSIT_AMOUNT} ብር
-• የክፍያ ዘዴ፡ {PAYMENT_METHOD}
-
-6. የተከራይ ግዴታ
-• መኪናውን በአግባቡ መጠቀም
-• ለሶስተኛ ወገን መከራየት አይፈቀድም
-• ማንኛውንም ጉዳት መክፈል
-
-7. የአከራይ መብት
-• መኪናውን በማንኛውም ጊዜ ለምርመራ መመልከት
-
-8. የውል መቋረጫ
-• አንዱ ወገን {TERMINATION_NOTICE_PERIOD} ቀን በፊት ማሳወቂያ ሲሰጥ
-
-9. ምስክሮች
-ምስክር 1: {WITNESS1_NAME} – ፊርማ __________
-ምስክር 2: {WITNESS2_NAME} – ፊርማ __________
-
-10. ፊርማ
-• የአከራይ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}
-• የተከራይ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}`,
+የአከራይ ፊርማ: __________  የተከራይ ፊርማ: __________
+`,
     variables: [
       { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
-      { key: "OWNER_FULL_NAME", label: "አከራይ ሙሉ ስም", type: "text", required: true },
-      { key: "OWNER_FATHER_NAME", label: "አከራይ የአባት ስም", type: "text", required: true },
-      { key: "OWNER_ID_NUMBER", label: "አከራይ መታወቂያ ቁጥር", type: "text", required: true },
-      { key: "OWNER_ADDRESS", label: "አከራይ አድራሻ", type: "text", required: true },
-      { key: "RENTER_FULL_NAME", label: "ተከራይ ሙሉ ስም", type: "text", required: true },
-      { key: "RENTER_FATHER_NAME", label: "ተከራይ የአባት ስም", type: "text", required: true },
-      { key: "RENTER_ID_NUMBER", label: "ተከራይ መታወቂያ ቁጥር", type: "text", required: true },
-      { key: "RENTER_ADDRESS", label: "ተከራይ አድራሻ", type: "text", required: true },
-      { key: "CAR_MAKE_MODEL", label: "የመኪና ዓይነት / ሞዴል", type: "text", required: true, placeholder: "Toyota Vitz 2010" },
-      { key: "CAR_COLOR", label: "የመኪና ቀለም", type: "text", required: true },
-      { key: "ENGINE_NUMBER", label: "የሞተር ቁጥር", type: "text", required: true },
-      { key: "CHASSIS_NUMBER", label: "የሻሲ ቁጥር", type: "text", required: true },
-      { key: "PLATE_NUMBER", label: "የሰሌዳ ቁጥር", type: "text", required: true },
+      { key: "LANDLORD_FULL_NAME", label: "አከራይ ሙሉ ስም", type: "text", required: true },
+      { key: "LANDLORD_NATIONALITY", label: "አከራይ ዜግነት", type: "text", required: true },
+      { key: "LANDLORD_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
+      { key: "LANDLORD_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
+      { key: "LANDLORD_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
+      { key: "LANDLORD_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
+      { key: "LANDLORD_ADDRESS", label: "አከራይ አድራሻ", type: "text", required: true },
+      { key: "TENANT_FULL_NAME", label: "ተከራይ ሙሉ ስም", type: "text", required: true },
+      { key: "TENANT_NATIONALITY", label: "ተከራይ ዜግነት", type: "text", required: true },
+      { key: "TENANT_ADDRESS", label: "ተከራይ አድራሻ", type: "text", required: true },
+      { key: "REPRESENTED_NAME", label: "በማን ስም የተመዘገበ", type: "text", required: true },
+      { key: "VEHICLE_PLATE", label: "የሰሌዳ ቁጥር", type: "text", required: true },
+      { key: "VEHICLE_TYPE", label: "የተሸከርካሪው ዓይነት", type: "text", required: true },
+      { key: "VEHICLE_COUNTRY", label: "የተሠራበት አገር", type: "text", required: true },
+      { key: "VEHICLE_CHASSIS", label: "የሻንሲ ቁጥር", type: "text", required: true },
+      { key: "VEHICLE_PURPOSE", label: "የኪራይ አገልግሎት", type: "text", required: true },
       { key: "RENT_START_DATE", label: "የኪራይ መጀመሪያ ቀን", type: "date", required: true },
       { key: "RENT_END_DATE", label: "የኪራይ ማብቂያ ቀን", type: "date", required: true },
-      { key: "RENT_DURATION", label: "የኪራይ ቆይታ", type: "text", required: true },
-      { key: "RENT_AMOUNT", label: "የቀን / ወር ኪራይ (ብር)", type: "number", required: true },
-      { key: "DEPOSIT_AMOUNT", label: "የተቀማጭ ገንዘብ (ብር)", type: "number", required: true },
-      { key: "PAYMENT_METHOD", label: "የክፍያ ዘዴ", type: "text", required: true },
+      { key: "RENT_DURATION", label: "የኪራይ ዘመን", type: "text", required: true },
+      { key: "MONTHLY_RENT", label: "ወርሃዊ ኪራይ (ብር)", type: "number", required: true },
+      { key: "ADVANCE_PAYMENT_MONTHS", label: "የስንት ወር ቅድሚያ", type: "number", required: true },
+      { key: "ADVANCE_PAYMENT_AMOUNT", label: "የቅድሚያ ክፍያ መጠን (ብር)", type: "number", required: true },
       { key: "TERMINATION_NOTICE_PERIOD", label: "የማሳወቂያ ጊዜ (በቀናት)", type: "text", required: true },
+      { key: "PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለወገን)", type: "number", required: true },
+      { key: "GOVT_PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለመንግስት)", type: "number", required: true },
       { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
       { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
       { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },
@@ -193,105 +144,59 @@ export const AGREEMENT_TEMPLATES: AgreementTemplate[] = [
     language: "am",
     version: "v1",
     category: "Real Estate",
-    content: `የውል ቀን፡ {AGREEMENT_DATE} ዓ.ም
+    content: `{AGREEMENT_DATE} የቤት ሽያጭ ውል ስምምነት
 
-1. የሻጭ መረጃ
-• ሙሉ ስም፡ {SELLER_FULL_NAME}
-• የአባት ስም፡ {SELLER_FATHER_NAME}
-• ዜግነት፡ {SELLER_NATIONALITY}
-• መታወቂያ ቁጥር፡ {SELLER_ID_NUMBER}
-• አድራሻ፡ {SELLER_ADDRESS}
+ሻጭ ----------- {SELLER_FULL_NAME} /ዜግነት {SELLER_NATIONALITY}/ {SELLER_REPRESENTATION} {SELLER_AGENT_NAME} የውክልና ስልጣን ቁጥር {SELLER_PO_NUMBER} በቀን {SELLER_PO_DATE} አድራሻ፡- {SELLER_ADDRESS}
 
-ውክልና፡ {SELLER_REPRESENTATION}
+ገዢ ----------- {BUYER_FULL_NAME} /ዜግነት {BUYER_NATIONALITY}/ {BUYER_REPRESENTATION} {BUYER_AGENT_NAME} የውክልና ስልጣን ቁጥር {BUYER_PO_NUMBER} በቀን {BUYER_PO_DATE} አድራሻ፡- {BUYER_ADDRESS}
 
-የወኪል መረጃ (ካለ)
-• ስም፡ {SELLER_AGENT_NAME}
-• የውክልና ሰነድ ቁጥር፡ {SELLER_PO_NUMBER}
-• የተሰጠበት ቀን፡ {SELLER_PO_DATE}
+እኔ ሻጭ በስም ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክ/ከተማ ወረዳ {PROPERTY_WOREDA} የቤት ቁጥር {PROPERTY_HOUSE_NUMBER} የካርታ ቁጥር {PROPERTY_MAP_NUMBER} የቦታው ስፋት {PROPERTY_LAND_AREA} ካሬ ሜትር የተሰጠበት ቀን {PROPERTY_DATE} የቤቱ አገልግሎት ለመኖሪያ የሆነውን መኖሪያ ቤት ለገዢ በዛሬው ዕለት በብር {SALE_PRICE} ({SALE_PRICE_WORDS}) የሸጥኩላቸው ሲሆን የገንዘብ አከፋፈል በተመለከተ በዚህ ውል ደረሰኝነት አማካኝነት ሙሉ ክፍያ ብር {SALE_PRICE} ({SALE_PRICE_WORDS}) ተቀብዬ መኖሪያ ቤቱን እና ቤቱን የሚመለከቱ ኦርጅናል ማስረጃዎችን ካርታ ጭምር አስረክቤ ተስማምቼ መሸጤን በፊርማዬ አረጋግጣለሁ፡፡
 
-2. የገዢ መረጃ
-• ሙሉ ስም፡ {BUYER_FULL_NAME}
-• የአባት ስም፡ {BUYER_FATHER_NAME}
-• ዜግነት፡ {BUYER_NATIONALITY}
-• መታወቂያ ቁጥር፡ {BUYER_ID_NUMBER}
-• አድራሻ፡ {BUYER_ADDRESS}
+ይህንን የመኖሪያ ቤት ግዢ ከመረከባቸው በፊት በዕዳ ዕገዳ ይዠየዋለሁ አይሸጥም የሚል ተከራካሪ ወገን በመንግስትም ሆነ ከግለሰብ በኩል ቢቀርብ ተከራክሬ ለመመለስ የውል ግዴታ ገብቼ የሸጥኩላቸው መሆኑን በፊርማዬ አረጋግጣለሁ፡፡
 
-ውክልና፡ {BUYER_REPRESENTATION}
+እኔም ገዢ ከዚህ በላይ በተገለጸው የውል ቃል መሰረት ተስማምቼ በ{SELLER_FULL_NAME} ስም ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክ/ከተማ ወረዳ {PROPERTY_WOREDA} የቤት ቁጥር {PROPERTY_HOUSE_NUMBER} የካርታ ቁጥር {PROPERTY_MAP_NUMBER} የቦታው ስፋት {PROPERTY_LAND_AREA} ካሬ ሜትር የተሰጠበት ቀን {PROPERTY_DATE} በዛሬው እለት ከሻጭ ላይ በብር {SALE_PRICE} ({SALE_PRICE_WORDS}) የገዛሁ ሲሆን የገንዘቡም አከፋፈል በተመለከተ በዚህ ውል ደረሰኝነት አማካኝ ሙሉ በሙሉ ክፍያ ብር {SALE_PRICE} ({SALE_PRICE_WORDS}) ከፍዬ የመኖሪያ ቤቱን እና ቤቱን የሚመለከቱ ኦርጅናል ዶክሚንቶችን ካርታ ተረክቤ ተስማምቼ መግዛቴን በፊርማዬ አረጋግጣለሁ፡፡
 
-የወኪል መረጃ (ካለ)
-• ስም፡ {BUYER_AGENT_NAME}
-• የውክልና ሰነድ ቁጥር፡ {BUYER_PO_NUMBER}
-• የተሰጠበት ቀን፡ {BUYER_PO_DATE}
+የስም ማዞሪያ አሹራን በተመለከተ መንግስት የሚጠይቀውን ክፍያ እኔ ገዢ ልከፍል ተስማምቻለሁ፡፡
 
-3. የሚሸጠው ንብረት መግለጫ
-• ከተማ፡ {PROPERTY_CITY}
-• ክፍለ ከተማ፡ {PROPERTY_SUBCITY}
-• ወረዳ፡ {PROPERTY_WOREDA}
-• ቀበሌ፡ {PROPERTY_KEBELE}
-• የቤት ቁጥር፡ {PROPERTY_HOUSE_NUMBER}
-• የካርታ / የይዞታ ቁጥር፡ {PROPERTY_MAP_NUMBER}
-• የመሬት ስፋት፡ {PROPERTY_LAND_AREA} ካሬ ሜትር
-• የቤት አይነት፡ {PROPERTY_TYPE}
+እኛ ምስክሮች ሁለቱ ወገኖች ተስማምተው ሲሸጡና ሲገዙ አይተናል፡፡
+1. የምስክር ስም {WITNESS1_NAME} /ዜግነት {WITNESS1_NATIONALITY}/ አድራሻ፡- {WITNESS1_ADDRESS}
+2. የምስክር ስም {WITNESS2_NAME} /ዜግነት {WITNESS2_NATIONALITY}/ አድራሻ፡- {WITNESS2_ADDRESS}
 
-4. የሽያጭ ዋጋ እና ክፍያ
-• ጠቅላላ የሽያጭ ዋጋ፡ {SALE_PRICE} ብር
-• በፊደል፡ {SALE_PRICE_WORDS}
-
-የክፍያ ሁኔታ፡ {PAYMENT_STATUS}
-• የክፍያ ዘዴ፡ {PAYMENT_METHOD}
-• የመጀመሪያ ክፍያ፡ {DOWN_PAYMENT}
-• የቀሪ ክፍያ ቀን፡ {REMAINING_PAYMENT_DATE}
-
-5. የሻጭ መግለጫ
-እኔ {SELLER_FULL_NAME} ከላይ በተገለጸው ንብረት ላይ ሙሉ የህግ መብት እንዳለኝ እና ከማንኛውም እገዳ፣ ተጠያቂነት ወይም ክስ ነፃ መሆኑን እገልጻለሁ።
-
-6. የገዢ መግለጫ
-እኔ {BUYER_FULL_NAME} ንብረቱን በሙሉ ፈቃዴ ገዝቻለሁ እና ክፍያውን መፈጸሜን አረጋግጣለሁ።
-
-7. ምስክሮች
-ምስክር 1: {WITNESS1_NAME} – ፊርማ __________
-ምስክር 2: {WITNESS2_NAME} – ፊርማ __________
-
-8. ፊርማ
-• የሻጭ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}
-• የገዢ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}`,
+የሻጭ ፊርማ ________________
+የገዢ ፊርማ ________________
+የምስክሮች ፊርማ
+1. ________________
+2. ________________`,
     variables: [
       { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
       { key: "SELLER_FULL_NAME", label: "የሻጭ ሙሉ ስም", type: "text", required: true },
-      { key: "SELLER_FATHER_NAME", label: "የሻጭ የአባት ስም", type: "text", required: true },
       { key: "SELLER_NATIONALITY", label: "የሻጭ ዜግነት", type: "text", required: true },
-      { key: "SELLER_ID_NUMBER", label: "የሻጭ መታወቂያ ቁጥር", type: "text", required: true },
       { key: "SELLER_ADDRESS", label: "የሻጭ አድራሻ", type: "text", required: true },
       { key: "SELLER_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
       { key: "SELLER_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
       { key: "SELLER_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
       { key: "SELLER_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
       { key: "BUYER_FULL_NAME", label: "የገዢ ሙሉ ስም", type: "text", required: true },
-      { key: "BUYER_FATHER_NAME", label: "የገዢ የአባት ስም", type: "text", required: true },
       { key: "BUYER_NATIONALITY", label: "የገዢ ዜግነት", type: "text", required: true },
-      { key: "BUYER_ID_NUMBER", label: "የገዢ መታወቂያ ቁጥር", type: "text", required: true },
       { key: "BUYER_ADDRESS", label: "የገዢ አድራሻ", type: "text", required: true },
       { key: "BUYER_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
       { key: "BUYER_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
       { key: "BUYER_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
       { key: "BUYER_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
-      { key: "PROPERTY_CITY", label: "ከተማ", type: "text", required: true },
       { key: "PROPERTY_SUBCITY", label: "ክፍለ ከተማ", type: "text", required: true },
       { key: "PROPERTY_WOREDA", label: "ወረዳ", type: "text", required: true },
-      { key: "PROPERTY_KEBELE", label: "ቀበሌ", type: "text", required: true },
       { key: "PROPERTY_HOUSE_NUMBER", label: "የቤት ቁጥር", type: "text", required: true },
-      { key: "PROPERTY_MAP_NUMBER", label: "የካርታ / የይዞታ ቁጥር", type: "text", required: true },
-      { key: "PROPERTY_LAND_AREA", label: "የመሬት ስፋት (ካሬ ሜትር)", type: "text", required: true },
-      { key: "PROPERTY_TYPE", label: "የቤት አይነት", type: "text", required: true },
+      { key: "PROPERTY_MAP_NUMBER", label: "የካርታ ቁጥር", type: "text", required: true },
+      { key: "PROPERTY_LAND_AREA", label: "የቦታው ስፋት (ካሬ ሜትር)", type: "text", required: true },
+      { key: "PROPERTY_DATE", label: "የካርታ የተሰጠበት ቀን", type: "text", required: true },
       { key: "SALE_PRICE", label: "ጠቅላላ የሽያጭ ዋጋ (ብር)", type: "number", required: true },
       { key: "SALE_PRICE_WORDS", label: "የሽያጭ ዋጋ (በፊደል)", type: "text", required: true },
-      { key: "PAYMENT_STATUS", label: "የክፍያ ሁኔታ", type: "text", required: true, placeholder: "ሙሉ በሙሉ ተከፍሏል ወይም በክፍያ መደብ" },
-      { key: "PAYMENT_METHOD", label: "የክፍያ ዘዴ", type: "text", required: true },
-      { key: "DOWN_PAYMENT", label: "የመጀመሪያ ክፍያ", type: "text", required: false },
-      { key: "REMAINING_PAYMENT_DATE", label: "የቀሪ ክፍያ ቀን", type: "text", required: false },
       { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_NATIONALITY", label: "ምስክር 1 ዜግነት", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
       { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
-      { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
+      { key: "WITNESS2_NATIONALITY", label: "ምስክር 2 ዜግነት", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
     ],
   },
   {
@@ -302,82 +207,55 @@ export const AGREEMENT_TEMPLATES: AgreementTemplate[] = [
     language: "am",
     version: "v1",
     category: "Real Estate",
-    content: `የውል ቀን፡ {AGREEMENT_DATE} ዓ.ም
+    content: `{AGREEMENT_DATE} የቤት ኪራይ ውል ስምምነት
 
-1. የአከራይ መረጃ
-• ሙሉ ስም፡ {LANDLORD_FULL_NAME}
-• የአባት ስም፡ {LANDLORD_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {LANDLORD_ID_NUMBER}
-• አድራሻ፡ {LANDLORD_ADDRESS}
+አከራይ ----------- {LANDLORD_FULL_NAME} /ዜግነት {LANDLORD_NATIONALITY}/ {LANDLORD_REPRESENTATION} {LANDLORD_AGENT_NAME} የውክልና ስልጣን ቁጥር {LANDLORD_PO_NUMBER} በቀን {LANDLORD_PO_DATE} አድራሻ {LANDLORD_ADDRESS}
+ተከራይ ----------- {TENANT_FULL_NAME} /ዜግነት {TENANT_NATIONALITY}/ አድራሻ {TENANT_ADDRESS}
 
-2. የተከራይ መረጃ
-• ሙሉ ስም፡ {TENANT_FULL_NAME}
-• የአባት ስም፡ {TENANT_FATHER_NAME}
-• መታወቂያ ቁጥር፡ {TENANT_ID_NUMBER}
-• አድራሻ፡ {TENANT_ADDRESS}
+እኔ አከራይ {LANDLORD_REPRESENTATION} {REPRESENTED_NAME} ስም ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክፍለ ከተማ ወረዳ {PROPERTY_WOREDA} የካርታ ቁጥር {PROPERTY_MAP_NO} ካርታው የተሰጠበት ቀን {PROPERTY_MAP_DATE} የቦታው ስፋት {PROPERTY_AREA} ካሬ ሜትር ፓርሴል ቁጥር {PROPERTY_PARCEL} አገልግሎቱ {PROPERTY_USAGE} የሆነውን መለያ {PROPERTY_LABEL} የተለየውን ቤት ተከራይ ለ{PROPERTY_PURPOSE} አገልግሎት እንዲጠቀሙበት ከዛሬ {RENT_START_DATE} ጀምሮ እስከ {RENT_END_DATE} ድረስ ለ{RENT_DURATION} ጊዜ በወር ብር {MONTHLY_RENT} ያከራየኋቸው ሲሆን የገንዘቡም አከፋፈል በተመለከተ የ{ADVANCE_PAYMENT_MONTHS} ወር ቅድሚያ ክፍያ ብር {ADVANCE_PAYMENT_AMOUNT} ተቀብያለሁ:: ቀጣዩንም በየወሩ ቅድሚያ ሊከፍሉኝ ተስማምተናል::
 
-3. የኪራይ ቤት መግለጫ
-• ከተማ፡ {PROPERTY_CITY}
-• ክፍለ ከተማ፡ {PROPERTY_SUBCITY}
-• ወረዳ፡ {PROPERTY_WOREDA}
-• ቀበሌ፡ {PROPERTY_KEBELE}
-• የቤት ቁጥር፡ {PROPERTY_HOUSE_NUMBER}
-• የቤት አይነት፡ {PROPERTY_TYPE}
+ሆኖም የዚህ ቤት የመብራት፣ የውሃ እና ሌሎችንም {UTILITIES_RESPONSIBILITY} በተመለከተ ተከራይ ቤቱን ከተረከቡበት ቀን ጀምሮ ያለውን እስከ ውል ፍፃሜ ጊዜ የሚፈለግበትን የፍጆታ ክፍያ በቢሉ መሰረት ለመክፈል የውል ግዴታ ገብተዋል:: ተከራይ ቤቱን ለቀው ሲሄዱ አስቀድሞ በነበረበት ሁኔታ አስተካክለው እንዲያስረክቡ ሁለታችንም ወገኖች ተስማምተናል:: በተጨማሪም አከራይም ሆነ ተከራይ ውል ለማቋረጥ ቢፈልጉ የ{TERMINATION_NOTICE_PERIOD} ቀናት ቅድመ ማስጠንቀቂያ በመስጠት ውሉ ሊቋረጥ ይችላል:: ተከራይ የተከራዩትን ቤት ለሌላ ሶስተኛ ወገን ማስተላለፍ ወይም ማከራየት አይችሉም::
 
-4. የኪራይ ዘመን
-• የመጀመሪያ ቀን፡ {RENT_START_DATE}
-• የመጨረሻ ቀን፡ {RENT_END_DATE}
-• የኪራይ ጊዜ፡ {RENT_DURATION}
+ይህም ውል በፍ/ብ/ሕ/ቁ 1731/2005 በሚያዘው መሠረት በሕግ ፊት የፀና ነው፡፡ ይህንን ውል እንደውሉ የማይፈፅም ወገን ቢኖር ውሉን ላከበረ ወገን ብር {PENALTY_AMOUNT} ለመንግስት ብር {GOVT_PENALTY_AMOUNT} ከፍሎ ውሉና ገደቡ በፍ/ብ/ሕ/ቁ 1889/1890 በሚያዘው መሠረት በህግ ፊት የፀና ይሆናል፡፡ ውሉም አይፈርስም ስንል ተስማምተን ተዋውለናል፡፡
 
-5. የኪራይ ክፍያ
-• ወርሃዊ ኪራይ፡ {MONTHLY_RENT} ብር
-• የተቀማጭ ገንዘብ፡ {DEPOSIT_AMOUNT} ብር
-• የክፍያ ቀን፡ {RENT_PAYMENT_DAY} ቀን
-
-6. የተከራይ ግዴታ
-• ቤቱን በአግባቡ መጠቀም
-• ማንኛውንም ጉዳት መጠገን
-• ኪራይን በወቅቱ መክፈል
-
-7. የአከራይ ግዴታ
-• ቤቱን ለመኖር ተገቢ ሁኔታ ማድረግ
-• የቤቱን መብት መጠበቅ
-
-8. የውል መቋረጫ
-• አንዱ ወገን በፊት {TERMINATION_NOTICE_PERIOD} ቀን ማሳወቂያ ሲሰጥ
-
-9. ምስክሮች
-ምስክር 1: {WITNESS1_NAME} – ፊርማ __________
-ምስክር 2: {WITNESS2_NAME} – ፊርማ __________
-
-10. ፊርማ
-• የአከራይ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}
-• የተከራይ ፊርማ፡ __________ ቀን፡ {SIGN_DATE}`,
+                    የአከራይ ፊርማ: __________                  የተከራይ ፊርማ: __________
+`,
     variables: [
       { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
       { key: "LANDLORD_FULL_NAME", label: "አከራይ ሙሉ ስም", type: "text", required: true },
-      { key: "LANDLORD_FATHER_NAME", label: "አከራይ የአባት ስም", type: "text", required: true },
-      { key: "LANDLORD_ID_NUMBER", label: "አከራይ መታወቂያ ቁጥር", type: "text", required: true },
+      { key: "LANDLORD_NATIONALITY", label: "አከራይ ዜግነት", type: "text", required: true },
+      { key: "LANDLORD_REPRESENTATION", label: "ውክልና (በራሴ/በወኪል)", type: "text", required: true, placeholder: "በራሴ ወይም በወኪል" },
+      { key: "LANDLORD_AGENT_NAME", label: "የወኪል ስም (ካለ)", type: "text", required: false },
+      { key: "LANDLORD_PO_NUMBER", label: "የውክልና ሰነድ ቁጥር", type: "text", required: false },
+      { key: "LANDLORD_PO_DATE", label: "የውክልና የተሰጠበት ቀን", type: "text", required: false },
       { key: "LANDLORD_ADDRESS", label: "አከራይ አድራሻ", type: "text", required: true },
       { key: "TENANT_FULL_NAME", label: "ተከራይ ሙሉ ስም", type: "text", required: true },
-      { key: "TENANT_FATHER_NAME", label: "ተከራይ የአባት ስም", type: "text", required: true },
-      { key: "TENANT_ID_NUMBER", label: "ተከራይ መታወቂያ ቁጥር", type: "text", required: true },
+      { key: "TENANT_NATIONALITY", label: "ተከራይ ዜግነት", type: "text", required: true },
       { key: "TENANT_ADDRESS", label: "ተከራይ አድራሻ", type: "text", required: true },
-      { key: "PROPERTY_CITY", label: "ከተማ", type: "text", required: true },
+      { key: "REPRESENTED_NAME", label: "በማን ስም የተመዘገበ", type: "text", required: true },
       { key: "PROPERTY_SUBCITY", label: "ክፍለ ከተማ", type: "text", required: true },
       { key: "PROPERTY_WOREDA", label: "ወረዳ", type: "text", required: true },
-      { key: "PROPERTY_KEBELE", label: "ቀበሌ", type: "text", required: true },
-      { key: "PROPERTY_HOUSE_NUMBER", label: "የቤት ቁጥር", type: "text", required: true },
-      { key: "PROPERTY_TYPE", label: "የቤት አይነት", type: "text", required: true },
+      { key: "PROPERTY_MAP_NO", label: "የካርታ ቁጥር", type: "text", required: true },
+      { key: "PROPERTY_MAP_DATE", label: "ካርታ የተሰጠበት ቀን", type: "text", required: true },
+      { key: "PROPERTY_AREA", label: "የቦታው ስፋት (ካሬ ሜትር)", type: "text", required: true },
+      { key: "PROPERTY_PARCEL", label: "ፓርሴል ቁጥር", type: "text", required: true },
+      { key: "PROPERTY_USAGE", label: "የቦታው አገልግሎት", type: "text", required: true },
+      { key: "PROPERTY_LABEL", label: "መለያ ፊደል (ካለ)", type: "text", required: false },
+      { key: "PROPERTY_PURPOSE", label: "ለምን አገልግሎት እንደሚከራይ", type: "text", required: true, placeholder: "ለምሳሌ ለመኖሪያ፣ ለንግድ" },
       { key: "RENT_START_DATE", label: "የኪራይ መጀመሪያ ቀን", type: "date", required: true },
       { key: "RENT_END_DATE", label: "የኪራይ ማብቂያ ቀን", type: "date", required: true },
-      { key: "RENT_DURATION", label: "የኪራይ ጊዜ", type: "text", required: true },
+      { key: "RENT_DURATION", label: "የኪራይ ዘመን", type: "text", required: true },
       { key: "MONTHLY_RENT", label: "ወርሃዊ ኪራይ (ብር)", type: "number", required: true },
-      { key: "DEPOSIT_AMOUNT", label: "የተቀማጭ ገንዘብ (ብር)", type: "number", required: true },
-      { key: "RENT_PAYMENT_DAY", label: "የክፍያ ቀን", type: "text", required: true },
+      { key: "ADVANCE_PAYMENT_MONTHS", label: "የስንት ወር ቅድሚያ", type: "number", required: true },
+      { key: "ADVANCE_PAYMENT_AMOUNT", label: "የቅድሚያ ክፍያ መጠን (ብር)", type: "number", required: true },
+      { key: "UTILITIES_RESPONSIBILITY", label: "የመገልገያ ክፍያዎች ኃላፊነት", type: "text", required: true, placeholder: "ለምሳሌ መብራትና ውሃ" },
       { key: "TERMINATION_NOTICE_PERIOD", label: "የማሳወቂያ ጊዜ (በቀናት)", type: "text", required: true },
+      { key: "PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለወገን)", type: "number", required: true },
+      { key: "GOVT_PENALTY_AMOUNT", label: "የውል ማፍረሻ (ለመንግስት)", type: "number", required: true },
       { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
       { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
       { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },

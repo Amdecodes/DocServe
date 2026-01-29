@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe, Hash } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Hash, Cake } from "lucide-react";
 
 export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -37,7 +37,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
                   {personalInfo.firstName} <span className="font-light text-[#059669]">{personalInfo.lastName}</span>
                 </h1>
                 <p className="text-xl tracking-[0.2em] text-slate-500 uppercase font-medium mb-6">
-                  {personalInfo.jobTitle || "Professional Title"}
+                  {personalInfo.jobTitle}
                 </p>
                 
                 {/* Contact Grid - Horizontal */}
@@ -70,6 +70,12 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
                         </span>
                       </div>
                     )}
+                    {personalInfo.dateOfBirth && (
+                      <div className="flex items-center gap-2">
+                        <Cake size={14} className="text-[#059669]" />
+                        <span>Date of Birth: {personalInfo.dateOfBirth}</span>
+                      </div>
+                    )}
                 </div>
              </div>
              
@@ -91,7 +97,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
            {/* Profile */}
            {summary && (
              <section className="mb-10">
-               <h3 className="text-sm font-bold text-[#059669] uppercase mb-3 tracking-widest border-b border-emerald-100 pb-1">Professional Profile</h3>
+               <h3 className="text-sm font-bold text-[#059669] uppercase mb-3 tracking-widest border-b border-emerald-100 pb-1">About Me</h3>
                <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
                   <p className="text-slate-600 leading-relaxed text-justify">
                     {typeof summary === "string" ? summary : ""}

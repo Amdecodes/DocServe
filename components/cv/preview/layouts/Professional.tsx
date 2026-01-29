@@ -4,6 +4,7 @@ import {
   Mail,
   MapPin,
   Globe,
+  Cake,
   User,
   Briefcase,
   GraduationCap,
@@ -77,6 +78,14 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                   </span>
                 </div>
               )}
+              {personalInfo.dateOfBirth && (
+                <div className="flex items-center gap-3">
+                  <div className="min-w-6 flex justify-center">
+                    <Cake size={16} fill="black" />
+                  </div>
+                  <span>Date of Birth: {personalInfo.dateOfBirth}</span>
+                </div>
+              )}
               {(personalInfo.website || personalInfo.linkedin) && (
                 <div className="flex items-center gap-3">
                   <div className="min-w-6 flex justify-center">
@@ -134,7 +143,7 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
               </div>
               <div className="mb-2">
                 <h3 className="text-lg font-bold uppercase tracking-widest text-[#2c3e50]">
-                  Profile
+                  About Me
                 </h3>
               </div>
               <p className="text-sm leading-relaxed text-gray-600 text-justify">

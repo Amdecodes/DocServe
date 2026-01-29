@@ -29,7 +29,7 @@ export function GoldenLayout({ data }: { data: CVData }) {
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-xl tracking-widest uppercase text-[#d4af37]/90 font-light mb-2">
-          {personalInfo.jobTitle || "Job Title"}
+          {personalInfo.jobTitle}
         </p>
         {(personalInfo.headline) && (
           <p className="text-sm tracking-wide text-white/80 max-w-2xl mx-auto italic font-sans normal-case">
@@ -58,19 +58,25 @@ export function GoldenLayout({ data }: { data: CVData }) {
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-[#1e293b] mt-1 shrink-0" />
                 <span>
-                 {personalInfo.city && personalInfo.country
+                  {personalInfo.city && personalInfo.country
                     ? `${personalInfo.city}, ${personalInfo.country}`
-                    : "Addis Ababa, Ethiopia"}
+                    : personalInfo.city || personalInfo.country}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-[#1e293b] shrink-0" />
-                <span>{personalInfo.email || "email@example.com"}</span>
+                <span>{personalInfo.email}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#1e293b] shrink-0" />
-                <span>{personalInfo.phone || "+251 900 000 000"}</span>
+                <span>{personalInfo.phone}</span>
               </div>
+              {personalInfo.dateOfBirth && (
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-[#1e293b] shrink-0" />
+                  <span>DOB: {personalInfo.dateOfBirth}</span>
+                </div>
+              )}
               {personalInfo.linkedin && (
                 <div className="flex items-center gap-3">
                   <Linkedin className="w-4 h-4 text-[#1e293b] shrink-0" />
@@ -149,7 +155,7 @@ export function GoldenLayout({ data }: { data: CVData }) {
             <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
               <section>
                  <h3 className="text-xl font-bold uppercase tracking-widest text-[#1e293b] mb-4 border-b-2 border-[#1e293b] pb-1 inline-block">
-                  Objective
+                  About Me
                 </h3>
                 <p className="text-gray-700 leading-relaxed text-justify text-sm">
                   {typeof summary === "string" ? summary : ""}

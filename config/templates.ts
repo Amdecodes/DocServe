@@ -279,6 +279,27 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.EmeraldProfessionalCoverLetter,
       })),
   },
+  {
+    id: "freshman-entry",
+    name: "Freshman Entry",
+    description: "Ideal for students and entry-level professionals, highlighting skills and education over work history.",
+    tags: ["Student", "Freshman", "Skills-Focused"],
+    category: "simple",
+    colorScheme: {
+      primary: "#fb7185", // rose-400
+      secondary: "#fef2f2", // rose-50
+      accent: "#f43f5e", // rose-500
+    },
+    previewImage: "/images/templet-previev/freshman-entry.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/FreshmanEntry").then((m) => ({
+        default: m.FreshmanEntryLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
+        default: m.FreshmanCoverLetter,
+      })),
+  },
 ];
 
 // Dynamic import map for lazy loading (used by both Preview and PDF renderer)
@@ -412,6 +433,16 @@ export const templateComponents: Record<
     coverLetter: () =>
       import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then((m) => ({
         default: m.EmeraldProfessionalCoverLetter,
+      })),
+  },
+  "freshman-entry": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/FreshmanEntry").then((m) => ({
+        default: m.FreshmanEntryLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
+        default: m.FreshmanCoverLetter,
       })),
   },
 };

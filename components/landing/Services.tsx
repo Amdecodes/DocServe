@@ -30,7 +30,7 @@ export default function Services() {
       items: [
         { label: t("agreements.car") },
         { label: t("agreements.house") },
-        { label: t("agreements.business") },
+        // { label: t("agreements.business") },
       ],
       comingSoon: false,
       action: t("agreements.action"),

@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe, Briefcase } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Briefcase, User, Cake } from "lucide-react";
 
 export function ElegantLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -57,11 +57,11 @@ export function ElegantLayout({ data }: { data: CVData }) {
             <div className="space-y-3 text-sm text-gray-700">
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-gray-500 shrink-0" />
-                <span>{personalInfo.phone || "+251 900 000 000"}</span>
+                <span>{personalInfo.phone}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gray-500 shrink-0" />
-                <span className="break-all">{personalInfo.email || "email@example.com"}</span>
+                <span className="break-all">{personalInfo.email}</span>
               </div>
               {personalInfo.website && (
                 <div className="flex items-center gap-3">
@@ -75,14 +75,22 @@ export function ElegantLayout({ data }: { data: CVData }) {
                   <a href={formatUrl(personalInfo.linkedin)} target="_blank" rel="noopener noreferrer" className="hover:text-[#3e3430] underline decoration-dotted">LinkedIn</a>
                 </div>
               )}
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-gray-500 mt-1 shrink-0" />
-                <span className="leading-tight">
-                 {personalInfo.city && personalInfo.country
-                    ? `${personalInfo.city}, ${personalInfo.country}`
-                    : "Addis Ababa, Ethiopia"}
-                </span>
-              </div>
+              {(personalInfo.city || personalInfo.country) && (
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-gray-500 shrink-0" />
+                  <span className="leading-tight">
+                    {personalInfo.city && personalInfo.country
+                      ? `${personalInfo.city}, ${personalInfo.country}`
+                      : personalInfo.city || personalInfo.country}
+                  </span>
+                </div>
+              )}
+              {personalInfo.dateOfBirth && (
+                <div className="flex items-center gap-3">
+                  <Cake className="w-4 h-4 text-gray-500 shrink-0" /> 
+                  <span>Date of Birth: {personalInfo.dateOfBirth}</span>
+                </div>
+              )}
             </div>
           </section>
 
@@ -150,7 +158,7 @@ export function ElegantLayout({ data }: { data: CVData }) {
               {personalInfo.lastName}
             </h1>
             <p className="text-xl text-gray-600 font-light mt-4">
-              {personalInfo.jobTitle || "Professional Title"}
+              {personalInfo.jobTitle}
             </p>
              {(personalInfo.headline) && (
               <p className="text-sm text-gray-500 mt-2 italic">
@@ -164,7 +172,7 @@ export function ElegantLayout({ data }: { data: CVData }) {
             <AIBlurOverlay type="summary" isGenerated={data.aiMetadata?.generated}>
               <section>
                 <h3 className="text-lg font-bold uppercase tracking-wider text-[#3e3430] mb-3">
-                  Objective
+                  About Me
                 </h3>
                 <p className="text-sm text-gray-700 leading-relaxed text-justify">
                   {typeof summary === "string" ? summary : ""}

@@ -180,6 +180,8 @@ export async function createProduct(data: {
   description?: string;
   base_price: number;
   image_url?: string;
+  category?: string;
+  sub_category?: string;
   active?: boolean;
   variations?: { name: string; image_url: string }[];
 }) {
@@ -191,6 +193,8 @@ export async function createProduct(data: {
       description: data.description,
       base_price: data.base_price,
       image_url: data.image_url,
+      category: data.category ?? "Marketing",
+      sub_category: data.sub_category,
       active: data.active ?? true,
       variations: {
         create: data.variations,
@@ -214,6 +218,8 @@ export async function updateProduct(
     description?: string;
     base_price?: number;
     image_url?: string;
+    category?: string;
+    sub_category?: string;
     active?: boolean;
     variations?: { id?: string; name: string; image_url: string }[];
   },

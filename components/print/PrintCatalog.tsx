@@ -1,0 +1,129 @@
+"use client";
+
+import { useState } from "react";
+import { PrintProduct } from "@/types/print";
+import { ProductCard } from "@/components/print/ProductCard";
+import { PRINT_CATEGORIES } from "@/config/print-categories";
+import { Megaphone, Shirt, StickyNote, BookOpen, ChevronRight, Store } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
+
+interface PrintCatalogProps {
+  products: PrintProduct[];
+}
+
+const CATEGORY_ICONS = {
+  [PRINT_CATEGORIES.CARDS]: BookOpen,
+  [PRINT_CATEGORIES.MARKETING]: Megaphone,
+  [PRINT_CATEGORIES.MERCHANDISE]: Shirt,
+  [PRINT_CATEGORIES.STATIONERY]: StickyNote,
+};
+
+export function PrintCatalog({ products }: PrintCatalogProps) {
+  const t = useTranslations("PrintOrders");
+  const [activeCategory, setActiveCategory] = useState<string>(PRINT_CATEGORIES.CARDS);
+
+  const filteredProducts = products.filter(
+    (p) => (p.category || PRINT_CATEGORIES.MARKETING) === activeCategory
+  );
+
+  return (
+    <div className="space-y-12">
+      {/* Category Folders */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Object.values(PRINT_CATEGORIES).map((category) => {
+          const Icon = CATEGORY_ICONS[category];
+          const isActive = activeCategory === category;
+
+          return (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={cn(
+                "relative group flex flex-col items-start p-6 rounded-3xl transition-all duration-300 border text-left outline-none",
+                isActive
+                  ? "bg-white border-teal-500 shadow-xl shadow-teal-900/5 scale-[1.02]"
+                  : "bg-white/80 border-transparent hover:border-gray-200 hover:shadow-lg hover:-translate-y-1"
+              )}
+            >
+              {/* Folder Tab Effect */}
+              <div 
+                className={cn(
+                   "absolute top-0 left-6 -mt-3 h-4 w-24 rounded-t-lg transition-colors duration-300",
+                   isActive ? "bg-teal-500" : "bg-gray-100 group-hover:bg-gray-200"
+                )} 
+              />
+              
+              <div className={cn(
+                "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-colors",
+                isActive ? "bg-teal-50 text-teal-600" : "bg-gray-50 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600"
+              )}>
+                <Icon className="w-6 h-6" />
+              </div>
+
+              <h3 className={cn(
+                "text-lg font-bold mb-2 transition-colors",
+                isActive ? "text-gray-900" : "text-gray-600 group-hover:text-gray-900"
+              )}>
+                {t(`categories.${category}`)}
+              </h3>
+
+              <p className="text-xs text-gray-500 leading-relaxed mb-4 min-h-[40px]">
+                {t(`categories.desc_${category}`)}
+              </p>
+
+              <div className={cn(
+                "mt-auto flex items-center text-xs font-bold uppercase tracking-wider transition-colors",
+                isActive ? "text-teal-600" : "text-gray-300 group-hover:text-teal-400"
+              )}>
+                {isActive ? t("viewing") : t("explore")} 
+                <ChevronRight className="w-3 h-3 ml-1" />
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Products Grid */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="min-h-[400px]"
+        >
+          <div className="mb-6 flex items-center gap-3">
+             <Store className="w-5 h-5 text-gray-400" />
+             <h2 className="text-xl font-bold text-gray-900">
+               {t(`categories.${activeCategory}`)} {t("collection")}
+             </h2>
+             <span className="text-sm font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+               {filteredProducts.length}
+             </span>
+          </div>
+
+          {filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+               <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-300">
+                 <Store className="w-8 h-8" />
+               </div>
+               <p className="text-gray-900 font-medium">{t("noProducts")}</p>
+               <p className="text-sm text-gray-500 mt-1">
+                 {t("checkBackLater")} {t(`categories.${activeCategory}`)}.
+               </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}

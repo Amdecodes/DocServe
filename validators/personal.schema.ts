@@ -13,6 +13,7 @@ export const personalSchema = z.object({
   website: z.string().optional(),
   summary: z.string().optional(),
   photo: z.string().optional(),
+  dateOfBirth: z.string().optional(),
 });
 
 export type PersonalSchema = z.infer<typeof personalSchema>;
