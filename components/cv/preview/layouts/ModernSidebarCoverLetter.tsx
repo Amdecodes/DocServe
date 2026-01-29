@@ -80,12 +80,6 @@ export function ModernSidebarCoverLetter({
             )}
           </div>
 
-          <div className="pl-8 mt-auto mb-16">
-             <div className="w-16 h-1 bg-[#1F1F1F] mb-4"></div>
-             <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">
-                {new Date().toLocaleDateString("en-US", { year: 'numeric' })} Cover Letter
-             </p>
-          </div>
       </div>
 
       {/* RIGHT CONTENT - The Letter */}
@@ -107,10 +101,6 @@ export function ModernSidebarCoverLetter({
                 <p className="font-bold text-[#1F1F1F] text-lg mb-1">{coverLetter.recipientName || "Hiring Manager"}</p>
                 <p className="text-gray-600">{coverLetter.jobTitle}</p>
                 <p className="text-gray-600">{coverLetter.companyName}</p>
-             </div>
-             <div className="text-right">
-                <p className="font-bold text-[#1F1F1F]">Date</p>
-                <p className="text-gray-600">{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
              </div>
         </div>
 

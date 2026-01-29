@@ -101,7 +101,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#f3f4f6", // gray-100
       accent: "#d4af37", // gold
     },
-    previewImage: "/images/templates/golden.png", // Valid placeholder
+    previewImage: "/images/templet-previev/golden-excutive.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/Golden").then((m) => ({
         default: m.GoldenLayout,
@@ -122,7 +122,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#ffffff",
       accent: "#3e3430",
     },
-    previewImage: "/images/templates/elegant.png",
+    previewImage: "/images/templet-previev/elegant-sidebar.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/Elegant").then((m) => ({
         default: m.ElegantLayout,
@@ -143,7 +143,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#FFFFFF",
       accent: "#D4AF37",
     },
-    previewImage: "/images/templet-preview/modern-black.png",
+    previewImage: "/images/templet-previev/modern-gold.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/ModernDark").then((m) => ({
         default: m.ModernDarkLayout,
@@ -164,7 +164,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#E5E5E5",
       accent: "#333333",
     },
-    previewImage: "/images/templates/modern-sidebar.png",
+    previewImage: "/images/templet-previev/modern-sidebar.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/ModernSidebar").then((m) => ({
         default: m.ModernSidebarLayout,
@@ -185,7 +185,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#ffffff",
       accent: "#90cdf4",
     },
-    previewImage: "/images/templet-preview/corporate.png",
+    previewImage: "/images/templet-previev/corporatr.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/CorporateFocus").then((m) => ({
         default: m.CorporateFocusLayout,
@@ -206,7 +206,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#f0fdfa",
       accent: "#0f766e",
     },
-    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-20-17.png",
+    previewImage: "/images/templet-previev/teal.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/MinimalistTeal").then((m) => ({
         default: m.MinimalistTealLayout,
@@ -227,7 +227,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#f5f3ff",
       accent: "#4338ca",
     },
-    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-24-07.png",
+    previewImage: "/images/templet-previev/crative-split.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/CreativeSplit").then((m) => ({
         default: m.CreativeSplitLayout,
@@ -248,7 +248,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#ffffff",
       accent: "#991b1b",
     },
-    previewImage: "/images/templet-preview/Screenshot From 2026-01-18 18-24-44.png",
+    previewImage: "/images/templet-previev/excutive.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/ExecutiveMaroon").then((m) => ({
         default: m.ExecutiveMaroonLayout,
@@ -269,8 +269,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#ffffff",
       accent: "#059669",
     },
-    // Using a placeholder image for now, as one doesn't exist yet
-    previewImage: "/images/templates/modern-sidebar.png", 
+    previewImage: "/images/templet-previev/emraled.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/EmeraldProfessional").then((m) => ({
         default: m.EmeraldProfessionalLayout,

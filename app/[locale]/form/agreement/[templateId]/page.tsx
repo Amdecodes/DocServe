@@ -18,20 +18,21 @@ export default function AgreementFormPage() {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
-  // Initialize template
+  // Initialize template and default form data
   useEffect(() => {
     if (params.templateId) {
       const found = AGREEMENT_TEMPLATES.find((t) => t.id === params.templateId);
       if (found) {
         setTemplate(found);
-      } else {
-        // Handle not found
-        // router.push('/agreements');
+        
+        // Initialize form data
+        setFormData({});
       }
     }
   }, [params.templateId]);
 
-  const handleInputChange = (key: string, value: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInputChange = (key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -46,6 +47,7 @@ export default function AgreementFormPage() {
 
     sortedVars.forEach((v) => {
       const val = formData[v.key];
+      
       // Use a distinct placeholder style for empty values to guide the user
       const replacement = val
         ? val

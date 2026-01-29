@@ -168,12 +168,29 @@ export function VirtualAssistanceForm({
         <p className="text-gray-600 text-lg mb-8 leading-relaxed">
           {t("successMessage")}
         </p>
-        <Button
-          onClick={() => (window.location.href = "/services")}
-          className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 py-6 h-auto text-lg w-full"
-        >
-          {t("back")}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Button
+            onClick={() => (window.location.href = "/services")}
+            variant="outline"
+            className="rounded-full px-8 py-6 h-auto text-lg flex-1 border-gray-200"
+          >
+            {t("back")}
+          </Button>
+          <Button
+            asChild
+            className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-8 py-6 h-auto text-lg flex-1 shadow-lg shadow-blue-100"
+          >
+            <a
+              href="https://t.me/elutesh123"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2"
+            >
+              <Send className="w-5 h-5" />
+              {t("telegramJoin")}
+            </a>
+          </Button>
+        </div>
       </motion.div>
     );
   }

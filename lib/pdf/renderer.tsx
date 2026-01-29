@@ -47,10 +47,9 @@ export async function renderCvToHtml(
                 templateId === 'golden' 
                   ? 'linear-gradient(to right, #f3f4f6 33.333333%, white 33.333333%) !important;'
                   : templateId === 'modern-dark'
-                    ? '#000000 !important;'
+                    ? 'white !important;'
                     : 'white !important;'
               }
-              min-height: 100vh;
             }
           ` : ''}
         </style>

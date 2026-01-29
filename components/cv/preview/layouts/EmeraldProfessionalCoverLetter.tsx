@@ -32,11 +32,6 @@ export function EmeraldProfessionalCoverLetter({
                 </p>
              </div>
              
-             {/* Date Block aligned right */}
-             <div className="text-right pt-2">
-                <p className="text-sm font-bold text-[#059669] uppercase tracking-widest mb-1">Date</p>
-                <p className="text-slate-700 font-medium">{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-             </div>
          </div>
 
          {/* Contact Grid - Horizontal */}

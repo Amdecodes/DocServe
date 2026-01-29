@@ -64,28 +64,56 @@ export async function POST(req: Request) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
     // Extract customer info from stored form_data to pass to Chapa
-    // formatting relies on the expected structure of form_data.personal
+    // formatting relies on the expected structure of form_data.personal (agreements) or personalInfo (CVs)
     type ChapaFormData = {
       personal?: {
         email?: string;
         firstName?: string;
         lastName?: string;
-        phone?: string;
-        [key: string]: unknown;
+      };
+      personalInfo?: {
+        email?: string;
+        firstName?: string;
+        lastName?: string;
       };
       [key: string]: unknown;
     };
-    const formData =
-      typeof order.form_data === "object" && order.form_data !== null
-        ? (order.form_data as ChapaFormData)
-        : undefined;
-    const personal = formData?.personal || {};
+
+    const formData = order.form_data as unknown as ChapaFormData;
+    const personal = formData?.personal || formData?.personalInfo || {};
 
     // Use passed values or fallback to stored values
-    const payloadEmail = email || personal.email;
-    const payloadFirstName = firstName || personal.firstName;
-    const payloadLastName = lastName || personal.lastName;
-    // Phone number stored in DB but not sent to Chapa
+    let payloadEmail = email || personal.email;
+    let payloadFirstName = firstName || personal.firstName;
+    let payloadLastName = lastName || personal.lastName;
+
+    // --- DATA ROBUSTNESS & SANITIZATION (FOR CHAPA PAYLOAD ONLY) ---
+    // Chapa is strict about email format and phone numbers.
+    // 1. Email Validation & Fallback
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // If the provided email is invalid OR contains "example.com"
+    // or if it's missing entirely, we MUST provide a valid fallback for the payment gateway.
+    let chapaEmail = payloadEmail;
+    const isActuallyValid = chapaEmail && emailRegex.test(chapaEmail) && !chapaEmail.includes("example.com");
+
+    if (!isActuallyValid) {
+       console.warn(`[Chapa Init] Using fallback email for "${chapaEmail}" to avoid initialization failure.`);
+       chapaEmail = "elaemail@gmail.com";
+    }
+
+    // 2. Phone Validation & Fallback
+    // Chapa also validates phone numbers if provided. We'll sanitize and fallback if needed.
+    let chapaPhone = phone || (formData?.personal as any)?.phone || (formData?.personalInfo as any)?.phone;
+    // Simple check: must be at least 8 characters for Chapa to accept it generally
+    if (!chapaPhone || String(chapaPhone).length < 8) {
+       chapaPhone = "0913894924";
+    }
+    
+    // 3. Name Sanitization
+    const chapaFirstName = (payloadFirstName || "Valued").replace(/[^\w\s\u1200-\u137F]/gi, "").substring(0, 30);
+    const chapaLastName = (payloadLastName || "Customer").replace(/[^\w\s\u1200-\u137F]/gi, "").substring(0, 30);
+    // --- END SANITIZATION ---
 
     // Get price based on service type
     const amount = getPriceForService(order.service_type);
@@ -95,32 +123,34 @@ export async function POST(req: Request) {
     let description = "Paperless Service";
 
     if (order.service_type === "cv_writing") {
-      title = "CV Service";
-      description = "Premium CV Design";
+      title = "CV Writing";
+      description = "Premium CV Design Service";
     } else if (order.service_type.startsWith("agreement:")) {
       const templateId = order.service_type.split(":")[1];
-      // Use generic safe strings to satisfy Chapa validation
-      // Chapa title max 16 chars. description no special chars.
       title = "Agreement";
-      description = `Template ${templateId}`;
+      description = `Payment for ${templateId.replace(/-/g, " ")}`;
     }
 
-    // Construct payload with optional fields
+    // Sanitize title and description for Chapa - strictly Latin/ASCII as per error
+    const sanitizedTitle = title.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 16) || "Service Pay";
+    const sanitizedDescription = description.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 50) || "Paperless Digital Service";
+
+    // Construct payload
     const payload: Record<string, any> = {
       amount: amount.toString(),
       currency: PRICE_CURRENCY,
       tx_ref: order.tx_ref,
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
+      email: chapaEmail,
+      phone_number: chapaPhone,
+      first_name: chapaFirstName,
+      last_name: chapaLastName,
       customization: {
-        title,
-        description,
+        title: sanitizedTitle,
+        description: sanitizedDescription,
       },
     };
-
-    if (payloadEmail) payload.email = payloadEmail;
-    if (payloadFirstName) payload.first_name = payloadFirstName;
-    if (payloadLastName) payload.last_name = payloadLastName;
 
     // 5. Call Chapa Initialize API
     const response = await fetch(

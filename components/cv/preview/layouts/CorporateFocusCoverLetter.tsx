@@ -78,10 +78,6 @@ export function CorporateFocusCoverLetter({
           <p className="text-slate-500">{coverLetter.companyName}</p>
         </div>
 
-        {/* Date */}
-        <div className="mb-8 text-right text-sm text-slate-500 font-medium">
-           {new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}
-        </div>
 
         {/* Salutation */}
         <div className="mb-6 text-lg font-medium text-slate-800">

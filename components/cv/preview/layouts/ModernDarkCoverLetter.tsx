@@ -71,10 +71,6 @@ export function ModernDarkCoverLetter({
         )}
       </div>
 
-      {/* Date */}
-      <div className="text-right text-sm text-[#D4AF37] mb-10 tracking-wider">
-        <p>{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-      </div>
 
       {/* Recipient */}
       <div className="mb-10 text-sm">

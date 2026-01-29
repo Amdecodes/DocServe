@@ -58,14 +58,6 @@ export default function Footer() {
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
                 <span>{t("addressLine1")}<br/>{t("addressLine2")}</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <span>+251 911 234 567</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <span>hello@docuserve.com</span>
-              </li>
             </ul>
           </div>
         </div>

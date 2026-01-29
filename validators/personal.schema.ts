@@ -3,8 +3,8 @@ import { z } from "zod";
 export const personalSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
-  email: z.string().optional(),
-  phone: z.string().min(10, "Phone number is too short"),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  phone: z.string().optional().or(z.literal("")),
   city: z.string().min(2, "City is required"),
   country: z.string().min(2, "Country is required"),
   jobTitle: z.string().min(2, "Job title is required"),

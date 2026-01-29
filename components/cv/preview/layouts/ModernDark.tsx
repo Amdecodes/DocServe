@@ -16,7 +16,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
 
   return (
     <div 
-      className="min-h-[297mm] w-full font-sans text-black bg-white flex flex-col"
+      className="w-full font-sans text-black bg-white flex flex-col"
       style={{
         background: "#FFFFFF",
         WebkitPrintColorAdjust: "exact",
@@ -24,7 +24,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
       }}
     >
       {/* Header Section */}
-      <div className="flex items-start gap-10 p-12 pb-10">
+      <div className="flex items-start gap-10 px-12 py-10 pb-8">
         {/* Photo */}
         {personalInfo.photo && (
           <div className="shrink-0">
@@ -87,10 +87,10 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
       <div className="border-t border-gray-200 mx-12"></div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-12 gap-10 p-12 pt-10 h-full">
+      <div className="grid grid-cols-12 gap-8 px-12 py-4">
         
         {/* Left Column (Narrower - 4/12) */}
-        <div className="col-span-4 space-y-10">
+        <div className="col-span-4 space-y-8">
           
           {/* Education */}
           {education.length > 0 && (
@@ -164,14 +164,14 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
         </div>
 
         {/* Right Column (Wider - 8/12) */}
-        <div className="col-span-8 space-y-10">
+        <div className="col-span-8 space-y-8">
           
           {/* Experience */}
           <section>
             <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-200 pb-2">
               Experience
             </h2>
-            <div className="space-y-8">
+            <div className="space-y-6">
               {experience.length === 0 ? (
                 <p className="text-sm text-gray-500 italic">No experience added yet.</p>
               ) : (
@@ -223,14 +223,14 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 mx-12 mt-auto"></div>
+      <div className="border-t border-gray-200 mx-12"></div>
 
       {/* Footer Contact */}
-      <div className="p-10 bg-white">
-        <h2 className="text-lg font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-6 text-center">
+      <div className="px-12 py-8 bg-white pb-12">
+        <h2 className="text-lg font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-4 text-center">
           Contact Person
         </h2>
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 text-sm text-gray-600">
+        <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm text-gray-600">
           {personalInfo.phone && (
             <div className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-[#D4AF37]" />

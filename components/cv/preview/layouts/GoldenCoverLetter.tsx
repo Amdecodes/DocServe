@@ -116,10 +116,6 @@ export function GoldenCoverLetter({
             <p className="font-bold text-[#1e293b] text-lg font-serif">{senderName}</p>
           </div>
           
-           {/* Date at bottom right like in image example */}
-           <div className="mt-12 text-right text-sm text-gray-600">
-             <p>{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-           </div>
 
         </main>
       </div>

@@ -231,85 +231,119 @@ Output only the rewritten bullets, one per line.`;
 // GEMINI API CALL
 // ============================================================================
 
-// Hardcode the model to ensure we use a supported version (gemini-2.5-flash)
-// process.env.GEMINI_API_URL might point to deprecated models
-const MODEL_ID = "gemini-2.5-flash";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent`;
+// Fallback models in priority order
+const FALLBACK_MODELS = [
+  "gemini-2.5-flash",      // Primary
+  "gemini-3.0-flash",      // Fallback 1
+  "gemini-2.5-flash-lite", // Fallback 2
+  "gemini-2.5-flash", // Retry primary one last time
+];
+
+const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 async function callGeminiAPI(userPrompt: string): Promise<string> {
-  const maxRetries = 3;
-  let attempt = 0;
-  
-  while (attempt < maxRetries) {
-    try {
-      const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 512,
-            topP: 0.8,
-            topK: 40,
+  const maxRetriesPerModel = 2; // Reduced retries per model since we have fallbacks
+  let lastError: Error | null = null;
+
+  for (const modelId of FALLBACK_MODELS) {
+    let attempt = 0;
+    console.log(`[Gemini API] Attempting generation with model: ${modelId}`);
+
+    while (attempt < maxRetriesPerModel) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/${modelId}:generateContent?key=${GEMINI_API_KEY}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-          safetySettings: [
-            {
-              category: "HARM_CATEGORY_HARASSMENT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.4,
+              maxOutputTokens: 512,
+              topP: 0.8,
+              topK: 40,
             },
-            {
-              category: "HARM_CATEGORY_HATE_SPEECH",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-            {
-              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-            {
-              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-          ],
-        }),
-      });
+            safetySettings: [
+              {
+                category: "HARM_CATEGORY_HARASSMENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_HATE_SPEECH",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+            ],
+          }),
+        });
 
-      if (response.status === 429) {
-        attempt++;
-        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
-        console.warn(`[Gemini API] 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetries})`);
-        if (attempt >= maxRetries) throw new Error(`Gemini API 429 Quota Exceeded after ${maxRetries} retries`);
+        if (response.status === 429) {
+          attempt++;
+          const waitTime = Math.pow(2, attempt) * 1000;
+          console.warn(`[Gemini API] ${modelId} 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`);
+          if (attempt >= maxRetriesPerModel) break; // Break inner loop to try next model
+          
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          continue;
+        }
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`[Gemini API] ${modelId} Error ${response.status}:`, errorText);
+          // 404 means model not found (likely for future/invalid models) - try next immediately
+          if (response.status === 404) break; 
+          // 5xx errors might be transient, but better to switch model
+          break;
+        }
+
+        const result = await response.json();
         
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        continue;
+        // Safety block check
+        if (result.promptFeedback?.blockReason) {
+           console.warn(`[Gemini API] ${modelId} Safety Block: ${result.promptFeedback.blockReason}`);
+           // Safety blocks are usually content-related, switching model unlikely to help BUT different models have different sensitivities.
+           // We'll try next model just in case.
+           break; 
+        }
+
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!text) {
+           console.warn(`[Gemini API] ${modelId} returned no text candidate.`);
+           break;
+        }
+
+        // Success!
+        return cleanAIOutput(text);
+
+      } catch (e) {
+        console.error(`[Gemini API] ${modelId} Exception:`, e);
+        lastError = e as Error;
+        // On network exception, maybe retry same model? 
+        // For now, let's treat it as a failure for this attempt
+        attempt++;
+        if (attempt >= maxRetriesPerModel) break;
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-
-      if (!response.ok) {
-        const error = await response.text();
-        console.error("[Gemini API] Error response:", error);
-        throw new Error(`Gemini API failed: ${response.status}`);
-      }
-
-      const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      return cleanAIOutput(text);
-
-    } catch (e) {
-      if ((e as Error).message.includes("429")) throw e;
-      // If network error, maybe retry? For now only retry 429 explicitly handling loop
-      console.error("[Gemini API] Network/Unknown error:", e);
-      throw e;
     }
   }
   
-  throw new Error("Gemini API failed after retries");
+  // If we get here, all models failed
+  console.error("[Gemini API] All fallback models failed.");
+  throw lastError || new Error("All AI models failed to generate content.");
 }
 
 /**

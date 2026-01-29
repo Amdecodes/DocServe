@@ -419,6 +419,7 @@
     "errorMessage": "There was an error submitting your request. Please try again.",
     "back": "Back",
     "next": "Next",
+    "telegramJoin": "Contact us on Telegram",
     "steps": {
       "contact": "Contact",
       "job": "Job Info",

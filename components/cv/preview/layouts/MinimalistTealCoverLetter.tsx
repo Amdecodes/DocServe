@@ -71,10 +71,6 @@ export function MinimalistTealCoverLetter({
       {/* Main Content */}
       <div className="flex-1 p-16 pt-12 max-w-4xl mx-auto w-full">
         
-        {/* Date */}
-        <div className="mb-10 text-right text-sm text-[#0f766e] font-bold uppercase tracking-wider">
-           {new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}
-        </div>
 
         {/* Recipient Block */}
         <div className="mb-12">

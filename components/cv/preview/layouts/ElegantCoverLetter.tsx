@@ -90,7 +90,6 @@ export function ElegantCoverLetter({
              <p className="font-bold">{coverLetter.recipientName || "Hiring Manager"}</p>
              <p className="text-gray-600">{coverLetter.jobTitle}</p>
              <p className="text-gray-600">{coverLetter.companyName}</p>
-             <p className="text-gray-500 mt-2">{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
           </div>
 
           {/* Letter Body */}

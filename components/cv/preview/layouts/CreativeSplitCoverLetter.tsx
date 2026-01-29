@@ -88,11 +88,6 @@ export function CreativeSplitCoverLetter({
                   <p className="text-slate-600">{coverLetter.jobTitle}</p>
                   <p className="text-slate-500">{coverLetter.companyName}</p>
                </div>
-               {/* Date */}
-               <div className="text-right">
-                  <p className="text-sm font-bold text-[#4338ca] uppercase mb-1 tracking-wider">Date</p>
-                  <p className="text-slate-700 font-medium">{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-               </div>
             </div>
 
             {/* Salutation */}

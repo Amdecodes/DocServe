@@ -84,10 +84,6 @@ export function ExecutiveMaroonCoverLetter({
              <p className="text-slate-600">{coverLetter.companyName}</p>
            </div>
            
-           <div className="text-right">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Date</p>
-              <p className="text-slate-700 font-medium">{new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-           </div>
         </div>
 
         {/* Salutation */}
