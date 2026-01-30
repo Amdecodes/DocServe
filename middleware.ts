@@ -11,9 +11,15 @@ const intlMiddleware = createMiddleware({
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)", "/:locale/admin(.*)"]);
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
+const isPublicAdminRoute = createRouteMatcher([
+  "/admin/login(.*)", 
+  "/:locale/admin/login(.*)",
+  "/admin/sign-up(.*)",
+  "/:locale/admin/sign-up(.*)"
+]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
+  if (isAdminRoute(req) && !isPublicAdminRoute(req)) {
     await auth.protect();
   }
 
