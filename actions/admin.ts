@@ -15,8 +15,6 @@ async function requireAdmin() {
   const user = await currentUser();
   const adminEmail = process.env.ADMIN_EMAIL;
 
-  console.log(`[Auth Check] User: ${user?.emailAddresses[0]?.emailAddress}, Admin: ${adminEmail}`);
-
   if (!user || !adminEmail) {
     throw new Error("Unauthorized access: User not logged in or admin email not configured");
   }
@@ -26,7 +24,6 @@ async function requireAdmin() {
   );
 
   if (!isEmailMatch) {
-    console.error(`[Auth Check] Access Denied. User email(s): ${user.emailAddresses.map(e => e.emailAddress).join(', ')} do not match ${adminEmail}`);
     throw new Error("Unauthorized access: Not an admin");
   }
 }

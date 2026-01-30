@@ -828,9 +828,12 @@
 export interface AgreementVariable {
   key: string;
   label: string;
-  type: "text" | "number" | "date" | "textarea";
+  type: "text" | "number" | "date" | "textarea" | "checkbox";
   required: boolean;
   placeholder?: string;
+  dependsOn?: string;
+  truthyValue?: string; // e.g., "በወኪል"
+  falsyValue?: string;  // e.g., "በራሴ"
 }
 
 export interface AgreementTemplate {
@@ -944,28 +947,32 @@ ______________________                _______________________         1. _______
       },
       {
         key: "BUYER_REPRESENTATION",
-        label: "ውክልና (በራሴ/በወኪል)",
-        type: "text",
+        label: "በወኪል ነው? (ውክልና ካለ ይምረጡ)",
+        type: "checkbox",
         required: true,
-        placeholder: "በራሴ ወይም በወኪል",
+        truthyValue: "በወኪል",
+        falsyValue: "በራሴ",
       },
       {
         key: "BUYER_AGENT_NAME",
-        label: "የወኪል ስም (ካለ)",
+        label: "የወኪል ስም",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       {
         key: "BUYER_PO_NUMBER",
         label: "የውክልና ሰነድ ቁጥር",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       {
         key: "BUYER_PO_DATE",
         label: "የውክልና የተሰጠበት ቀን",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       { key: "BUYER_ADDRESS", label: "የገዢ አድራሻ", type: "text", required: true },
       {
@@ -1044,6 +1051,18 @@ ______________________                _______________________         1. _______
       {
         key: "WITNESS2_ADDRESS",
         label: "ምስክር 2 አድራሻ",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "WITNESS3_NAME",
+        label: "ምስክር 3 ስም",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "WITNESS3_ADDRESS",
+        label: "ምስክር 3 አድራሻ",
         type: "text",
         required: true,
       },
@@ -1259,6 +1278,18 @@ __________________                      ___________________               1. ___
         type: "text",
         required: true,
       },
+      {
+        key: "WITNESS3_NAME",
+        label: "ምስክር 3 ስም",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "WITNESS3_ADDRESS",
+        label: "ምስክር 3 አድራሻ",
+        type: "text",
+        required: true,
+      },
       { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },
@@ -1364,28 +1395,32 @@ __________________                      ___________________               1. ___
       { key: "BUYER_ADDRESS", label: "የገዢ አድራሻ", type: "text", required: true },
       {
         key: "BUYER_REPRESENTATION",
-        label: "ውክልና (በራሴ/በወኪል)",
-        type: "text",
+        label: "በወኪል ነው? (ውክልና ካለ ይምረጡ)",
+        type: "checkbox",
         required: true,
-        placeholder: "በራሴ ወይም በወኪል",
+        truthyValue: "በወኪል",
+        falsyValue: "በራሴ",
       },
       {
         key: "BUYER_AGENT_NAME",
-        label: "የወኪል ስም (ካለ)",
+        label: "የወኪል ስም",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       {
         key: "BUYER_PO_NUMBER",
         label: "የውክልና ሰነድ ቁጥር",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       {
         key: "BUYER_PO_DATE",
         label: "የውክልና የተሰጠበት ቀን",
         type: "text",
         required: false,
+        dependsOn: "BUYER_REPRESENTATION",
       },
       {
         key: "PROPERTY_SUBCITY",
@@ -1437,12 +1472,6 @@ __________________                      ___________________               1. ___
         required: true,
       },
       {
-        key: "WITNESS1_NATIONALITY",
-        label: "ምስክር 1 ዜግነት",
-        type: "text",
-        required: true,
-      },
-      {
         key: "WITNESS1_ADDRESS",
         label: "ምስክር 1 አድራሻ",
         type: "text",
@@ -1455,14 +1484,14 @@ __________________                      ___________________               1. ___
         required: true,
       },
       {
-        key: "WITNESS2_NATIONALITY",
-        label: "ምስክር 2 ዜግነት",
+        key: "WITNESS2_ADDRESS",
+        label: "ምስክር 2 አድራሻ",
         type: "text",
         required: true,
       },
       {
-        key: "WITNESS3_NATIONALITY",
-        label: "ምስክር 2 ዜግነት",
+        key: "WITNESS3_NAME",
+        label: "ምስክር 3 ስም",
         type: "text",
         required: true,
       },
@@ -1472,6 +1501,7 @@ __________________                      ___________________               1. ___
         type: "text",
         required: true,
       },
+      { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },
   {
@@ -1711,6 +1741,237 @@ __________________                      ___________________               1. ___
         type: "text",
         required: true,
       },
+      {
+        key: "WITNESS3_NAME",
+        label: "ምስክር 3 ስም",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "WITNESS3_ADDRESS",
+        label: "ምስክር 3 አድራሻ",
+        type: "text",
+        required: true,
+      },
+      { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
+    ],
+  },
+  {
+    id: "condo-sale-am",
+    title: "የኮንዶሚኒየም ቤት ሽያጭ ውል",
+    description: "የኮንዶሚኒየም ቤት ሽያጭ ውል ማዘጋጃ ቅጽ",
+    price: 150,
+    language: "am",
+    version: "v1",
+    category: "Real Estate",
+    content: `{AGREEMENT_DATE} 
+                                        የኮንዶሚኒየም ቤት ሽያጭ ውል ስምምነት
+
+ሻጭ ----------- {SELLER_FULL_NAME} 
+    /ዜግነት {SELLER_NATIONALITY}/ {SELLER_REPRESENTATION} {SELLER_AGENT_NAME} የውክልና ስልጣን ቁጥር {SELLER_PO_NUMBER} በቀን {SELLER_PO_DATE} 
+    አድራሻ፡- {SELLER_ADDRESS}
+
+ገዢ ----------- {BUYER_FULL_NAME} 
+    /ዜግነት {BUYER_NATIONALITY}/ {BUYER_REPRESENTATION} {BUYER_AGENT_NAME} የውክልና ስልጣን ቁጥር {BUYER_PO_NUMBER} በቀን {BUYER_PO_DATE} 
+    አድራሻ፡- {BUYER_ADDRESS}
+
+እኔ ሻጭ በስሜ ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክ/ከተማ ወረዳ {PROPERTY_WOREDA} {PROPERTY_SITE_NAME} ሳይት ብሎክ {PROPERTY_BLOCK} ፎቅ {PROPERTY_FLOOR} የቤት ቁጥር {PROPERTY_HOUSE_NUMBER} የሆነውን መኖሪያ ቤት ለገዢ በዛሬው ዕለት በብር {SALE_PRICE} ({SALE_PRICE_WORDS}) የሸጥኩላቸው ሲሆን የገንዘብ አከፋፈል በተመለከተ በዚህ ውል ደረሰኝነት አማካኝነት ሙሉ ክፍያ ብር {SALE_PRICE} ({SALE_PRICE_WORDS}) ተቀብዬ መኖሪያ ቤቱን እና ቤቱን የሚመለከቱ ኦርጅናል ማስረጃዎችን አስረክቤ ተስማምቼ መሸጤን በፊርማዬ አረጋግጣለሁ፡፡
+
+ይህንን የኮንዶሚኒየም ቤት ግዢ ከመረከባቸው በፊት በዕዳ ዕገዳ ይዠየዋለሁ አይሸጥም የሚል ተከራካሪ ወገን በመንግስትም ሆነ ከግለሰብ በኩል ቢቀርብ ተከራክሬ ለመመለስ የውል ግዴታ ገብቼ የሸጥኩላቸው መሆኑን በፊርማዬ አረጋግጣለሁ፡፡
+
+እኔም ገዢ ከዚህ በላይ በተገለጸው የውል ቃል መሰረት ተስማምቼ በ{SELLER_FULL_NAME} ስም ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክ/ከተማ ወረዳ {PROPERTY_WOREDA} {PROPERTY_SITE_NAME} ሳይት ብሎክ {PROPERTY_BLOCK} ፎቅ {PROPERTY_FLOOR} የቤት ቁጥር {PROPERTY_HOUSE_NUMBER} በዛሬው እለት ከሻጭ ላይ በብር {SALE_PRICE} ({SALE_PRICE_WORDS}) የገዛሁ ሲሆን የገንዘቡም አከፋፈል በተመለከተ በዚህ ውል ደረሰኝነት አማካኝ ሙሉ ክፍያ ብር {SALE_PRICE} ({SALE_PRICE_WORDS}) ከፍዬ የመኖሪያ ቤቱን እና ቤቱን የሚመለከቱ ኦርጅናል ዶክሚንቶችን ተረክቤ ተስማምቼ መግዛቴን በፊርማዬ አረጋግጣለሁ፡፡
+
+            ይህንን የኮንዶሚኒየም ቤት ሽያጭ ውል ስምምነት ስናደርግ የነበሩ ምስክሮች
+እኛ ምስክሮች ሁለቱ ወገኖች ተስማምተው ሲሸጡና ሲገዙ አይተናል፡፡
+
+1. የምስክር ስም {WITNESS1_NAME}  አድራሻ፡- {WITNESS1_ADDRESS}
+2. የምስክር ስም {WITNESS2_NAME} አድራሻ፡- {WITNESS2_ADDRESS}
+3. የምስክር ስም {WITNESS3_NAME} አድራሻ፡- {WITNESS3_ADDRESS}
+
+   የሻጭ ስምና ፊርማ                             የገዢ ስምና ፊርማ                    የምስክሮች ፊርማ
+__________________                      ___________________               1. ________________
+
+ ________________                       ___________________               2. ________________
+
+                                                                          3. ________________`,
+    variables: [
+      { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
+      { key: "SELLER_FULL_NAME", label: "የሻጭ ሙሉ ስም", type: "text", required: true },
+      { key: "SELLER_NATIONALITY", label: "የሻጭ ዜግነት", type: "text", required: true },
+      { key: "SELLER_ADDRESS", label: "የሻጭ አድራሻ", type: "text", required: true },
+      {
+        key: "SELLER_REPRESENTATION",
+        label: "በወኪል ነው? (ውክልና ካለ ይምረጡ)",
+        type: "checkbox",
+        required: true,
+        truthyValue: "በወኪል",
+        falsyValue: "በራሴ",
+      },
+      {
+        key: "SELLER_AGENT_NAME",
+        label: "የወኪል ስም",
+        type: "text",
+        required: false,
+        dependsOn: "SELLER_REPRESENTATION",
+      },
+      {
+        key: "SELLER_PO_NUMBER",
+        label: "የውክልና ሰነድ ቁጥር",
+        type: "text",
+        required: false,
+        dependsOn: "SELLER_REPRESENTATION",
+      },
+      {
+        key: "SELLER_PO_DATE",
+        label: "የውክልና የተሰጠበት ቀን",
+        type: "text",
+        required: false,
+        dependsOn: "SELLER_REPRESENTATION",
+      },
+      { key: "BUYER_FULL_NAME", label: "የገዢ ሙሉ ስም", type: "text", required: true },
+      { key: "BUYER_NATIONALITY", label: "የገዢ ዜግነት", type: "text", required: true },
+      { key: "BUYER_ADDRESS", label: "የገዢ አድራሻ", type: "text", required: true },
+      {
+        key: "BUYER_REPRESENTATION",
+        label: "በወኪል ነው? (ውክልና ካለ ይምረጡ)",
+        type: "checkbox",
+        required: true,
+        truthyValue: "በወኪል",
+        falsyValue: "በራሴ",
+      },
+      {
+        key: "BUYER_AGENT_NAME",
+        label: "የወኪል ስም",
+        type: "text",
+        required: false,
+        dependsOn: "BUYER_REPRESENTATION",
+      },
+      {
+        key: "BUYER_PO_NUMBER",
+        label: "የውክልና ሰነድ ቁጥር",
+        type: "text",
+        required: false,
+        dependsOn: "BUYER_REPRESENTATION",
+      },
+      {
+        key: "BUYER_PO_DATE",
+        label: "የውክልና የተሰጠበት ቀን",
+        type: "text",
+        required: false,
+        dependsOn: "BUYER_REPRESENTATION",
+      },
+      { key: "PROPERTY_SUBCITY", label: "ክፍለ ከተማ", type: "text", required: true },
+      { key: "PROPERTY_WOREDA", label: "ወረዳ", type: "text", required: true },
+      { key: "PROPERTY_SITE_NAME", label: "የሳይቱ ስም", type: "text", required: true },
+      { key: "PROPERTY_BLOCK", label: "ብሎክ ቁጥር", type: "text", required: true },
+      { key: "PROPERTY_FLOOR", label: "ፎቅ", type: "text", required: true },
+      { key: "PROPERTY_HOUSE_NUMBER", label: "የቤት ቁጥር", type: "text", required: true },
+      { key: "SALE_PRICE", label: "ጠቅላላ የሽያጭ ዋጋ (ብር)", type: "number", required: true },
+      { key: "SALE_PRICE_WORDS", label: "የሽያጭ ዋጋ (በፊደል)", type: "text", required: true },
+      { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
+      { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
+      { key: "WITNESS3_NAME", label: "ምስክር 3 ስም", type: "text", required: true },
+      { key: "WITNESS3_ADDRESS", label: "ምስክር 3 አድራሻ", type: "text", required: true },
+      { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
+    ],
+  },
+  {
+    id: "condo-rent-am",
+    title: "የኮንዶሚኒየም ቤት ኪራይ ውል",
+    description: "የኮንዶሚኒየም ቤት ኪራይ ውል ማዘጋጃ ቅጽ",
+    price: 150,
+    language: "am",
+    version: "v1",
+    category: "Real Estate",
+    content: `{AGREEMENT_DATE} 
+                                        የኮንዶሚኒየም ቤት ኪራይ ውል ስምምነት
+
+አከራይ ----------- {LANDLORD_FULL_NAME} 
+    /ዜግነት {LANDLORD_NATIONALITY}/ {LANDLORD_REPRESENTATION} {LANDLORD_AGENT_NAME} የውክልና ስልጣን ቁጥር {LANDLORD_PO_NUMBER} በቀን {LANDLORD_PO_DATE} 
+    አድራሻ፡- {LANDLORD_ADDRESS}
+
+ተከራይ ----------- {TENANT_FULL_NAME} 
+    /ዜግነት {TENANT_NATIONALITY}/ አድራሻ፡- {TENANT_ADDRESS}
+
+እኔ አከራይ በስሜ ተመዝግቦ የሚገኘውን በአዲስ አበባ ከተማ አስተዳደር {PROPERTY_SUBCITY} ክ/ከተማ ወረዳ {PROPERTY_WOREDA} {PROPERTY_SITE_NAME} ሳይት ብሎክ {PROPERTY_BLOCK} ፎቅ {PROPERTY_FLOOR} የቤት ቁጥር {PROPERTY_HOUSE_NUMBER} የሆነውን መኖሪያ ቤት ተከራይ ለ{RENT_PURPOSE} አገልግሎት እንዲጠቀሙበት ከዛሬ {RENT_START_DATE} ጀምሮ እስከ {RENT_END_DATE} ድረስ ለ{RENT_DURATION} ጊዜ በወር ብር {MONTHLY_RENT} ያከራየኋቸው ሲሆን የገንዘቡም አከፋፈል በተመለከተ የ{ADVANCE_PAY_MONTHS} ወር ቅድሚያ ክፍያ ብር {ADVANCE_PAY_AMOUNT} ተቀብያለሁ:: ቀጣዩንም በየወሩ ቅድሚያ ሊከፍሉኝ ተስማምተናል::
+
+ሆኖም የዚህ ቤት የመብራት፣ የውሃ እና ሌሎችንም {UTILITIES_RESPONSIBILITY} በተመለከተ ተከራይ ቤቱን ከተረከቡበት ቀን ጀምሮ ያለውን እስከ ውል ፍፃሜ ጊዜ የሚፈለግበትን የፍጆታ ክፍያ በቢሉ መሰረት ለመክፈል የውል ግዴታ ገብተዋል:: ተከራይ ቤቱን ለቀው ሲሄዱ አስቀድሞ በነበረበት ሁኔታ አስተካክለው እንዲያስረክቡ ሁለታችንም ወገኖች ተስማምተናል::
+
+በተጨማሪም አከራይም ሆነ ተከራይ ውል ለማቋረጥ ቢፈልጉ የ{NOTICE_PERIOD} ቀናት ቅድመ ማስጠንቀቂያ በመስጠት ውሉ ሊቋረጥ ይችላል:: ተከራይ የተከራዩትን ቤት ለሌላ ሶስተኛ ወገን ማስተላለፍ ወይም ማከራየት አይችሉም::
+
+            ይህንን የኮንዶሚኒየም ቤት ኪራይ ውል ስምምነት ስናደርግ የነበሩ ምስክሮች
+እኛ ምስክሮች ሁለቱ ወገኖች ተስማምተው ሲያከራዩና ሲከራዩ አይተናል፡፡
+
+1. የምስክር ስም {WITNESS1_NAME}  አድራሻ፡- {WITNESS1_ADDRESS}
+2. የምስክር ስም {WITNESS2_NAME} አድራሻ፡- {WITNESS2_ADDRESS}
+3. የምስክር ስም {WITNESS3_NAME} አድራሻ፡- {WITNESS3_ADDRESS}
+
+   የአከራይ ስምና ፊርማ                             የተከራይ ስምና ፊርማ                    የምስክሮች ፊርማ
+__________________                      ___________________               1. ________________
+
+ ________________                       ___________________               2. ________________
+
+                                                                          3. ________________`,
+    variables: [
+      { key: "AGREEMENT_DATE", label: "የውል ቀን", type: "text", required: true },
+      { key: "LANDLORD_FULL_NAME", label: "አከራይ ሙሉ ስም", type: "text", required: true },
+      { key: "LANDLORD_NATIONALITY", label: "አከራይ ዜግነት", type: "text", required: true },
+      { key: "LANDLORD_ADDRESS", label: "አከራይ አድራሻ", type: "text", required: true },
+      {
+        key: "LANDLORD_REPRESENTATION",
+        label: "በወኪል ነው? (ውክልና ካለ ይምረጡ)",
+        type: "checkbox",
+        required: true,
+        truthyValue: "በወኪል",
+        falsyValue: "በራሴ",
+      },
+      {
+        key: "LANDLORD_AGENT_NAME",
+        label: "የወኪል ስም",
+        type: "text",
+        required: false,
+        dependsOn: "LANDLORD_REPRESENTATION",
+      },
+      {
+        key: "LANDLORD_PO_NUMBER",
+        label: "የውክልና ሰነድ ቁጥር",
+        type: "text",
+        required: false,
+        dependsOn: "LANDLORD_REPRESENTATION",
+      },
+      {
+        key: "LANDLORD_PO_DATE",
+        label: "የውክልና የተሰጠበት ቀን",
+        type: "text",
+        required: false,
+        dependsOn: "LANDLORD_REPRESENTATION",
+      },
+      { key: "TENANT_FULL_NAME", label: "ተከራይ ሙሉ ስም", type: "text", required: true },
+      { key: "TENANT_NATIONALITY", label: "ተከራይ ዜግነት", type: "text", required: true },
+      { key: "TENANT_ADDRESS", label: "ተከራይ አድራሻ", type: "text", required: true },
+      { key: "PROPERTY_SUBCITY", label: "ክፍለ ከተማ", type: "text", required: true },
+      { key: "PROPERTY_WOREDA", label: "ወረዳ", type: "text", required: true },
+      { key: "PROPERTY_SITE_NAME", label: "የሳይቱ ስም", type: "text", required: true },
+      { key: "PROPERTY_BLOCK", label: "ብሎክ ቁጥር", type: "text", required: true },
+      { key: "PROPERTY_FLOOR", label: "ፎቅ", type: "text", required: true },
+      { key: "PROPERTY_HOUSE_NUMBER", label: "የቤት ቁጥር", type: "text", required: true },
+      { key: "RENT_PURPOSE", label: "የኪራዩ አገልግሎት", type: "text", required: true, placeholder: "ለምሳሌ ለመኖሪያ" },
+      { key: "RENT_START_DATE", label: "የኪራይ መጀመሪያ ቀን", type: "date", required: true },
+      { key: "RENT_END_DATE", label: "የኪራይ ማብቂያ ቀን", type: "date", required: true },
+      { key: "RENT_DURATION", label: "የኪራይ ዘመን", type: "text", required: true },
+      { key: "MONTHLY_RENT", label: "ወርሃዊ ኪራይ (ብር)", type: "number", required: true },
+      { key: "ADVANCE_PAY_MONTHS", label: "የስንት ወር ቅድሚያ", type: "number", required: true },
+      { key: "ADVANCE_PAY_AMOUNT", label: "የቅድሚያ ክፍያ መጠን (ብር)", type: "number", required: true },
+      { key: "UTILITIES_RESPONSIBILITY", label: "የመገልገያ ክፍያዎች ኃላፊነት", type: "text", required: true, placeholder: "ለምሳሌ መብራትና ውሃ" },
+      { key: "NOTICE_PERIOD", label: "የማሳወቂያ ጊዜ (በቀናት)", type: "text", required: true },
+      { key: "WITNESS1_NAME", label: "ምስክር 1 ስም", type: "text", required: true },
+      { key: "WITNESS1_ADDRESS", label: "ምስክር 1 አድራሻ", type: "text", required: true },
+      { key: "WITNESS2_NAME", label: "ምስክር 2 ስም", type: "text", required: true },
+      { key: "WITNESS2_ADDRESS", label: "ምስክር 2 አድራሻ", type: "text", required: true },
+      { key: "WITNESS3_NAME", label: "ምስክር 3 ስም", type: "text", required: true },
+      { key: "WITNESS3_ADDRESS", label: "ምስክር 3 አድራሻ", type: "text", required: true },
       { key: "SIGN_DATE", label: "ፊርማ ቀን", type: "date", required: true },
     ],
   },

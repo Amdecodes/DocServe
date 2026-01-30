@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AGREEMENT_TEMPLATES, AgreementTemplate } from "@/config/agreements";
+import { AGREEMENT_TEMPLATES, AgreementTemplate, AgreementVariable } from "@/config/agreements";
 import Header from "@/components/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
@@ -32,8 +32,17 @@ export default function AgreementFormPage() {
   }, [params.templateId]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInputChange = (key: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+  const handleInputChange = (variable: AgreementVariable, value: any) => {
+    let finalValue = value;
+    
+    // For checkboxes, handle truthy/falsy values if provided
+    if (variable.type === "checkbox") {
+      if (variable.truthyValue || variable.falsyValue) {
+        finalValue = value ? (variable.truthyValue || "Yes") : (variable.falsyValue || "No");
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, [variable.key]: finalValue }));
   };
 
   const getPreviewContent = () => {
@@ -126,35 +135,71 @@ export default function AgreementFormPage() {
             <p className="text-gray-500 mb-8">{template.description}</p>
 
             <div className="space-y-6">
-              {template.variables.map((variable) => (
-                <div key={variable.key}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {variable.label}{" "}
-                    {variable.required && (
-                      <span className="text-red-500">*</span>
+              {template.variables.map((variable) => {
+                // Handle conditional visibility
+                if (variable.dependsOn) {
+                  const dependencyValue = formData[variable.dependsOn];
+                  // If dependency is a checkbox value (truthyValue/falsyValue or boolean)
+                  const dependencyVar = template.variables.find(v => v.key === variable.dependsOn);
+                  
+                  let isVisible = !!dependencyValue;
+                  if (dependencyVar?.type === "checkbox" && dependencyVar.falsyValue) {
+                    isVisible = dependencyValue !== dependencyVar.falsyValue;
+                  }
+                  
+                  if (!isVisible) return null;
+                }
+
+                return (
+                  <div key={variable.key}>
+                    <label className={cn(
+                      "block text-sm font-medium text-gray-700 mb-1",
+                      variable.type === "checkbox" && "flex items-center gap-2 cursor-pointer"
+                    )}>
+                      {variable.type === "checkbox" ? (
+                        <>
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                            checked={!!formData[variable.key] && formData[variable.key] !== variable.falsyValue}
+                            onChange={(e) =>
+                              handleInputChange(variable, e.target.checked)
+                            }
+                          />
+                          <span>{variable.label}</span>
+                        </>
+                      ) : (
+                        <>
+                          {variable.label}{" "}
+                          {variable.required && (
+                            <span className="text-red-500">*</span>
+                          )}
+                        </>
+                      )}
+                    </label>
+                    
+                    {variable.type === "textarea" ? (
+                      <textarea
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 min-h-[100px]"
+                        placeholder={variable.placeholder}
+                        value={formData[variable.key] || ""}
+                        onChange={(e) =>
+                          handleInputChange(variable, e.target.value)
+                        }
+                      />
+                    ) : variable.type === "checkbox" ? null : (
+                      <Input
+                        type={variable.type}
+                        placeholder={variable.placeholder}
+                        value={formData[variable.key] || ""}
+                        onChange={(e) =>
+                          handleInputChange(variable, e.target.value)
+                        }
+                      />
                     )}
-                  </label>
-                  {variable.type === "textarea" ? (
-                    <textarea
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 min-h-[100px]"
-                      placeholder={variable.placeholder}
-                      value={formData[variable.key] || ""}
-                      onChange={(e) =>
-                        handleInputChange(variable.key, e.target.value)
-                      }
-                    />
-                  ) : (
-                    <Input
-                      type={variable.type}
-                      placeholder={variable.placeholder}
-                      value={formData[variable.key] || ""}
-                      onChange={(e) =>
-                        handleInputChange(variable.key, e.target.value)
-                      }
-                    />
-                  )}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="mt-10 pt-6 border-t">
