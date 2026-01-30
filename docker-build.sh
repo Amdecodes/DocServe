@@ -12,7 +12,7 @@ echo "   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
 docker build \
     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
     --build-arg NEXT_PUBLIC_BASE_URL="$NEXT_PUBLIC_BASE_URL" \
-    -t bir-stationary .
+    -t senedx-app .
 
 echo ""
-echo "✅ Build complete! Run with: docker run -p 3000:3000 --env-file .env bir-stationary"
+echo "✅ Build complete! Run with: docker run -p 3000:3000 --env-file .env senedx-app"

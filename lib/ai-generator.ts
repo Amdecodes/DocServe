@@ -233,10 +233,10 @@ Output only the rewritten bullets, one per line.`;
 
 // Fallback models in priority order
 const FALLBACK_MODELS = [
-  "gemini-2.5-flash",      // Primary
-  "gemini-3.0-flash",      // Fallback 1
+  "gemini-3-pro",      // Primary
+  "gemini-2.5-flash",  // Fallback 1
   "gemini-2.5-flash-lite", // Fallback 2
-  "gemini-2.5-flash", // Retry primary one last time
+  "gemini-1.5-flash", // Legacy fallback
 ];
 
 const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";

@@ -22,7 +22,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="text-gray-500 text-xs">
-            © {new Date().getFullYear()} Bir Stationary. All rights reserved.
+            © {new Date().getFullYear()} SENEDX. All rights reserved.
           </p>
         </div>
       </div>

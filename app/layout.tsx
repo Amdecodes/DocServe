@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Bir Stationary - Professional Document Services",
+  title: "SENEDX - Professional Document Services",
   description: "Create professional documents online. Fast, easy, and print-ready.",
 };
 

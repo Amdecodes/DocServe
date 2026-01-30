@@ -54,11 +54,9 @@ export default function Header() {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <img
-            src="/images/Logo/ela_Bir_stationary-removebg-preview.png"
-            alt="Bir Stationary"
-            className="h-12 md:h-14 w-auto"
-          />
+          <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">
+            {t("logo")}
+          </span>
         </Link>
 
         {/* Desktop Nav - Only for Landing Page */}
