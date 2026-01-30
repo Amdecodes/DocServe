@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
 import { motion } from "framer-motion";
@@ -87,11 +88,14 @@ export default function Hero() {
               className="relative bg-white p-3 rounded-2xl shadow-2xl border border-gray-100 group overflow-hidden"
             >
               <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0" />
-              <div className="relative aspect-auto max-h-[500px] w-full overflow-hidden rounded-xl bg-gray-50 z-10 flex justify-center">
-                <img
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 z-10 flex justify-center">
+                <Image
                   className="h-full w-auto max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
                   src="/images/templet-previev/crative-split.png"
                   alt="Creative Split Resume Template"
+                  width={500}
+                  height={667}
+                  priority
                 />
                 {/* Subtle overlay blur on edges */}
                 <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]" />

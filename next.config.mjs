@@ -16,8 +16,9 @@ const nextConfig = {
         hostname: 'utfs.io',
       },
     ],
-    // Disable image optimization for Supabase signed URLs since they already include tokens
-    unoptimized: process.env.NODE_ENV === 'production' ? false : true,
+    formats: ['image/avif', 'image/webp'],
+    // Ensure image optimization is enabled in production
+    unoptimized: process.env.NODE_ENV === 'development',
   },
   output: 'standalone',
 };

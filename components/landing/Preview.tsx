@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Preview() {
   const t = useTranslations("Preview");
@@ -47,13 +48,15 @@ export default function Preview() {
             {[...images, ...images].map((src, index) => (
               <div 
                 key={index} 
-                className="flex-shrink-0 w-64 md:w-80 aspect-[1/1.4] bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+                className="flex-shrink-0 w-64 md:w-80 aspect-[1/1.4] bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden relative"
               >
-                <img 
+                <Image 
                   src={src} 
                   alt="Document Preview" 
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 256px, 320px"
+                  quality={75}
                 />
               </div>
             ))}
