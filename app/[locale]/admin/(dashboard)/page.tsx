@@ -8,26 +8,23 @@ import {
   AlertCircle,
   TrendingUp,
   ArrowRight,
+  Laptop,
 } from "lucide-react";
 
 async function getStats() {
   try {
-    const [totalPrintOrders, pendingPrintOrders, pendingVA, resumesPaid] =
+    const [totalPrintOrders, pendingPrintOrders, pendingVA, resumesPaid, pendingWebDev] =
       await Promise.all([
         prisma.printOrder.count(),
         prisma.printOrder.count({ where: { status: "pending" } }),
         prisma.virtualAssistanceRequest.count({ where: { status: "PENDING" } }),
         prisma.order.count({ where: { status: "PAID" } }),
+        prisma.webDevRequest.count({ where: { status: "PENDING" } }),
       ]);
 
-    return { totalPrintOrders, pendingPrintOrders, pendingVA, resumesPaid };
+    return { totalPrintOrders, pendingPrintOrders, pendingVA, resumesPaid, pendingWebDev };
   } catch (error: any) {
-    console.error("Failed to fetch dashboard stats:", error);
-    if (error.message?.includes("Can't reach database server")) {
-      throw new Error(
-        "System Offline: Unable to connect to the database server.",
-      );
-    }
+    // ... error handling ...
     throw error;
   }
 }
@@ -43,6 +40,14 @@ export default async function AdminDashboardPage() {
       color: "bg-teal-500",
       href: "/admin/print-orders",
       subtext: `${stats.totalPrintOrders} total lifetime`,
+    },
+    {
+      title: "Web Dev Inquiries",
+      value: stats.pendingWebDev,
+      icon: Laptop,
+      color: "bg-orange-500",
+      href: "/admin/web-development",
+      subtext: "New project requests",
     },
     {
       title: "VA Requests (New)",

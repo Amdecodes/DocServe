@@ -1,4 +1,4 @@
-import { FileText, Headset, Printer, Scroll } from "lucide-react";
+import { FileText, Headset, Printer, Scroll, Laptop } from "lucide-react";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
@@ -60,6 +60,15 @@ export default function ServicesPage() {
               price={t("printPrice")}
               href="/print-orders"
               icon={<Printer className="h-6 w-6 text-teal-600" />}
+            />
+
+            {/* Web Development */}
+            <ServiceCard
+              title={t("webDevTitle")}
+              description={t("webDevDescription")}
+              price={t("webDevPrice")}
+              href="/services/web-development"
+              icon={<Laptop className="h-6 w-6 text-blue-600" />}
             />
           </div>
         </div>

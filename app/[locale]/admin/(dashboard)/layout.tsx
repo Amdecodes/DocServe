@@ -12,6 +12,7 @@ import {
   Settings,
   Menu,
   X,
+  Laptop,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const sidebarItems = [
   { href: "/admin/print-orders", label: "Print Orders", icon: Printer },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/virtual-assistance", label: "Virtual Assist", icon: Headset },
+  { href: "/admin/web-development", label: "Web Development", icon: Laptop },
   { href: "/admin/resumes", label: "Resumes", icon: FileText },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];

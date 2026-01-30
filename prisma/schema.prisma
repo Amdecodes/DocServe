@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -111,4 +112,41 @@ enum PrintOrderStatus {
   contacted
   completed
   cancelled
+}
+
+enum WebDevStatus {
+  PENDING
+  CONTACTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum WebDevProjectType {
+  PORTFOLIO
+  LANDING_PAGE
+  E_COMMERCE
+  SAAS
+  CORPORATE
+  BLOG
+  OTHER
+}
+
+model WebDevRequest {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Contact Info
+  fullName    String
+  email       String
+  phone       String
+  
+  // Project Details
+  projectType WebDevProjectType
+  budgetRange String?
+  description String?
+  
+  // Status
+  status      WebDevStatus @default(PENDING)
 }

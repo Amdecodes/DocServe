@@ -19,6 +19,7 @@ const nextConfig = {
     // Disable image optimization for Supabase signed URLs since they already include tokens
     unoptimized: process.env.NODE_ENV === 'production' ? false : true,
   },
+  output: 'standalone',
 };
 
 export default withNextIntl(nextConfig);

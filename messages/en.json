@@ -70,6 +70,13 @@
       "house": "House Rent Agreements",
       "business": "Business Contracts",
       "action": "Draft Agreement"
+    },
+    "webDev": {
+      "title": "Web Development",
+      "portfolio": "Portfolio & Personal",
+      "saas": "SaaS & Web Apps",
+      "ecommerce": "E-Commerce Stores",
+      "action": "Select Type"
     }
   },
   "WhyChooseUs": {
@@ -121,7 +128,7 @@
     "description": "Select the service that best fits your needs. We help you create professional documents that stand out.",
     "resumeTitle": "Resume Builder",
     "resumeDescription": "Create a professional, standardized CV in minutes with our AI-powered builder.",
-    "resumePrice": "Starting from 199 ETB",
+    "resumePrice": "Starting from 150 ETB",
     "vaTitle": "Virtual Assistance",
     "vaDescription": "Get professional virtual assistance for your remote tasks and administrative needs.",
     "vaPrice": "Request a Quote",
@@ -131,6 +138,9 @@
     "agreementTitle": "Agreement Services",
     "agreementDescription": "Legally binding agreements for car sales, house rentals, and business contracts.",
     "agreementPrice": "Starting from 150 ETB",
+    "webDevTitle": "Web Development",
+    "webDevDescription": "Custom high-performance websites, SaaS platforms, and digital solutions for your business.",
+    "webDevPrice": "Request a Quote",
     "comingSoon": "More Services Coming Soon"
   },
   "ServiceCard": {
@@ -190,6 +200,10 @@
     "freshman-entry": {
       "name": "Freshman Entry",
       "description": "Ideal for students and entry-level professionals, highlighting skills and education over work history."
+    },
+    "lavender-executive": {
+      "name": "Lavender Executive",
+      "description": "Modern, clean design with bold violet accents and a centered professional layout."
     },
     "useThisTemplate": "Use This Template",
     "previewNotAvailable": "Preview Not Available"
@@ -345,6 +359,40 @@
     "add": "Add",
     "noSkills": "No skills added yet.",
     "placeholder": "e.g. JavaScript, Project Management"
+  },
+  "WebDevelopment": {
+    "title": "Premium Web Development",
+    "description": "We build high-performance, stunning websites tailored to your brand.",
+    "steps": {
+      "type": "Project Type",
+      "typeDesc": "Select the type of project you need",
+      "details": "Project Details",
+      "detailsDesc": "Tell us more about yourself and the project",
+      "contact": "Contact Info"
+    },
+    "types": {
+      "PORTFOLIO": "Portfolio",
+      "LANDING_PAGE": "Landing Page",
+      "E_COMMERCE": "E-Commerce",
+      "SAAS": "SaaS Platform",
+      "CORPORATE": "Corporate Site",
+      "BLOG": "Blog / News",
+      "OTHER": "Other Custom Solution"
+    },
+    "form": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "budget": "Estimated Budget (Optional)",
+      "description": "Project Description",
+      "descriptionPlaceholder": "Tell us about your vision, features, and timeline...",
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "startNew": "Start New Request",
+      "back": "Back",
+      "successTitle": "Request Received!",
+      "successMessage": "We have received your project details. Our team will review it and get back to you shortly."
+    }
   },
   "CVNavigation": {
     "next": "Next",

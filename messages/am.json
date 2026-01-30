@@ -70,6 +70,13 @@
       "house": "የቤት ኪራይ ውሎች",
       "business": "የቢዝነስ ውሎች",
       "action": "ውል ይፃፉ"
+    },
+    "webDev": {
+      "title": "የዌብሳይት ልማት",
+      "portfolio": "ፖርትፎሊዮ እና የግል",
+      "saas": "የሶፍትዌር አገልግሎት (SaaS)",
+      "ecommerce": "የገበያ ድረ-ገጾች",
+      "action": "አይነት ይምረጡ"
     }
   },
   "WhyChooseUs": {
@@ -121,7 +128,7 @@
     "description": "ፍላጎትዎን የሚያሟላውን አገልግሎት ይምረጡ። ፕሮፌሽናል ዶክመንቶችን እንዲያዘጋጁ እንረዳዎታለን።",
     "resumeTitle": "CV ማዘጋጃ",
     "resumeDescription": "በደቂቃዎች ውስጥ ፕሮፌሽናል እና ደረጃውን የጠበቀ CV ያዘጋጁ።",
-    "resumePrice": "ከ 199 ብር ይጀምራል",
+    "resumePrice": "ከ 150 ብር ይጀምራል",
     "vaTitle": "ቨርቹዋል አሲስታንስ",
     "vaDescription": "ለርቀት ስራዎችዎ እና ለአስተዳደራዊ ፍላጎቶችዎ የባለሙያ ድጋፍ ያግኙ።",
     "vaPrice": "ዋጋ ይጠይቁ",
@@ -131,6 +138,9 @@
     "agreementTitle": "የውል አገልግሎቶች",
     "agreementDescription": "ለመኪና ሽያጭ፣ የቤት ኪራይ እና የቢዝነስ ውሎች ህጋዊ የሆኑ ውሎች።",
     "agreementPrice": "ከ 150 ብር ይጀምራል",
+    "webDevTitle": "የዌብሳይት ልማት",
+    "webDevDescription": "ለቢዝነስዎ የሚሆኑ ዘመናዊ ድረ-ገጾች፣ SaaS ፕላትፎርሞች እና የዲጂታል መፍትሄዎች።",
+    "webDevPrice": "ዋጋ ይጠይቁ",
     "comingSoon": "ተጨማሪ አገልግሎቶች በቅርብ ቀን"
   },
   "ServiceCard": {
@@ -190,6 +200,10 @@
     "freshman-entry": {
       "name": "የጀማሪ ሲቪ (Freshman)",
       "description": "ለተማሪዎች እና ለጀማሪዎች ተስማሚ የሆነ፣ ከስራ ልምድ ይልቅ ችሎታን እና ትምህርትን የሚያጎላ ዲዛይን።"
+    },
+    "lavender-executive": {
+      "name": "ላቬንደር ኤክስኪዩቲቭ",
+      "description": "ዘመናዊ እና ግልጽ የሆነ፣ ደማቅ የቫዮሌት ቀለሞች ያሉት ፕሮፌሽናል ዲዛይን።"
     },
     "useThisTemplate": "ይህንን ቅጽ ተጠቀም",
     "previewNotAvailable": "ቅድመ እይታ አይገኝም"
@@ -391,6 +405,40 @@
     "toneHelp": "ለድርጅቱ ባህል የሚመጥን የአጻጻፍ ስልት ይምረጡ።",
     "letterBody": "የደብዳቤው አካል",
     "letterPlaceholder": "የተከበሩ የስራ ሃላፊ፣\n\nበድርጅታችሁ ለወጣው የስራ ማስታወቂያ ለማመልከት ነው..."
+  },
+  "WebDevelopment": {
+    "title": "ፕሪሚየም የዌብሳይት ልማት",
+    "description": "ለእርስዎ ብራንድ የሚመጥኑ፣ ከፍተኛ ጥራት ያላቸው እና ማራኪ ድረ-ገጾችን እንገነባለን።",
+    "steps": {
+      "type": "የፕሮጀክት አይነት",
+      "typeDesc": "የሚፈልጉትን የፕሮጀክት አይነት ይምረጡ",
+      "details": "የፕሮጀክት ዝርዝር",
+      "detailsDesc": "ስለራስዎ እና ስለ ፕሮጀክቱ የበለጠ ይንገሩን",
+      "contact": "የመገኛ መረጃ"
+    },
+    "types": {
+      "PORTFOLIO": "ፖርትፎሊዮ",
+      "LANDING_PAGE": "ላንዲንግ ፔጅ",
+      "E_COMMERCE": "የገበያ ድረ-ገጽ",
+      "SAAS": "የሶፍትዌር አገልግሎት (SaaS)",
+      "CORPORATE": "የድርጅት ድረ-ገጽ",
+      "BLOG": "ብሎግ / ዜና",
+      "OTHER": "ሌላ ልዩ ፍላጎት"
+    },
+    "form": {
+      "fullName": "ሙሉ ስም",
+      "email": "ኢሜይል አድራሻ",
+      "phone": "ስልክ ቁጥር",
+      "budget": "የታሰበ በጀት (አማራጭ)",
+      "description": "የፕሮጀክት መግለጫ",
+      "descriptionPlaceholder": "ስለ ራዕይዎ፣ ስለሚፈለጉት ነገሮች እና ስለ ጊዜው ይግለጹልን...",
+      "submit": "ጥያቄውን ላክ",
+      "submitting": "በመላክ ላይ...",
+      "startNew": "አዲስ ጥያቄ ጀምር",
+      "back": "ተመለስ",
+      "successTitle": "ጥያቄው ደርሷል!",
+      "successMessage": "የፕሮጀክትዎን ዝርዝር ተቀብለናል። ቡድናችን መረጃውን መርምሮ በቅርቡ ያነጋግርዎታል።"
+    }
   },
   "VirtualAssistance": {
     "pageTitle": "ቨርቿል እርዳታ ይጠይቁ",

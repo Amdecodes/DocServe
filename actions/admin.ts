@@ -1,7 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { VirtualAssistanceStatus, PrintOrderStatus } from "@prisma/client";
+import {
+  VirtualAssistanceStatus,
+  PrintOrderStatus,
+  WebDevStatus,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs/server";
 import { deleteFileFromUrl } from "@/lib/upload";
@@ -150,6 +154,38 @@ export async function updateVAStatus(
     return { success: true };
   } catch (error) {
     console.error("Failed to update status", error);
+    return { success: false };
+  }
+}
+
+export async function getWebDevRequests() {
+  try {
+    await requireAdmin();
+    const requests = await prisma.webDevRequest.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return requests;
+  } catch (error: any) {
+    console.error("Database Error in getWebDevRequests:", error);
+    return [];
+  }
+}
+
+export async function updateWebDevRequestStatus(
+  id: string,
+  status: WebDevStatus,
+) {
+  try {
+    await requireAdmin();
+    await prisma.webDevRequest.update({
+      where: { id },
+      data: { status },
+    });
+    revalidatePath("/admin/web-development");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update web dev request status", error);
     return { success: false };
   }
 }

@@ -68,6 +68,7 @@ export function VirtualAssistanceForm({
   >("idle");
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const STEPS = [
@@ -543,27 +544,34 @@ export function VirtualAssistanceForm({
                         <p className="text-sm text-gray-600 mb-3">
                           {t("uploadDescription")}
                         </p>
-                        <UploadButton
-                          endpoint="virtualAssistanceResume"
-                          onClientUploadComplete={(res) => {
-                            if (res && res[0]) {
-                              const fileUrl = res[0].url;
-                              const fileName = res[0].name;
-                              setUploadedFile(fileUrl);
-                              setUploadedFileName(fileName);
-                              form.setValue("resume_url", fileUrl);
-                            }
-                          }}
-                          onUploadError={(error: Error) => {
-                            alert(t("uploadError"));
-                            console.error(error);
-                          }}
-                          appearance={{
-                            button:
-                              "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium ut-ready:bg-teal-600 ut-uploading:bg-teal-500",
-                            allowedContent: "text-xs text-gray-500 mt-2",
-                          }}
-                        />
+                          <UploadButton
+                            endpoint="virtualAssistanceResume"
+                            onUploadBegin={() => setUploadError(null)}
+                            onClientUploadComplete={(res) => {
+                              if (res && res[0]) {
+                                const fileUrl = res[0].url;
+                                const fileName = res[0].name;
+                                setUploadedFile(fileUrl);
+                                setUploadedFileName(fileName);
+                                form.setValue("resume_url", fileUrl);
+                                setUploadError(null);
+                              }
+                            }}
+                            onUploadError={(error: Error) => {
+                              setUploadError(error.message || t("uploadError"));
+                              console.error(error);
+                            }}
+                            appearance={{
+                              button:
+                                "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium ut-ready:bg-teal-600 ut-uploading:bg-teal-500",
+                              allowedContent: "text-xs text-gray-500 mt-2",
+                            }}
+                          />
+                          {uploadError && (
+                            <p className="text-xs text-red-500 mt-2 animate-pulse font-medium bg-red-50 px-2 py-1 rounded">
+                              {uploadError}
+                            </p>
+                          )}
                       </div>
                     ) : (
                       <div className="flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-xl">

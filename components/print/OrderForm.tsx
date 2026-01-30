@@ -56,7 +56,7 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
       categoryConfig.forEach(field => {
         const val = formData.get(`dynamic_${field.name}`) as string;
         if (val) {
-          const label = field.label;
+          const label = t(field.label);
           dynamicFieldsInstructions.push(`${label}: ${val}`);
         }
       });

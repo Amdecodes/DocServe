@@ -290,7 +290,7 @@ export const TEMPLATES: TemplateConfig[] = [
       secondary: "#fef2f2", // rose-50
       accent: "#f43f5e", // rose-500
     },
-    previewImage: "/images/templet-previev/freshman-entry.png",
+    previewImage: "/images/templet-previev/fresheman.png",
     resumeComponent: () =>
       import("@/components/cv/preview/layouts/FreshmanEntry").then((m) => ({
         default: m.FreshmanEntryLayout,
@@ -298,6 +298,27 @@ export const TEMPLATES: TemplateConfig[] = [
     coverLetterComponent: () =>
       import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
         default: m.FreshmanCoverLetter,
+      })),
+  },
+  {
+    id: "lavender-executive",
+    name: "Lavender Executive",
+    description: "Modern, single-column design with violet accents and a clean centered layout.",
+    tags: ["Modern", "Executive", "Purple"],
+    category: "executive",
+    colorScheme: {
+      primary: "#8b5cf6", // violet-500
+      secondary: "#ffffff",
+      accent: "#a78bfa", // violet-400
+    },
+    previewImage: "/images/templet-previev/lavender.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/LavenderExecutive").then((m) => ({
+        default: m.LavenderExecutiveLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/LavenderCoverLetter").then((m) => ({
+        default: m.LavenderCoverLetter,
       })),
   },
 ];
@@ -443,6 +464,16 @@ export const templateComponents: Record<
     coverLetter: () =>
       import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
         default: m.FreshmanCoverLetter,
+      })),
+  },
+  "lavender-executive": {
+    resume: () =>
+      import("@/components/cv/preview/layouts/LavenderExecutive").then((m) => ({
+        default: m.LavenderExecutiveLayout,
+      })),
+    coverLetter: () =>
+      import("@/components/cv/preview/layouts/LavenderCoverLetter").then((m) => ({
+        default: m.LavenderCoverLetter,
       })),
   },
 };

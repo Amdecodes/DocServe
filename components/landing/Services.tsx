@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
-import { FileText, Printer, Headset, ArrowRight, Scroll } from "lucide-react";
+import { FileText, Printer, Headset, ArrowRight, Scroll, Laptop } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Services() {
@@ -64,6 +64,20 @@ export default function Services() {
       action: t("virtualAssistance.action"),
       color: "bg-purple-50 text-purple-600",
       href: "/form/virtual-assistance",
+    },
+    {
+      id: "web-development",
+      title: t("webDev.title"),
+      icon: Laptop,
+      items: [
+        { label: t("webDev.portfolio") },
+        { label: t("webDev.saas") },
+        { label: t("webDev.ecommerce") },
+      ],
+      comingSoon: false,
+      action: t("webDev.action"),
+      color: "bg-blue-50 text-blue-600",
+      href: "/services/web-development",
     },
   ];
 
