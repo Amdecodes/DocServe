@@ -39,14 +39,26 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
             >
-              <Link href="/resumes/templates">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full sm:w-auto"
-                >
-                  {t("ctaPrimary")}
-                </Button>
-              </Link>
+                {/* Desktop: Go to Template Gallery */}
+                <Link href="/resumes/templates" className="hidden md:block w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
+                  >
+                    {t("ctaPrimary")}
+                  </Button>
+                </Link>
+
+                {/* Mobile: Direct to Builder (Bypass Gallery) */}
+                <Link href="/form/cv?template=golden" className="md:hidden w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
+                  >
+                    {t("ctaPrimary")}
+                  </Button>
+                </Link>
+                </Link>
               <Link href="/services">
                 <Button
                   variant="outline"

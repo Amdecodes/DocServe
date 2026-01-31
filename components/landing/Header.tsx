@@ -192,9 +192,11 @@ export default function Header() {
                 <Globe className="w-5 h-5" />
                 {t("switchLanguage")}
               </button>
-              <Button className="w-full bg-primary text-white">
-                {t("cta")}
-              </Button>
+              <Link href="/form/cv?template=golden" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button className="w-full bg-primary text-white">
+                  {t("cta")}
+                </Button>
+              </Link>
             </nav>
           </motion.div>
         )}
