@@ -34,7 +34,7 @@ export function TemplateGallery() {
       {TEMPLATES.map((template, idx) => (
         <div
           key={template.id}
-          className="group relative bg-white rounded-xl shadow-sm md:shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
+          className="group relative bg-white rounded-xl shadow-xs md:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col transform-gpu"
         >
           {/* Badge overlays */}
           <div className="absolute top-3 left-3 z-10 flex gap-2">

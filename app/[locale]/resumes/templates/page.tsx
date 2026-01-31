@@ -15,7 +15,7 @@ export default async function TemplatesPage() {
 
         {/* Hero Section */}
         <div className="bg-white relative overflow-hidden pt-32 pb-20 border-b border-gray-100">
-          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] opacity-[0.4] pointer-events-none"></div>
+          <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] opacity-[0.4] pointer-events-none"></div>
 
           <div className="container mx-auto px-4 text-center relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider mb-6 border border-blue-100">
@@ -33,7 +33,7 @@ export default async function TemplatesPage() {
 
         {/* Templates Grid Section */}
         <div className="container mx-auto px-4 py-16 -mt-8 relative z-20">
-          <div className="bg-white/80 lg:backdrop-blur-xl border border-white/50 rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="bg-white lg:bg-white/80 lg:backdrop-blur-xl border border-gray-100 lg:border-white/50 rounded-3xl p-4 md:p-8 shadow-sm">
             <div className="mb-10 flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-100 pb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">
