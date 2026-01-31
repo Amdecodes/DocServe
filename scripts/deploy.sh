@@ -3,6 +3,18 @@
 # SENEDX Deployment Script
 # Usage: ./scripts/deploy.sh
 
+# Try to load NVM configuration
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Check if npm/node is available now
+if ! command -v npm &> /dev/null; then
+    echo "❌ Error: 'npm' is not found."
+    echo "This script requires Node.js. If you installed it via NVM, make sure to run this script as a user with NVM accessing rights."
+    echo "To fix: Install Node.js v18+ manually on this VPS."
+    exit 1
+fi
+
 echo "🚀 Starting Deployment..."
 
 # 0. Ensure Global Tools Installed
