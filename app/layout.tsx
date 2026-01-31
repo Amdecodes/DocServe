@@ -54,6 +54,9 @@ export const metadata: Metadata = {
       "am-ET": "https://senedx.com/am",
     },
   },
+  verification: {
+    google: "IxM9WZ1vze2Dqy56X6GlTXjQfufjX24C75EOzYXD6_g",
+  },
 };
 
 export default function RootLayout({
