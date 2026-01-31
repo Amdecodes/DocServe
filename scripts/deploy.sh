@@ -5,6 +5,17 @@
 
 echo "🚀 Starting Deployment..."
 
+# 0. Ensure Global Tools Installed
+if ! command -v pnpm &> /dev/null; then
+    echo "⚠️ pnpm not found. Installing global pnpm..."
+    npm install -g pnpm
+fi
+
+if ! command -v pm2 &> /dev/null; then
+    echo "⚠️ PM2 not found. Installing global PM2..."
+    npm install -g pm2
+fi
+
 # 1. Pull latest changes
 echo "📥 Pulling latest code..."
 git pull
