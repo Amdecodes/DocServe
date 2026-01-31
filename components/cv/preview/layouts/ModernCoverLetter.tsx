@@ -32,16 +32,6 @@ export function ModernCoverLetter({
           </p>
         </div>
       </header>
-      {/* Date */}
-      <div className="mb-8 text-right">
-        <p>
-          {new Date().toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-      </div>
       {/* Recipient Info */}
       <div className="mb-8">
         <p className="font-bold">

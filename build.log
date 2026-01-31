@@ -1,0 +1,65 @@
+
+> paperless@0.1.0 build /home/amde/Documents/ElaProject/paperless
+> next build
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.3s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/15) ...
+  Generating static pages using 15 workers (3/15) 
+  Generating static pages using 15 workers (7/15) 
+  Generating static pages using 15 workers (11/15) 
+✓ Generating static pages using 15 workers (15/15) in 310.2ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/admin
+├ ƒ /[locale]/admin/login
+├ ƒ /[locale]/admin/print-orders
+├ ƒ /[locale]/admin/products
+├ ƒ /[locale]/admin/resumes
+├ ƒ /[locale]/admin/virtual-assistance
+├ ƒ /[locale]/agreements
+├ ƒ /[locale]/checkout
+├ ƒ /[locale]/checkout/failed
+├ ƒ /[locale]/checkout/success
+├ ƒ /[locale]/form/agreement/[templateId]
+├ ƒ /[locale]/form/cv
+├ ƒ /[locale]/form/virtual-assistance
+├ ƒ /[locale]/print-orders
+├ ƒ /[locale]/print-orders/[productId]
+├ ƒ /[locale]/print-orders/success
+├ ƒ /[locale]/resumes/templates
+├ ƒ /[locale]/services
+├ ƒ /api/admin/print-orders
+├ ƒ /api/admin/print-orders/[id]
+├ ƒ /api/ai/generate
+├ ƒ /api/cron/cleanup
+├ ƒ /api/orders
+├ ƒ /api/orders/[id]
+├ ƒ /api/payment/chapa/init
+├ ƒ /api/payment/chapa/webhook
+├ ƒ /api/payment/verify-json
+├ ƒ /api/pdf/download
+├ ƒ /api/print-orders
+├ ƒ /api/print-products
+├ ƒ /api/upload/image
+├ ƒ /api/upload/product
+├ ƒ /api/upload/refresh-url
+├ ƒ /api/uploadthing
+└ ƒ /api/virtual-assistance
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

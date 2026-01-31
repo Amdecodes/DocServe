@@ -2,9 +2,25 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Preview() {
   const t = useTranslations("Preview");
+
+  const images = [
+    "/images/auto play/Pasted image.png",
+    "/images/auto play/Pasted image (2).png",
+    "/images/auto play/Pasted image (3).png",
+    "/images/auto play/Pasted image (4).png",
+    "/images/auto play/Pasted image (5).png",
+    "/images/auto play/Pasted image (6).png",
+    "/images/auto play/Pasted image (7).png",
+    "/images/auto play/Pasted image (8).png",
+    "/images/auto play/Pasted image (9).png",
+    "/images/auto play/shirt-1.png",
+    "/images/auto play/shirt-2.jpg",
+ 
+  ];
 
   return (
     <section className="py-20 bg-lightbg">
@@ -29,41 +45,18 @@ export default function Preview() {
              }}
              style={{ width: "fit-content" }}
           >
-            {[
-              "/images/auto play/Screenshot From 2026-01-18 18-18-45.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-20-17.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-20-41.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-21-18.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-22-11.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-22-47.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-23-13.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-24-07.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-24-44.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-25-28.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-26-00.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-26-28.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-18-45.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-20-17.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-20-41.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-21-18.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-22-11.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-22-47.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-23-13.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-24-07.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-24-44.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-25-28.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-26-00.png",
-              "/images/auto play/Screenshot From 2026-01-18 18-26-28.png"
-            ].map((src, index) => (
+            {[...images, ...images].map((src, index) => (
               <div 
                 key={index} 
-                className="flex-shrink-0 w-64 md:w-80 aspect-[1/1.4] bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+                className="flex-shrink-0 w-64 md:w-80 aspect-[1/1.4] bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden relative"
               >
-                <img 
+                <Image 
                   src={src} 
                   alt="Document Preview" 
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 256px, 320px"
+                  quality={75}
                 />
               </div>
             ))}

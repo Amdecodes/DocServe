@@ -11,12 +11,7 @@
  * - No placeholders / no assumptions → avoids hallucinations
  */
 
-import {
-  CVData,
-  ExperienceItem,
-  CoverLetterTone,
-  DocumentLanguage,
-} from "@/types/cv";
+import { CVData, ExperienceItem, CoverLetterTone } from "@/types/cv";
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -30,19 +25,10 @@ interface AIGenerationOutput {
 }
 
 // Tone mapping (UI dropdown → prompt language style)
-const TONE_MAP: Record<CoverLetterTone, Record<DocumentLanguage, string>> = {
-  Formal: {
-    en: "conservative, respectful wording",
-    am: "ባህላዊ እና አክብሮታዊ አጻጻፍ",
-  },
-  Neutral: {
-    en: "neutral, ATS-safe language",
-    am: "ገለልተኛ እና ሙያዊ ቋንቋ",
-  },
-  Confident: {
-    en: "strong verbs, assertive tone",
-    am: "ጠንካራ ግሦች፣ በራስ መተማመን ያለው ድምጽ",
-  },
+const TONE_MAP: Record<CoverLetterTone, string> = {
+  Formal: "conservative, respectful wording",
+  Neutral: "neutral, ATS-safe language",
+  Confident: "strong verbs, assertive tone",
 };
 
 // Input limits (backend-enforced safeguards)
@@ -60,37 +46,24 @@ const GEMINI_API_URL = process.env.GEMINI_API_URL;
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPTS: Record<DocumentLanguage, string> = {
-  en: `You are a professional career writer specializing in ATS-friendly resumes and cover letters.
-Write concise, human-sounding, non-generic content.
-Do not invent facts.
-Do not mention AI, prompts, or templates.
-Follow the structure and limits exactly.`,
+const SYSTEM_PROMPT = `You are a senior career writer and ATS optimization specialist.
+Your output must be clear, concise, factual, and recruiter-readable.
 
-  am: `ROLE: You are an expert CV writer for the Ethiopian market.
-  
-STRICT OUTPUT RULE: You MUST write ONLY in Amharic (አማርኛ).
-- If the user input is in English, you MUST translate it to Amharic.
-- Do NOT generate English sentences.
-- Use Amharic script (ፊደል) for the entire response.
-- Technical terms can remain in English if there is no common Amharic equivalent, but the sentence structure MUST be Amharic.
-- Use standard Amharic punctuation (። ፣ ፤ ፥ ፦ !).
-
-FORBIDDEN:
-- Do not respond in English.
-- Do not provide translations in brackets.
-- Do not include AI meta-talk ("Here is the summary in Amharic").`,
-};
+Hard rules:
+- Do NOT invent facts, tools, metrics, or achievements
+- Do NOT use clichés, buzzwords, or motivational language
+- Do NOT repeat the same sentence structure
+- Do NOT mention AI, prompts, or templates
+- Write in plain professional English suitable for ATS parsing
+- Optimize for clarity, relevance, and hiring manager scanning
+- Follow structure and limits exactly`;
 
 // Experience level translations
-const EXPERIENCE_LEVEL_MAP: Record<
-  ExperienceLevel,
-  Record<DocumentLanguage, string>
-> = {
-  "Entry-level": { en: "Entry-level", am: "የመጀመሪያ ደረጃ" },
-  "Mid-level": { en: "Mid-level", am: "መካከለኛ ደረጃ" },
-  Senior: { en: "Senior", am: "ከፍተኛ ደረጃ" },
-  Executive: { en: "Executive", am: "አስተዳዳሪ ደረጃ" },
+const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
+  "Entry-level": "Entry-level",
+  "Mid-level": "Mid-level",
+  Senior: "Senior",
+  Executive: "Executive",
 };
 
 // Experience level type
@@ -154,50 +127,24 @@ function buildSummaryPrompt(
   experienceLevel: ExperienceLevel,
   industry: string,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Write a professional summary for a CV.
-
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
-- Industry: ${industry}
-- Notes: ${userNotes || "N/A"}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate any English concepts from inputs into Amharic.
-3. Length: 2-3 sentences.
-4. Focus: Impact, skills, professional value.
-5. Tone: Professional, formal.
-6. NO English sentences allowed.
-
-[OUTPUT]
-Write only the Amharic summary text now:`;
-  }
-
-  return `Write a professional summary for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+  return `Write a professional summary for a ${expLevelText} ${jobTitle} in the ${industry} field.
 
 Rules:
-- 2-3 sentences only
-- Focus on impact and skills, not responsibilities
-- Use clear, professional language
-- No buzzwords, no clichés
-- Do not mention years unless provided
-- Do not use first person ("I", "my")
+- 2–3 sentences only (60–80 words total)
+- Third person only (no "I", "my", "we")
+- Emphasize core skills, impact, and role focus
+- Avoid responsibilities; highlight outcomes and strengths
+- Use concrete language recruiters expect
+- No buzzwords, no clichés, no fluff
+- Do not assume years, tools, or certifications unless stated
 
-User notes:
-${userNotes || "None provided"}
+User-provided information:
+${userNotes || "No additional details provided"}
 
-Output only the summary text, nothing else.`;
+Output only the summary text.`;
 }
 
 /**
@@ -210,57 +157,43 @@ function buildCoverLetterPrompt(
   industry: string,
   tone: CoverLetterTone,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const toneInstruction =
-    TONE_MAP[tone]?.[language] || TONE_MAP.Neutral[language];
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Write the body of a cover letter.
-
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
-- Industry: ${industry}
-- Tone: ${toneInstruction}
-- Notes: ${userNotes || "N/A"}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Structure: 3 short paragraphs.
-3. Content: Value proposition, skills, motivation.
-4. NO greetings ("Dear..."), NO sign-off ("Sincerely...").
-5. NO placeholders like [Company Name].
-6. Translate all English inputs to Amharic context.
-7. NO English sentences.
-
-[OUTPUT]
-Write only the 3 Amharic paragraphs now:`;
-  }
-
-  return `Write a one-page cover letter body for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+  return `Write the body of a one-page cover letter for a ${expLevelText} ${jobTitle} in the ${industry} field.
 
 Tone: ${toneInstruction}
 
-Rules:
-- 3 short paragraphs only
-- No company names or specific references
-- No placeholders like [Company Name]
-- No greetings or signatures
-- Focus on value, skills, and motivation
-- Avoid generic phrases like "I am writing to apply"
-- Each paragraph should be 2-3 sentences max
+Structure rules (strict):
+- Exactly 3 short paragraphs
+- Each paragraph: 2–3 sentences
+- No greetings, no closings, no company names
+- No placeholders or assumptions
 
-User notes:
-${userNotes || "None provided"}
+Content rules:
+Paragraph 1 — Role alignment:
+- State professional focus and role relevance
+- Avoid phrases like "I am writing to apply"
 
-Output only the 3 paragraphs, nothing else.`;
+Paragraph 2 — Value and capability:
+- Highlight strengths, skills, and transferable value
+- Reference impact or problem-solving (without metrics unless given)
+
+Paragraph 3 — Motivation and fit:
+- Express interest in contributing and growing
+- Keep professional and restrained
+
+General rules:
+- First person allowed
+- No clichés or generic enthusiasm
+- No buzzwords
+- No repetition of resume bullets
+
+User-provided information:
+${userNotes || "No additional details provided"}
+
+Output only the 3 paragraphs.`;
 }
 
 /**
@@ -271,51 +204,25 @@ function buildBulletPrompt(
   bullets: string[],
   jobTitle: string,
   company: string,
-  language: DocumentLanguage,
 ): string {
-  const bulletList = bullets.map((b, i) => `${i + 1}. ${b}`).join("\n");
+  return `Rewrite the following resume bullets for ATS and recruiter review.
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
-
-[TASK]
-Rewrite these CV bullet points to be professional and impact-focused in Amharic.
-
-[CONTEXT]
-Role: ${jobTitle} at ${company}
-
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate the input bullet points from English (if applicable) to Amharic.
-3. Start each bullet with a strong Amharic verb.
-4. Keep the meaning but improve the phrasing.
-5. Length: 1 line per bullet.
-6. Count: Exactly ${bullets.length} bullets.
-7. NO English sentences.
-
-[BULLETS TO REWRITE]
-${bulletList}
-
-[OUTPUT]
-Write only the Amharic bullets, one per line:`;
-  }
-
-  return `Rewrite the following bullet points to be concise, results-oriented, and ATS-friendly.
-
-Context: ${jobTitle} at ${company}
+Context:
+Role: ${jobTitle}
+Organization: ${company}
 
 Rules:
-- Keep meaning unchanged
-- Start each with a strong action verb
-- No exaggeration or invented metrics
-- Max 1 line per bullet (under 100 characters)
+- Preserve original meaning exactly
+- Start each bullet with a strong action verb
+- Emphasize ownership, contribution, or outcome
+- Remove filler words and vague phrasing
+- No invented metrics, tools, or scope
+- One concise sentence per bullet (max 100 characters)
 - Return exactly ${bullets.length} bullets
-- No numbering in output
+- No numbering, symbols, or extra text
 
-Bullets:
-${bulletList}
+Original bullets:
+${bullets.map((b) => `- ${b}`).join("\n")}
 
 Output only the rewritten bullets, one per line.`;
 }
@@ -324,64 +231,119 @@ Output only the rewritten bullets, one per line.`;
 // GEMINI API CALL
 // ============================================================================
 
-async function callGeminiAPI(
-  userPrompt: string,
-  language: DocumentLanguage,
-): Promise<string> {
-  const systemPrompt = SYSTEM_PROMPTS[language];
+// Fallback models in priority order
+const FALLBACK_MODELS = [
+  "gemini-3-pro",      // Primary
+  "gemini-2.5-flash",  // Fallback 1
+  "gemini-2.5-flash-lite", // Fallback 2
+  "gemini-1.5-flash", // Legacy fallback
+];
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: systemPrompt }, { text: userPrompt }],
-        },
-      ],
-      generationConfig: {
-        temperature: 0.4, // Lower = more consistent, less creative
-        maxOutputTokens: 512, // Limit output length
-        topP: 0.8,
-        topK: 40,
-      },
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_HARASSMENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_HATE_SPEECH",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-      ],
-    }),
-  });
+const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error("[Gemini API] Error response:", error);
-    throw new Error(`Gemini API failed: ${response.status}`);
+async function callGeminiAPI(userPrompt: string): Promise<string> {
+  const maxRetriesPerModel = 2; // Reduced retries per model since we have fallbacks
+  let lastError: Error | null = null;
+
+  for (const modelId of FALLBACK_MODELS) {
+    let attempt = 0;
+    console.log(`[Gemini API] Attempting generation with model: ${modelId}`);
+
+    while (attempt < maxRetriesPerModel) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/${modelId}:generateContent?key=${GEMINI_API_KEY}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.4,
+              maxOutputTokens: 512,
+              topP: 0.8,
+              topK: 40,
+            },
+            safetySettings: [
+              {
+                category: "HARM_CATEGORY_HARASSMENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_HATE_SPEECH",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+            ],
+          }),
+        });
+
+        if (response.status === 429) {
+          attempt++;
+          const waitTime = Math.pow(2, attempt) * 1000;
+          console.warn(`[Gemini API] ${modelId} 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`);
+          if (attempt >= maxRetriesPerModel) break; // Break inner loop to try next model
+          
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          continue;
+        }
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`[Gemini API] ${modelId} Error ${response.status}:`, errorText);
+          // 404 means model not found (likely for future/invalid models) - try next immediately
+          if (response.status === 404) break; 
+          // 5xx errors might be transient, but better to switch model
+          break;
+        }
+
+        const result = await response.json();
+        
+        // Safety block check
+        if (result.promptFeedback?.blockReason) {
+           console.warn(`[Gemini API] ${modelId} Safety Block: ${result.promptFeedback.blockReason}`);
+           // Safety blocks are usually content-related, switching model unlikely to help BUT different models have different sensitivities.
+           // We'll try next model just in case.
+           break; 
+        }
+
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!text) {
+           console.warn(`[Gemini API] ${modelId} returned no text candidate.`);
+           break;
+        }
+
+        // Success!
+        return cleanAIOutput(text);
+
+      } catch (e) {
+        console.error(`[Gemini API] ${modelId} Exception:`, e);
+        lastError = e as Error;
+        // On network exception, maybe retry same model? 
+        // For now, let's treat it as a failure for this attempt
+        attempt++;
+        if (attempt >= maxRetriesPerModel) break;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
   }
-
-  const result = await response.json();
-
-  // Extract text from response
-  const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-  // Clean up common AI artifacts
-  return cleanAIOutput(text);
+  
+  // If we get here, all models failed
+  console.error("[Gemini API] All fallback models failed.");
+  throw lastError || new Error("All AI models failed to generate content.");
 }
 
 /**
@@ -441,15 +403,16 @@ export async function generateAIContent(
   );
 
   // Get document language (default to English)
-  const language: DocumentLanguage = cvData?.documentLanguage || "en";
+  const language = "en" as const;
   console.log(`[AI Generator] Final language used: ${language}`);
   console.log(
-    `[AI Generator] System prompt preview: ${SYSTEM_PROMPTS[language].substring(0, 100)}...`,
+    `[AI Generator] System prompt preview: ${SYSTEM_PROMPT.substring(0, 100)}...`,
   );
 
   // Extract and sanitize inputs
+  const personalInfo = cvData.personalInfo || {};
   const jobTitle =
-    sanitize(cvData.personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
+    sanitize(personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
   const experienceLevel = calculateExperienceLevel(cvData.experience);
   const industry = sanitize(
     extractIndustry(cvData.experience),
@@ -469,9 +432,8 @@ export async function generateAIContent(
       experienceLevel,
       industry,
       userNotes,
-      language,
     );
-    const professionalSummary = await callGeminiAPI(summaryPrompt, language);
+    const professionalSummary = await callGeminiAPI(summaryPrompt);
 
     // 2. Generate Cover Letter (only if user has cover letter data)
     let coverLetterBody: string | undefined;
@@ -483,9 +445,8 @@ export async function generateAIContent(
         industry,
         tone,
         userNotes,
-        language,
       );
-      coverLetterBody = await callGeminiAPI(coverLetterPrompt, language);
+      coverLetterBody = await callGeminiAPI(coverLetterPrompt);
     }
 
     // 3. Optimize Experience Bullets (only if user provided bullets)
@@ -500,9 +461,8 @@ export async function generateAIContent(
           sanitizedBullets,
           exp.jobTitle,
           exp.company,
-          language,
         );
-        const optimized = await callGeminiAPI(bulletPrompt, language);
+        const optimized = await callGeminiAPI(bulletPrompt);
 
         // Parse output - one bullet per line
         const parsedBullets = optimized
@@ -524,7 +484,7 @@ export async function generateAIContent(
 
     return {
       professionalSummary:
-        professionalSummary || generateFallbackSummary(jobTitle, language),
+        professionalSummary || generateFallbackSummary(jobTitle),
       coverLetterBody,
       optimizedBullets,
       generatedAt: new Date().toISOString(),
@@ -534,9 +494,9 @@ export async function generateAIContent(
 
     // Return fallback content - never fail the order
     return {
-      professionalSummary: generateFallbackSummary(jobTitle, language),
+      professionalSummary: generateFallbackSummary(jobTitle),
       coverLetterBody: cvData.coverLetter
-        ? generateFallbackCoverLetter(language)
+        ? generateFallbackCoverLetter()
         : undefined,
       optimizedBullets: cvData.experience.map((exp) => exp.achievements),
       generatedAt: new Date().toISOString(),
@@ -548,26 +508,11 @@ export async function generateAIContent(
 // FALLBACK CONTENT (When AI fails)
 // ============================================================================
 
-function generateFallbackSummary(
-  jobTitle: string,
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `በ${jobTitle} መስክ ከፍተኛ ልምድ ያለው እና ለተቋማት ስኬት ጉልህ አስተዋጽኦ ያበረከተ ሙያተኛ። ስትራቴጂያዊ እቅዶችን በመንደፍ እና በመተግበር የላቀ ውጤት ማስመዝገብ የሚችል።`;
-  }
+function generateFallbackSummary(jobTitle: string): string {
   return `Results-driven ${jobTitle} with demonstrated expertise in delivering high-impact solutions. Proven ability to drive organizational success through strategic initiatives and collaborative leadership.`;
 }
 
-function generateFallbackCoverLetter(
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `ችሎታዬን እና ልምዴን ተጠቅሜ ለድርጅትዎ አስተዋጽኦ ለማበርከት ዝግጁ ነኝ። በሙያዬ ያካበትኩት ልምድ በተለያዩ የስራ ሁኔታዎች ውስጥ ውጤታማ እንድሆን አስችሎኛል።
-
-ጠንካራ የስራ ስነ-ምግባር ያለኝ ሲሆን፣ አዳዲስ ነገሮችን ለመማር እና ራሴን ለማሻሻል ሁሌም ትጉ ነኝ። ለድርጅትዎ እሴት የሚጨምር ስራ ለመስራት ቆርጫለሁ።
-
-ስለ ብቃቴ እና ልምዴ በዝርዝር ለመወያየት ዝግጁ ነኝ። ስለሰጡኝ ጊዜ ከልብ አመሰግናለሁ።`;
-  }
+function generateFallbackCoverLetter(): string {
   return `I am excited to bring my skills and experience to a role where I can make a meaningful contribution. My background has equipped me with the expertise needed to excel in challenging environments and deliver results.
 
 Throughout my career, I have consistently demonstrated the ability to adapt, learn, and grow. I take pride in my work ethic and commitment to continuous improvement, always seeking opportunities to add value.

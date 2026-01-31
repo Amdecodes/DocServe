@@ -20,13 +20,15 @@ export default function Header() {
   const isLandingPage = pathname === "/";
 
   useEffect(() => {
-    if (!isLandingPage) {
-      setIsScrolled(false);
-      return;
-    }
+    if (!isLandingPage) return;
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    
+    // Check initial scroll
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLandingPage]);
@@ -38,8 +40,7 @@ export default function Header() {
 
   const navLinks = [
     { label: t("services"), href: "#services" },
-    { label: t("howItWorks"), href: "#how-it-works" },
-    { label: t("pricing"), href: "#pricing" },
+    { label: t("pricing"), href: "/prices" },
     { label: t("contact"), href: "#contact" },
   ];
 
@@ -48,28 +49,41 @@ export default function Header() {
       className={clsx(
         "left-0 right-0 z-50 transition-all duration-300",
         isLandingPage
-          ? `fixed top-0 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"}`
+          ? `fixed top-0 ${isScrolled ? "bg-white/95 md:bg-white/90 md:backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"}`
           : "relative bg-white shadow-sm py-4",
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-primary">
-          {t("logo")}
+        <Link href="/" className="flex items-center">
+          <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">
+            {t("logo")}
+          </span>
         </Link>
 
         {/* Desktop Nav - Only for Landing Page */}
         {isLandingPage && (
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-charcoal hover:text-primary transition-colors font-medium"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isExternal = link.href.startsWith("/");
+              return isExternal ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-charcoal hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-charcoal hover:text-primary transition-colors font-medium"
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
         )}
 
@@ -145,16 +159,28 @@ export default function Header() {
             className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden p-4 border-t"
           >
             <nav className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-lg font-medium text-charcoal"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isExternal = link.href.startsWith("/");
+                return isExternal ? (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-lg font-medium text-charcoal"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="text-lg font-medium text-charcoal"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               <hr />
               <button
                 onClick={() => {
@@ -166,9 +192,11 @@ export default function Header() {
                 <Globe className="w-5 h-5" />
                 {t("switchLanguage")}
               </button>
-              <Button className="w-full bg-primary text-white">
-                {t("cta")}
-              </Button>
+              <Link href="/form/cv?template=golden" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button className="w-full bg-primary text-white">
+                  {t("cta")}
+                </Button>
+              </Link>
             </nav>
           </motion.div>
         )}

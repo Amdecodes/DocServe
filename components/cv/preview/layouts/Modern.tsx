@@ -1,5 +1,7 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
+import { Cake } from "lucide-react";
+import Image from "next/image";
 
 export function ModernLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -25,32 +27,42 @@ export function ModernLayout({ data }: { data: CVData }) {
       <header className="border-b-4 border-teal-600 pb-6 mb-8 flex justify-between items-start">
         <div className="flex items-center gap-6">
           {personalInfo.photo && (
-            <img
-              src={personalInfo.photo}
-              alt={personalInfo.firstName}
-              className="h-32 w-32 rounded-full object-cover border-4 border-white shadow-md"
-            />
+            <div className="relative h-32 w-32 shrink-0">
+              <Image
+                src={personalInfo.photo}
+                alt={personalInfo.firstName}
+                fill
+                className="rounded-full object-cover border-4 border-white shadow-md"
+                sizes="128px"
+                priority
+              />
+            </div>
           )}
           <div>
             <h1 className="text-5xl font-bold uppercase tracking-tight text-gray-900 leading-none">
-              {personalInfo.firstName || "Your"}{" "}
+              {personalInfo.firstName}{" "}
               <span className="text-teal-600">
-                {personalInfo.lastName || "Name"}
+                {personalInfo.lastName}
               </span>
             </h1>
             <p className="text-2xl mt-2 text-gray-600 font-light">
-              {personalInfo.headline || personalInfo.jobTitle || "Job Title"}
+               {personalInfo.headline || personalInfo.jobTitle}
             </p>
           </div>
         </div>
         <div className="text-right text-sm text-gray-500 space-y-1 self-center">
-          <p>{personalInfo.email || "email@example.com"}</p>
-          <p>{personalInfo.phone || "+251 900 000 000"}</p>
+          <p>{personalInfo.email}</p>
+          <p>{personalInfo.phone}</p>
           <p>
             {personalInfo.city && personalInfo.country
               ? `${personalInfo.city}, ${personalInfo.country}`
-              : "Addis Ababa, Ethiopia"}
+              : personalInfo.city || personalInfo.country}
           </p>
+          {personalInfo.dateOfBirth && (
+            <p className="text-xs uppercase tracking-wider font-bold text-teal-700 flex items-center justify-end gap-1">
+              <Cake size={10} /> Date of Birth: {personalInfo.dateOfBirth}
+            </p>
+          )}
           {personalInfo.linkedin && (
             <p>
               <a
@@ -88,7 +100,7 @@ export function ModernLayout({ data }: { data: CVData }) {
           >
             <section>
               <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
-                Profile
+                About Me
               </h3>
               <p className="text-gray-700 leading-relaxed">
                 {typeof summary === "string" ? summary : ""}

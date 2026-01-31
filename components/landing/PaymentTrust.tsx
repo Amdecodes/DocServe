@@ -1,10 +1,9 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ShieldCheck } from "lucide-react";
+import Image from "next/image";
 
-export default function PaymentTrust() {
-  const t = useTranslations("Payment");
+export default async function PaymentTrust() {
+  const t = await getTranslations("Payment");
 
   return (
     <section className="py-12 bg-white border-t border-gray-100">
@@ -17,8 +16,14 @@ export default function PaymentTrust() {
           </div>
 
              {/* Payment Logos */}
-             <div className="h-16 bg-white rounded flex items-center justify-center p-2 border border-gray-100 shadow-sm">
-                <img src="/images/chapa-logo.png" alt="Chapa" className="h-full object-contain" />
+             <div className="h-16 bg-white rounded flex items-center justify-center p-2 border border-gray-100 shadow-sm relative w-48">
+                <Image
+                  src="/images/chapa-logo.png" 
+                  alt="Chapa" 
+                  fill
+                  className="object-contain p-2"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
              </div>
 
         </div>

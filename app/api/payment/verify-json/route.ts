@@ -47,6 +47,7 @@ export async function GET(req: Request) {
 
         // Step 1: Generate AI content FIRST (if not already generated)
         let formData = order.form_data as unknown as CVData;
+        const isAgreement = order.service_type.startsWith("agreement:");
 
         console.log(
           `[VerifyJSON] Form data documentLanguage: ${formData?.documentLanguage}`,
@@ -55,7 +56,7 @@ export async function GET(req: Request) {
           `[VerifyJSON] Form data keys: ${Object.keys(formData || {}).join(", ")}`,
         );
 
-        if (!formData?.aiMetadata?.generated) {
+        if (!isAgreement && !formData?.aiMetadata?.generated) {
           console.log(
             `[VerifyJSON] Generating AI content for Order ${orderId}`,
           );
@@ -92,7 +93,11 @@ export async function GET(req: Request) {
         }
 
         // Step 2: Generate PDF with AI-enriched content
-        const result = await processOrderPdf(orderId, formData);
+        const result = await processOrderPdf(
+          orderId,
+          formData,
+          order.service_type,
+        );
         if (result) {
           pdfUrl = result.pdfUrl;
           expiresAt = result.expiresAt;

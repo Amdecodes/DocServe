@@ -114,8 +114,9 @@ export async function POST(req: Request) {
 
     // 6. Generate AI Content (BEFORE PDF generation)
     let enrichedFormData = order.form_data;
+    const isAgreement = order.service_type.startsWith("agreement:");
 
-    if (!pdfUrl) {
+    if (!pdfUrl && !isAgreement) {
       try {
         console.log(`[Webhook] Generating AI content for Order ${order.id}`);
 
@@ -152,7 +153,11 @@ export async function POST(req: Request) {
     // 7. Generate PDF with AI-enriched content
     if (!pdfUrl) {
       try {
-        const result = await processOrderPdf(order.id, enrichedFormData);
+        const result = await processOrderPdf(
+          order.id,
+          enrichedFormData,
+          order.service_type,
+        );
         if (result) {
           pdfUrl = result.pdfUrl;
           expiresAt = result.expiresAt;

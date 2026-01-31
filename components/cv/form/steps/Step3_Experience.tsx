@@ -35,7 +35,7 @@ export function Step3_Experience() {
     setIsAdding(false);
   };
 
-  const addAchievement = (e: React.FormEvent) => {
+  const addAchievement = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (curAchievement.trim()) {
       setNewItem((prev) => ({
@@ -202,14 +202,14 @@ export function Step3_Experience() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        addAchievement(e as any);
+                        addAchievement(e);
                       }
                     }}
                   />
                   <Button
                     type="button"
                     variant="secondary"
-                    onClick={(e) => addAchievement(e as any)}
+                    onClick={(e) => addAchievement(e)}
                   >
                     Add
                   </Button>

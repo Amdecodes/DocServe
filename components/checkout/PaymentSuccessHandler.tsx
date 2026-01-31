@@ -12,6 +12,7 @@ export function PaymentSuccessHandler() {
     localStorage.removeItem("paperless.cv"); // If we use a global key
     localStorage.removeItem("paperless.customer");
     localStorage.removeItem("paperless.orderId");
+    localStorage.removeItem("paperless.cvData");
 
     console.log("Wizard data cleared after successful payment");
   }, []);
