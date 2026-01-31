@@ -20,13 +20,15 @@ export default function Header() {
   const isLandingPage = pathname === "/";
 
   useEffect(() => {
-    if (!isLandingPage) {
-      setIsScrolled(false);
-      return;
-    }
+    if (!isLandingPage) return;
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    
+    // Check initial scroll
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLandingPage]);
@@ -47,7 +49,7 @@ export default function Header() {
       className={clsx(
         "left-0 right-0 z-50 transition-all duration-300",
         isLandingPage
-          ? `fixed top-0 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"}`
+          ? `fixed top-0 ${isScrolled ? "bg-white/95 md:bg-white/90 md:backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"}`
           : "relative bg-white shadow-sm py-4",
       )}
     >

@@ -32,6 +32,7 @@ const HTML_SHELL = (content: string, title: string) => `
     }
     p {
       margin-bottom: 12px;
+      white-space: pre-wrap;
     }
     .footer {
       margin-top: 50px;
@@ -84,12 +85,6 @@ export async function renderAgreementToHtml(
   const htmlContent = `
     <h1>${template.title}</h1>
     ${paragraphs.map((p) => `<p>${p.replace(/\n/g, "<br/>")}</p>`).join("")}
-    <div style="page-break-before: always;"></div>
-    <div class="footer">
-       <span>Agreement Version: ${template.version}</span>
-       <span>Ref: ${formData.orderId || "N/A"}</span>
-       <span>Generated: ${new Date().toLocaleDateString()}</span>
-    </div>
   `;
 
   return HTML_SHELL(htmlContent, template.title);

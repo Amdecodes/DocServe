@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/Card";
 import { useCV } from "@/components/cv/CVContext";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import {
   personalSchema,
   type PersonalSchema,
@@ -57,16 +58,21 @@ export function Step1_Personal({ onNext }: Step1Props) {
   // 2. Watch for changes to sync with Preview & LocalStorage
   const formValues = form.watch();
 
+  // 2. Watch for changes to sync with Preview & LocalStorage (Debounced)
   useEffect(() => {
     const subscription = form.watch((value) => {
-      // Sync with Context (for Preview)
-      updateCVData("personalInfo", {
-        ...cvData.personalInfo,
-        ...value,
-      } as PersonalInfo);
+      const timeoutId = setTimeout(() => {
+        // Sync with Context (for Preview)
+        updateCVData("personalInfo", {
+          ...cvData.personalInfo,
+          ...value,
+        } as PersonalInfo);
 
-      // Persist to LocalStorage (include photo now that it is a URL)
-      localStorage.setItem("paperless.personal", JSON.stringify(value));
+        // Persist to LocalStorage
+        localStorage.setItem("paperless.personal", JSON.stringify(value));
+      }, 500); // 500ms debounce for typing
+      
+      return () => clearTimeout(timeoutId);
     });
     return () => subscription.unsubscribe();
   }, [form, updateCVData, cvData.personalInfo]);
@@ -101,11 +107,13 @@ export function Step1_Personal({ onNext }: Step1Props) {
             <div className="md:col-span-2 flex items-center gap-4">
               <div className="h-24 w-24 rounded-full bg-gray-100 border flex items-center justify-center overflow-hidden relative">
                 {formValues.photo ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
+                  <Image
                     src={formValues.photo}
                     alt="Profile"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 96px"
+                    priority
                   />
                 ) : (
                   <span className="text-gray-400 text-xs text-center p-2">

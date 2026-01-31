@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { CVProvider, useCV } from "@/components/cv/CVContext";
 import Header from "@/components/landing/Header";
-import { CVPreview } from "@/components/cv/preview/CVPreview";
+import dynamic from "next/dynamic";
+const CVPreview = dynamic(
+  () => import("@/components/cv/preview/CVPreview").then((mod) => mod.CVPreview),
+  { ssr: false }
+);
 import { TemplateSelector } from "@/components/cv/preview/TemplateSelector";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -42,7 +46,7 @@ const variants = {
     opacity: 1,
   },
   exit: (direction: number) => ({
-    x: direction < 0 ? 20 : -20,
+    x: direction < 0 ? 10 : -10, // Reduced movement
     opacity: 0,
   }),
 };
@@ -59,7 +63,7 @@ function CVWizardContent() {
   const t = useTranslations("ReviewStep");
   const navT = useTranslations("CVNavigation");
 
-  const stepsConfig = [
+  const stepsConfig = useMemo(() => [
     { title: navT("steps.personal"), icon: User },
     { title: navT("steps.education"), icon: GraduationCap },
     { title: navT("steps.experience"), icon: Briefcase },
@@ -67,7 +71,7 @@ function CVWizardContent() {
     { title: navT("steps.extras"), icon: Layers },
     { title: navT("steps.coverLetter") || "Cover Letter", icon: FileText },
     { title: navT("steps.review"), icon: CheckCircle },
-  ];
+  ], [navT]);
 
 
   const nextStep = () => {
@@ -150,39 +154,21 @@ function CVWizardContent() {
     }
   };
 
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden bg-gray-50/50">
-      {/* Mobile Tab Toggles */}
-      <div className="lg:hidden bg-white border-b flex shrink-0">
-        <button
-          onClick={() => setActiveTab("edit")}
-          className={cn(
-            "flex-1 py-3 text-sm font-medium border-b-2 transition-colors",
-            activeTab === "edit"
-              ? "border-teal-600 text-teal-600 bg-teal-50/30"
-              : "border-transparent text-gray-500",
-          )}
-        >
-          Edit Form
-        </button>
-        <button
-          onClick={() => setActiveTab("preview")}
-          className={cn(
-            "flex-1 py-3 text-sm font-medium border-b-2 transition-colors",
-            activeTab === "preview"
-              ? "border-teal-600 text-teal-600 bg-teal-50/30"
-              : "border-transparent text-gray-500",
-          )}
-        >
-          Live Preview
-        </button>
+      {/* Mobile Tab Toggles - REMOVED for performance, preview moved to end */}
+      <div className="hidden">
+        {/* Keeping states for internal logic but hiding UI */}
+        <button onClick={() => setActiveTab("edit")}>Edit</button>
+        <button onClick={() => setActiveTab("preview")}>Preview</button>
       </div>
 
       <div className="flex flex-1 lg:flex-row overflow-hidden relative">
         {/* Left: Form Area */}
         <div
           className={cn(
-            "w-full lg:w-2/5 xl:w-[45%] flex flex-col h-full bg-white/50 backdrop-blur-sm transition-all duration-300",
+            "w-full lg:w-2/5 xl:w-[45%] flex flex-col h-full bg-white transition-all duration-300",
             activeTab === "preview" ? "hidden lg:flex" : "flex",
           )}
         >
@@ -270,6 +256,40 @@ function CVWizardContent() {
                         {stepsConfig[currentStep].title}
                       </h2>
                       {renderStep()}
+                      
+                      {/* Mobile Only: Show Preview + Template Selector ONLY on the last step */}
+                      <div className="lg:hidden mt-12 border-t pt-10 px-2">
+                        {currentStep === stepsConfig.length - 1 && (
+                          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <div className="text-center">
+                               <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-2 px-4 py-1 bg-yellow-400 inline-block rotate-[-1deg] shadow-sm">
+                                  Your Resume Preview
+                               </h3>
+                               <p className="text-xs text-gray-500 mt-2 italic px-8">Check everything is correct before generating the final PDF.</p>
+                            </div>
+
+                            <div className="relative group">
+                               <div className="absolute -inset-2 bg-gradient-to-r from-teal-500/10 to-blue-500/10 rounded-[2rem] blur-xl opacity-50" />
+                               <div className="relative bg-white rounded-3xl p-2 border border-gray-100 shadow-2xl overflow-hidden min-h-[400px]">
+                                  <div className="scale-[0.55] sm:scale-[0.7] origin-top mb-[-300px] sm:mb-[-150px] transition-transform">
+                                     <CVPreview />
+                                  </div>
+                               </div>
+                            </div>
+
+                            <div className="bg-white rounded-[2rem] shadow-xl p-6 border border-gray-100 relative overflow-hidden">
+                               <div className="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-full blur-3xl -mr-12 -mt-12" />
+                               <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                  <span className="w-1.5 h-4 bg-teal-500 rounded-full" />
+                                  Choose Template
+                               </h3>
+                               <TemplateSelector layout="horizontal" />
+                            </div>
+                            
+                            <div className="py-20" /> {/* Extra spacing for final scroll */}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -278,7 +298,7 @@ function CVWizardContent() {
           </div>
 
           {/* Footer Navigation (Fixed at bottom) */}
-          <div className="bg-white/90 backdrop-blur-md border-t border-gray-200 p-4 md:px-10 shrink-0 flex justify-between z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
+          <div className="bg-white border-t border-gray-200 p-4 md:px-10 shrink-0 flex justify-between z-20 shadow-md">
             <Button
               variant="ghost"
               size="lg"
@@ -336,33 +356,26 @@ function CVWizardContent() {
             <div className="flex flex-col items-center min-h-full">
               {/* Live Preview Container */}
               <div className="w-full flex justify-center section-mobile-preview origin-top transition-all duration-300 z-10 scale-[0.7] sm:scale-[0.8] md:scale-[0.85] lg:scale-[0.8] xl:scale-[0.85] 2xl:scale-95 mb-60 lg:mb-20">
-                <CVPreview />
+                {/* On mobile, only render preview if active to save CPU/Memory. 
+                    Using 'activeTab' check to completely unmount it. */}
+                {typeof window !== 'undefined' && window.innerWidth < 1024 ? (
+                  activeTab === "preview" && <CVPreview />
+                ) : (
+                  <CVPreview />
+                )}
               </div>
             </div>
           </div>
 
           {/* 2. PC-Only Integrated Vertical Sidebar */}
-          <div className="hidden lg:flex w-28 bg-white/50 backdrop-blur-sm border-l border-gray-200 p-3 flex-col gap-4 sticky top-0 h-screen overflow-y-auto no-scrollbar shrink-0">
+          <div className="hidden lg:flex w-28 bg-white border-l border-gray-200 p-3 flex-col gap-4 sticky top-0 h-screen overflow-y-auto no-scrollbar shrink-0">
              <div className="flex items-center justify-center opacity-40 mb-2 mt-4">
                 <div className="w-1 h-8 bg-gray-300 rounded-full" />
              </div>
              <TemplateSelector layout="vertical" />
           </div>
 
-          {/* 3. Mobile-Only Floating Bottom Dock */}
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-            className="fixed bottom-10 left-4 right-4 z-[100] pointer-events-none lg:hidden"
-          >
-            <div className="max-w-md mx-auto bg-white/80 backdrop-blur-xl border border-white/40 shadow-2xl rounded-2xl p-2 px-3 flex flex-col gap-1 ring-1 ring-black/5 pointer-events-auto">
-              <div className="flex items-center justify-center gap-1.5 opacity-40 mb-1">
-                <div className="w-8 h-1 bg-gray-300 rounded-full" />
-              </div>
-              <TemplateSelector layout="horizontal" />
-            </div>
-          </motion.div>
+          {/* 3. Mobile-Only Floating Bottom Dock - REMOVED (integrated into Review step) */}
         </div>
       </div>
     </div>

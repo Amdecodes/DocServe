@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import Image from "next/image";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Briefcase, User, Cake } from "lucide-react";
 
@@ -41,11 +42,15 @@ export function ElegantLayout({ data }: { data: CVData }) {
           {/* Photo */}
           {personalInfo.photo && (
             <div className="flex justify-center mb-2">
-              <img
-                src={personalInfo.photo}
-                alt={personalInfo.firstName}
-                className="w-48 h-48 rounded-full object-cover border-4 border-gray-100 shadow-sm"
-              />
+              <div className="w-48 h-48 rounded-full border-4 border-gray-100 shadow-sm relative overflow-hidden">
+                  <Image
+                    src={personalInfo.photo}
+                    alt={personalInfo.firstName}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+              </div>
             </div>
           )}
 

@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import Image from "next/image";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, GripVertical, Cake } from "lucide-react";
 
@@ -42,11 +43,13 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
              </div>
              
              {personalInfo.photo && (
-                <div className="w-28 h-28 rounded-md border-2 border-[#fecaca] overflow-hidden shadow-lg shrink-0 ml-8">
-                  <img
+                <div className="w-28 h-28 rounded-md border-2 border-[#fecaca] overflow-hidden shadow-lg shrink-0 ml-8 relative">
+                  <Image
                     src={personalInfo.photo}
                     alt={personalInfo.firstName}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
              )}

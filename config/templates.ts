@@ -6,6 +6,7 @@
 import { ComponentType } from "react";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 
+
 export interface TemplateConfig {
   id: string;
   name: string;

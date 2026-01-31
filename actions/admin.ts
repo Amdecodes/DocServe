@@ -71,9 +71,9 @@ export async function getResumeOrders() {
         language,
       };
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Database Error in getResumeOrders:", error);
-    if (error.message?.includes("Can't reach database server")) {
+    if (error instanceof Error && error.message?.includes("Can't reach database server")) {
       throw new Error(
         "Unable to connect to the database. The server may be unreachable.",
       );
@@ -89,9 +89,9 @@ export async function getPrintOrders() {
       orderBy: { created_at: "desc" },
     });
     return orders;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Database Error in getPrintOrders:", error);
-    if (error.message?.includes("Can't reach database server")) {
+    if (error instanceof Error && error.message?.includes("Can't reach database server")) {
       throw new Error(
         "Unable to connect to the database. The server may be unreachable.",
       );
@@ -127,9 +127,9 @@ export async function getVARequests() {
       orderBy: { created_at: "desc" },
     });
     return requests;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Database Error in getVARequests:", error);
-    if (error.message?.includes("Can't reach database server")) {
+    if (error instanceof Error && error.message?.includes("Can't reach database server")) {
       throw new Error(
         "Unable to connect to the database. The server may be unreachable.",
       );
@@ -165,7 +165,7 @@ export async function getWebDevRequests() {
       orderBy: { createdAt: "desc" },
     });
     return requests;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Database Error in getWebDevRequests:", error);
     return [];
   }

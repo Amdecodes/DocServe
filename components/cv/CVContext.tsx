@@ -123,57 +123,60 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const templateFromUrl = searchParams.get("template");
 
-  // Track mount state and load persisted data
+  // Track mount state and load persisted data (Async to avoid blocking)
   useEffect(() => {
     isMountedRef.current = true;
 
-    // 1. Priority: URL Parameter
-    if (templateFromUrl && TEMPLATES.some((t: any) => t.id === templateFromUrl)) {
-      setSelectedTemplate(templateFromUrl);
-      localStorage.setItem("paperless.selectedTemplate", templateFromUrl);
-    } else {
-      // 2. Secondary: localStorage
-      const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
-      const isValid = TEMPLATES.some((t: any) => t.id === savedTemplate);
-      
-      if (savedTemplate && isValid) {
-        setSelectedTemplate(savedTemplate);
-      }
-    }
-
-    // Load cvData
-    try {
-      const savedCV = localStorage.getItem("paperless.cvData");
-      if (savedCV) {
-        const parsed = JSON.parse(savedCV) as CVData;
-        setCvData({
-          ...parsed,
-          documentLanguage: "en",
-        });
-        
-        // Only sync selectedTemplate from cvData if URL param wasn't provided
-        if (!templateFromUrl && parsed.selectedTemplate && TEMPLATES.some((t: any) => t.id === parsed.selectedTemplate)) {
-          setSelectedTemplate(parsed.selectedTemplate);
+    const loadData = async () => {
+      // 1. Immediate Phase: Load structure (Template)
+      if (templateFromUrl && TEMPLATES.some((t) => t.id === templateFromUrl)) {
+        setSelectedTemplate(templateFromUrl);
+      } else {
+        const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
+        if (savedTemplate && TEMPLATES.some((t) => t.id === savedTemplate)) {
+          setSelectedTemplate(savedTemplate);
         }
       }
-    } catch (e) {
-      console.error("Failed to load CV data", e);
-    }
-  }, [templateFromUrl]); // Re-run if URL param changes (e.g. back button)
 
-  // Persist template selection to localStorage and cvData
+      // 2. Delayed Phase: Load heavy content data
+      // This ensures the page is interactive and the template shell is ready first.
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      try {
+        const savedCV = localStorage.getItem("paperless.cvData");
+        if (savedCV) {
+          const parsed = JSON.parse(savedCV) as CVData;
+          setCvData(prev => ({
+            ...parsed,
+            documentLanguage: "en",
+          }));
+          
+          if (!templateFromUrl && parsed.selectedTemplate && TEMPLATES.some((t) => t.id === parsed.selectedTemplate)) {
+            setSelectedTemplate(parsed.selectedTemplate);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load CV data", e);
+      }
+    };
+
+    loadData();
+  }, [templateFromUrl]);
+
+  // Persist template selection to localStorage
   useEffect(() => {
     if (isMountedRef.current) {
       localStorage.setItem("paperless.selectedTemplate", selectedTemplate);
-      // Sync to cvData as well so it travels with the payload
-      setCvData(prev => ({ ...prev, selectedTemplate }));
     }
   }, [selectedTemplate]);
 
-  // Persist cvData to localStorage
+  // Debounced persistence of cvData to localStorage
   useEffect(() => {
     if (isMountedRef.current) {
-      localStorage.setItem("paperless.cvData", JSON.stringify(cvData));
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("paperless.cvData", JSON.stringify(cvData));
+      }, 1000); // 1s debounce for global state persistence
+      return () => clearTimeout(timeoutId);
     }
   }, [cvData]);
 
@@ -263,6 +266,8 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
 
   const setTemplate = useCallback((id: string) => {
     setSelectedTemplate(id);
+    // Sync to cvData explicitly
+    setCvData(prev => ({ ...prev, selectedTemplate: id }));
   }, []);
 
   return (

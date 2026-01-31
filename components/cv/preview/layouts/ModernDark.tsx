@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import Image from "next/image";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -27,11 +28,13 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
       <div className="flex items-start gap-10 px-12 py-10 pb-8">
         {/* Photo */}
         {personalInfo.photo && (
-          <div className="shrink-0">
-            <img
+          <div className="shrink-0 relative w-48 h-56">
+            <Image
               src={personalInfo.photo}
               alt={personalInfo.firstName}
-              className="w-48 h-56 object-cover border-[1px] border-gray-300"
+              fill
+              className="object-cover border-[1px] border-gray-300"
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
           </div>
         )}

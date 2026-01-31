@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import Image from "next/image";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -33,11 +34,13 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
       <div className="bg-[#f0fdfa] border-b-4 border-[#0d9488] p-10 pb-8 text-center">
         {/* Photo (Optional, centered) */}
         {personalInfo.photo && (
-          <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-md overflow-hidden">
-            <img
+          <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-md overflow-hidden relative">
+            <Image
               src={personalInfo.photo}
               alt={personalInfo.firstName}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
           </div>
         )}

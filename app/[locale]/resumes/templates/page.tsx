@@ -33,7 +33,7 @@ export default async function TemplatesPage() {
 
         {/* Templates Grid Section */}
         <div className="container mx-auto px-4 py-16 -mt-8 relative z-20">
-          <div className="bg-white/50 backdrop-blur-xl border border-white/50 rounded-3xl p-8 shadow-sm">
+          <div className="bg-white/80 lg:backdrop-blur-xl border border-white/50 rounded-3xl p-6 md:p-8 shadow-sm">
             <div className="mb-10 flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-100 pb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">

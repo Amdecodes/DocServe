@@ -1,6 +1,7 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Cake } from "lucide-react";
+import Image from "next/image";
 
 export function ModernLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -26,11 +27,16 @@ export function ModernLayout({ data }: { data: CVData }) {
       <header className="border-b-4 border-teal-600 pb-6 mb-8 flex justify-between items-start">
         <div className="flex items-center gap-6">
           {personalInfo.photo && (
-            <img
-              src={personalInfo.photo}
-              alt={personalInfo.firstName}
-              className="h-32 w-32 rounded-full object-cover border-4 border-white shadow-md"
-            />
+            <div className="relative h-32 w-32 shrink-0">
+              <Image
+                src={personalInfo.photo}
+                alt={personalInfo.firstName}
+                fill
+                className="rounded-full object-cover border-4 border-white shadow-md"
+                sizes="128px"
+                priority
+              />
+            </div>
           )}
           <div>
             <h1 className="text-5xl font-bold uppercase tracking-tight text-gray-900 leading-none">

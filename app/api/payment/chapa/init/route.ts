@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getPriceForService, PRICE_CURRENCY } from "@/config/pricing";
-import { AGREEMENT_TEMPLATES } from "@/config/agreements";
 
 export async function POST(req: Request) {
   try {
@@ -70,11 +69,13 @@ export async function POST(req: Request) {
         email?: string;
         firstName?: string;
         lastName?: string;
+        phone?: string;
       };
       personalInfo?: {
         email?: string;
         firstName?: string;
         lastName?: string;
+        phone?: string;
       };
       [key: string]: unknown;
     };
@@ -83,9 +84,9 @@ export async function POST(req: Request) {
     const personal = formData?.personal || formData?.personalInfo || {};
 
     // Use passed values or fallback to stored values
-    let payloadEmail = email || personal.email;
-    let payloadFirstName = firstName || personal.firstName;
-    let payloadLastName = lastName || personal.lastName;
+    const payloadEmail = email || personal.email;
+    const payloadFirstName = firstName || personal.firstName;
+    const payloadLastName = lastName || personal.lastName;
 
     // --- DATA ROBUSTNESS & SANITIZATION (FOR CHAPA PAYLOAD ONLY) ---
     // Chapa is strict about email format and phone numbers.
@@ -104,7 +105,7 @@ export async function POST(req: Request) {
 
     // 2. Phone Validation & Fallback
     // Chapa also validates phone numbers if provided. We'll sanitize and fallback if needed.
-    let chapaPhone = phone || (formData?.personal as any)?.phone || (formData?.personalInfo as any)?.phone;
+    let chapaPhone = phone || (personal as any).phone;
     // Simple check: must be at least 8 characters for Chapa to accept it generally
     if (!chapaPhone || String(chapaPhone).length < 8) {
        chapaPhone = "0913894924";
@@ -136,7 +137,7 @@ export async function POST(req: Request) {
     const sanitizedDescription = description.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 50) || "Paperless Digital Service";
 
     // Construct payload
-    const payload: Record<string, any> = {
+    const payload: Record<string, unknown> = {
       amount: amount.toString(),
       currency: PRICE_CURRENCY,
       tx_ref: order.tx_ref,

@@ -1,6 +1,20 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
+import Image from "next/image";
+
+// Helper for ribbon header style
+const RibbonHeader = ({ title }: { title: string }) => (
+  <div className="relative mb-6">
+    <div className="bg-[#1F1F1F] text-white py-2 px-6 pr-8 inline-block relative z-10 shadow-md">
+      <h3 className="text-lg font-bold uppercase tracking-wider">{title}</h3>
+    </div>
+    {/* Decorative Ribbon Fold Effect */}
+    <div className="absolute top-0 left-0 h-full w-full">
+       <div className="absolute top-full left-0 w-3 h-3 bg-black/30 transform skew-x-45 origin-top-left -z-10"></div>
+    </div>
+  </div>
+);
 
 export function ModernSidebarLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -21,17 +35,6 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
   };
 
   // Helper for ribbon header style
-  const RibbonHeader = ({ title }: { title: string }) => (
-    <div className="relative mb-6">
-      <div className="bg-[#1F1F1F] text-white py-2 px-6 pr-8 inline-block relative z-10 shadow-md">
-        <h3 className="text-lg font-bold uppercase tracking-wider">{title}</h3>
-      </div>
-      {/* Decorative Ribbon Fold Effect */}
-      <div className="absolute top-0 left-0 h-full w-full">
-         <div className="absolute top-full left-0 w-3 h-3 bg-black/30 transform skew-x-45 origin-top-left -z-10"></div>
-      </div>
-    </div>
-  );
 
   return (
     <div 
@@ -48,10 +51,13 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
         <div className="px-8 mb-12 flex justify-center">
           {personalInfo.photo ? (
             <div className="w-48 h-48 rounded-full border-4 border-white overflow-hidden shadow-sm">
-              <img
+              <Image
                 src={personalInfo.photo}
                 alt={personalInfo.firstName}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="192px"
+                priority
               />
             </div>
           ) : (

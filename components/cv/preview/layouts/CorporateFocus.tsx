@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import Image from "next/image";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -35,11 +36,13 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
         {/* Photo Section */}
         <div className="px-6 mb-10 w-full flex justify-center">
           {personalInfo.photo ? (
-            <div className="w-40 h-40 rounded-full border-4 border-[#2c5282] overflow-hidden shadow-lg">
-              <img
+            <div className="w-40 h-40 rounded-full border-4 border-[#2c5282] overflow-hidden shadow-lg relative">
+              <Image
                 src={personalInfo.photo}
                 alt={personalInfo.firstName}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
           ) : (

@@ -21,6 +21,15 @@ const nextConfig = {
     unoptimized: process.env.NODE_ENV === 'development',
   },
   output: 'standalone',
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-tabs',
+    ],
+  },
+  serverExternalPackages: ['puppeteer-core', '@sparticuz/chromium'],
 };
 
 export default withNextIntl(nextConfig);

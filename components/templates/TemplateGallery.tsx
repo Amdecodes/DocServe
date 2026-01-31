@@ -1,7 +1,7 @@
 "use client";
 
 import { useCV } from "@/components/cv/CVContext";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useTranslations } from "next-intl";
 import { TEMPLATES } from "@/config/templates";
 import { Badge } from "@/components/ui/Badge";
@@ -34,7 +34,7 @@ export function TemplateGallery() {
       {TEMPLATES.map((template, idx) => (
         <div
           key={template.id}
-          className="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
+          className="group relative bg-white rounded-xl shadow-sm md:shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
         >
           {/* Badge overlays */}
           <div className="absolute top-3 left-3 z-10 flex gap-2">
@@ -46,7 +46,7 @@ export function TemplateGallery() {
             {template.tags.includes("ats") && (
               <Badge
                 variant="secondary"
-                className="bg-white/90 backdrop-blur-sm shadow-sm font-medium"
+                className="bg-white/90 lg:backdrop-blur-sm shadow-sm font-medium"
               >
                 <Check className="w-3 h-3 mr-1" /> ATS
               </Badge>
@@ -56,13 +56,15 @@ export function TemplateGallery() {
           {/* Preview Image Area */}
           <div className="aspect-[210/297] bg-gray-100 relative overflow-hidden group-hover:bg-gray-50 transition-colors">
             {/* Real preview image or fallback */}
-            <div className="absolute inset-0 p-4 transition-transform duration-500 group-hover:scale-[1.02]">
+            <div className="absolute inset-0 p-4 transition-transform duration-500 lg:group-hover:scale-[1.02]">
               <div className="relative w-full h-full shadow-lg rounded-sm overflow-hidden bg-white">
                 <Image
                   src={template.previewImage || "/images/cv-preview.jpg"}
                   alt={template.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover object-top"
+                  priority={idx < 4}
                 />
               </div>
             </div>

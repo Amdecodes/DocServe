@@ -4,6 +4,7 @@ import { useCV } from "@/components/cv/CVContext";
 import { cn } from "@/lib/utils";
 import { Check, ChevronRight, LayoutList, Settings2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface TemplateSelectorProps {
@@ -21,12 +22,22 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
     setTemplate(id);
     if (onSelect) onSelect();
     if (layout === "horizontal") {
-      setTimeout(() => setIsExpanded(false), 800);
+      setTimeout(() => setIsExpanded(false), 400); // Snappier
     }
   };
 
   const activeTemplate = TEMPLATES.find(t => t.id === selectedTemplate) || TEMPLATES[0];
   const isVertical = layout === "vertical";
+
+  // Effect to scroll active template into view
+  useEffect(() => {
+    if (isExpanded) {
+      const activeEl = document.getElementById(`template-${selectedTemplate}`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [selectedTemplate, isExpanded]);
 
   return (
     <div className={cn("w-full relative", isVertical ? "h-full" : "")}>
@@ -35,9 +46,9 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
         {(isVertical || isExpanded) ? (
           <motion.div
             key="expanded"
-            initial={isVertical ? false : { opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={isVertical ? undefined : { opacity: 0, scale: 0.95 }}
+            initial={isVertical ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={isVertical ? undefined : { opacity: 0, y: 10 }}
             className={cn(
               "flex gap-2",
               isVertical ? "flex-col h-full overflow-y-auto no-scrollbar py-2" : "flex-col"
@@ -54,7 +65,7 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
               {!isVertical && (
                 <button 
                   onClick={() => setIsExpanded(false)}
-                  className="text-[10px] font-bold text-teal-600 hover:text-teal-700 transition-colors uppercase tracking-tight"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight transition-colors"
                 >
                   Done
                 </button>
@@ -63,8 +74,8 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
 
             {/* Template List */}
             <div className={cn(
-              "flex no-scrollbar snap-both items-center px-1",
-              isVertical ? "flex-col gap-5 overflow-y-auto pb-8" : "flex-row gap-3 overflow-x-auto py-1 snap-x"
+              "flex no-scrollbar scroll-smooth snap-x snap-mandatory items-center px-1",
+              isVertical ? "flex-col gap-5 overflow-y-auto pb-8" : "flex-row gap-3 overflow-x-auto py-1"
             )}>
               {TEMPLATES.map((template) => {
                 const isActive = selectedTemplate === template.id;
@@ -72,13 +83,13 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
                 return (
                   <button
                     key={template.id}
+                    id={`template-${template.id}`}
                     onClick={() => handleSelect(template.id)}
                     className={cn(
-                      "group relative flex flex-col shrink-0 transition-all duration-300 ease-out",
+                      "group relative flex flex-col shrink-0 transition-all duration-300 ease-out snap-center focus:outline-none",
                       isActive 
                         ? (isVertical ? "w-20 -translate-y-1" : "w-20 -translate-y-1") 
                         : (isVertical ? "w-16 opacity-70 hover:opacity-100 hover:-translate-y-1" : "w-14 hover:-translate-y-1 opacity-70 hover:opacity-100"),
-                      "focus:outline-hidden snap-center"
                     )}
                   >
                     <div className={cn(
@@ -88,10 +99,12 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
                         : "border-gray-200 bg-white/50 hover:border-teal-300"
                     )}>
                       {template.previewImage ? (
-                        <img 
+                        <Image 
                           src={template.previewImage} 
                           alt={template.name}
-                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          sizes="(max-width: 768px) 100px, 150px"
                         />
                       ) : (
                         <div 
@@ -140,7 +153,13 @@ export function TemplateSelector({ layout = "horizontal", onSelect }: TemplateSe
           >
             <div className="relative w-10 h-12 rounded-lg overflow-hidden border border-gray-200 shadow-sm shrink-0">
                {activeTemplate.previewImage ? (
-                  <img src={activeTemplate.previewImage} className="w-full h-full object-cover" alt="" />
+                  <Image 
+                    src={activeTemplate.previewImage} 
+                    alt="" 
+                    fill
+                    className="object-cover"
+                    sizes="40px"
+                  />
                ) : (
                   <div className="w-full h-full" style={{ background: activeTemplate.colorScheme.primary }} />
                )}

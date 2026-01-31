@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, lazy, useMemo, useState, useDeferredValue } from "react";
 import { useCV } from "@/components/cv/CVContext";
 import { DEFAULT_TEMPLATE, templateComponents } from "@/config/templates";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
-import { FileText, Mail } from "lucide-react";
+import { FileText, Mail, Loader2 } from "lucide-react";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { CV_DUMMY_DATA } from "@/config/dummy-data";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Dynamically generate lazy-loaded components from the registry
 const lazyTemplates = Object.fromEntries(
@@ -30,6 +31,15 @@ const lazyCoverLetters = Object.fromEntries(
     }>
   >
 >;
+
+// Helper function outside the component to avoid re-creation
+const mergePersonalInfo = (raw?: Partial<PersonalInfo>, dummy?: Partial<PersonalInfo>) => {
+  if (!raw) return dummy;
+  // Shave off empty strings and undefined to allow dummy data to show through
+  const entries = Object.entries(raw).filter(([_, v]) => v !== undefined && v !== "");
+  if (entries.length === 0) return dummy;
+  return { ...dummy, ...Object.fromEntries(entries) };
+};
 
 // Cover Letter Preview Component
 function CoverLetterPreviewContent({
@@ -119,6 +129,11 @@ export function CVPreview() {
     "resume",
   );
 
+  // PRO TIP: Use deferred value for the preview data.
+  // This tells React that updating the preview is lower priority than responding to typing.
+  // The user sees instant typing, and the preview catches up half a second later.
+  const deferredCvData = useDeferredValue(cvData);
+
   const TemplateComponent = useMemo(() => {
     return lazyTemplates[selectedTemplate] || lazyTemplates[DEFAULT_TEMPLATE];
   }, [selectedTemplate]);
@@ -129,30 +144,20 @@ export function CVPreview() {
     );
   }, [selectedTemplate]);
 
-  // Helper to merge dummy data for preview
+  // Merge dummy data using DEFERRED value
   const previewData = useMemo(() => {
-    const mergePersonalInfo = (raw?: Partial<PersonalInfo>, dummy?: Partial<PersonalInfo>) => {
-      if (!raw) return dummy;
-      return {
-        ...dummy,
-        ...Object.fromEntries(
-          Object.entries(raw).filter(([_, v]) => v !== undefined && v !== "")
-        ),
-      };
-    };
-
     return {
-      ...cvData,
-      personalInfo: mergePersonalInfo(cvData.personalInfo, CV_DUMMY_DATA.personalInfo),
-      summary: cvData.summary || CV_DUMMY_DATA.summary,
-      experience: cvData.experience?.length ? cvData.experience : CV_DUMMY_DATA.experience,
-      education: cvData.education?.length ? cvData.education : CV_DUMMY_DATA.education,
-      skills: cvData.skills?.length ? cvData.skills : CV_DUMMY_DATA.skills,
-      languages: cvData.languages?.length ? cvData.languages : CV_DUMMY_DATA.languages,
-      volunteer: cvData.volunteer?.length ? cvData.volunteer : CV_DUMMY_DATA.volunteer,
-      coreCompetencies: cvData.coreCompetencies?.length ? cvData.coreCompetencies : CV_DUMMY_DATA.coreCompetencies,
+      ...deferredCvData,
+      personalInfo: mergePersonalInfo(deferredCvData.personalInfo, CV_DUMMY_DATA.personalInfo),
+      summary: deferredCvData.summary || CV_DUMMY_DATA.summary,
+      experience: deferredCvData.experience?.length ? deferredCvData.experience : CV_DUMMY_DATA.experience,
+      education: deferredCvData.education?.length ? deferredCvData.education : CV_DUMMY_DATA.education,
+      skills: deferredCvData.skills?.length ? deferredCvData.skills : CV_DUMMY_DATA.skills,
+      languages: deferredCvData.languages?.length ? deferredCvData.languages : CV_DUMMY_DATA.languages,
+      volunteer: deferredCvData.volunteer?.length ? deferredCvData.volunteer : CV_DUMMY_DATA.volunteer,
+      coreCompetencies: deferredCvData.coreCompetencies?.length ? deferredCvData.coreCompetencies : CV_DUMMY_DATA.coreCompetencies,
     } as CVData;
-  }, [cvData]);
+  }, [deferredCvData]);
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -182,29 +187,52 @@ export function CVPreview() {
         </button>
       </div>
 
-      {/* Preview Content */}
-      <div className="w-[210mm] min-h-[297mm] origin-top scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] transition-transform relative">
+      {/* Preview Content - PRO CSS optimization: will-change and gpu acceleration */}
+      <div 
+        className="w-[210mm] min-h-[297mm] origin-top scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] transition-transform relative bg-white shadow-2xl border border-gray-100 overflow-hidden"
+        style={{ 
+          willChange: 'transform',
+          transform: 'scale(var(--tw-scale-x)) translateZ(0)',
+          backfaceVisibility: 'hidden'
+        }}
+      >
         <Suspense
           fallback={
-            <div className="p-10 text-gray-400">Loading template...</div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 md:bg-gray-50/50 md:backdrop-blur-sm z-50">
+               <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-gray-100">
+                  <Loader2 className="w-10 h-10 text-teal-600 animate-spin" />
+                  <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Preparing Template...</p>
+               </div>
+            </div>
           }
         >
           {/* Visual Page Break Overlay */}
           <div 
-            className="absolute inset-0 pointer-events-none z-50"
+            className="absolute inset-0 pointer-events-none z-[40]"
             style={{
               background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(297mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
             }} 
           />
 
-          {activePreview === "resume" ? (
-            <TemplateComponent data={previewData} />
-          ) : (
-            <CoverLetterComponent
-              coverLetter={(previewData.coverLetter || {}) as CoverLetterData}
-              personalInfo={previewData.personalInfo || {}}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${selectedTemplate}-${activePreview}`}
+              initial={{ opacity: 0, scale: 0.99 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.01 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="w-full h-full"
+            >
+              {activePreview === "resume" ? (
+                <TemplateComponent data={previewData} />
+              ) : (
+                <CoverLetterPreviewContent
+                   coverLetter={previewData.coverLetter || ({} as CoverLetterData)}
+                   personalInfo={previewData.personalInfo || {}}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </Suspense>
       </div>
     </div>

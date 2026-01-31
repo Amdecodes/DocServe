@@ -1,6 +1,15 @@
 import { CoverLetterData, PersonalInfo } from "@/types/cv";
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
+// Helper for ribbon header style
+const RibbonHeader = ({ title }: { title: string }) => (
+  <div className="relative mb-6">
+    <div className="bg-[#1F1F1F] text-white py-2 px-6 pr-8 inline-block relative z-10 shadow-md">
+      <h3 className="text-lg font-bold uppercase tracking-wider">{title}</h3>
+    </div>
+  </div>
+);
+
 export function ModernSidebarCoverLetter({
   coverLetter,
   personalInfo,
@@ -19,14 +28,6 @@ export function ModernSidebarCoverLetter({
     return `https://${url}`;
   };
 
-  // Helper for ribbon header style
-  const RibbonHeader = ({ title }: { title: string }) => (
-    <div className="relative mb-6">
-      <div className="bg-[#1F1F1F] text-white py-2 px-6 pr-8 inline-block relative z-10 shadow-md">
-        <h3 className="text-lg font-bold uppercase tracking-wider">{title}</h3>
-      </div>
-    </div>
-  );
 
   return (
     <div 
