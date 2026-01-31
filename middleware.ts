@@ -18,31 +18,41 @@ const isPublicAdminRoute = createRouteMatcher([
   "/:locale/admin/sign-up(.*)"
 ]);
 
-const isSeoRoute = createRouteMatcher(["/sitemap.xml", "/robots.txt"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  if (isSeoRoute(req)) {
+export default function middleware(req: any, event: any) {
+  const pathname = req.nextUrl.pathname;
+  
+  // 1. Absolute early return for sitemap and robots to bypass Clerk and next-intl
+  if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
     return NextResponse.next();
   }
 
-  if (isAdminRoute(req) && !isPublicAdminRoute(req)) {
-    await auth.protect();
-  }
+  // 2. Run Clerk and intl middleware for other routes
+  return clerkMiddleware(async (auth, req) => {
+    if (isAdminRoute(req) && !isPublicAdminRoute(req)) {
+      await auth.protect();
+    }
 
-  if (isApiRoute(req)) {
-    return NextResponse.next();
-  }
+    if (isApiRoute(req)) {
+      return NextResponse.next();
+    }
 
-  return intlMiddleware(req);
-});
+    return intlMiddleware(req);
+  })(req, event);
+}
 
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|xml|txt)).*)',
+    // Match all request paths except for the ones starting with:
+    // - _next/static (static files)
+    // - _next/image (image optimization files)
+    // - favicon.ico (favicon file)
+    '/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
+    // Explicitly include sitemap and robots to ensure they hit the middleware for early return
+    '/sitemap.xml',
+    '/robots.txt',
   ],
 };
 
