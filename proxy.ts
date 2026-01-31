@@ -18,29 +18,17 @@ const isPublicAdminRoute = createRouteMatcher([
   "/:locale/admin/sign-up(.*)"
 ]);
 
-export default function middleware(req: any, event: any) {
-  const pathname = req.nextUrl.pathname;
-  
-  // 1. Absolute early return for sitemap and robots
-  if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
-    const response = NextResponse.next();
-    response.headers.set('x-sitemap-debug', 'true');
-    return response;
+export default clerkMiddleware(async (auth, req) => {
+  if (isAdminRoute(req) && !isPublicAdminRoute(req)) {
+    await auth.protect();
   }
 
-  // 2. Run Clerk and intl middleware for other routes
-  return clerkMiddleware(async (auth, req) => {
-    if (isAdminRoute(req) && !isPublicAdminRoute(req)) {
-      await auth.protect();
-    }
+  if (isApiRoute(req)) {
+    return NextResponse.next();
+  }
 
-    if (isApiRoute(req)) {
-      return NextResponse.next();
-    }
-
-    return intlMiddleware(req);
-  })(req, event);
-}
+  return intlMiddleware(req);
+});
 
 
 export const config = {
@@ -56,4 +44,3 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)',
   ],
 };
-
