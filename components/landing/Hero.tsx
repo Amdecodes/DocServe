@@ -58,7 +58,6 @@ export default function Hero() {
                     {t("ctaPrimary")}
                   </Button>
                 </Link>
-                </Link>
               <Link href="/services">
                 <Button
                   variant="outline"
