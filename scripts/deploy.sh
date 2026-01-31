@@ -1,17 +1,24 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # SENEDX Deployment Script
 # Usage: ./scripts/deploy.sh
 
-# Try to load NVM configuration
+# 0. Load Environment (NVM, .bashrc, etc)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+[ -s "$HOME/.profile" ] && source "$HOME/.profile"
 
-# Check if npm/node is available now
+# 1. Critical Check: Is Node/NPM installed?
 if ! command -v npm &> /dev/null; then
-    echo "❌ Error: 'npm' is not found."
-    echo "This script requires Node.js. If you installed it via NVM, make sure to run this script as a user with NVM accessing rights."
-    echo "To fix: Install Node.js v18+ manually on this VPS."
+    echo "❌ CRITICAL ERROR: 'npm' is not found in PATH."
+    echo "---------------------------------------------------"
+    echo "It looks like Node.js is not installed or not in the path of this script."
+    echo ""
+    echo "👉 TRY RUNNING THIS TO INSTALL NODE.JS (Ubuntu/Debian):"
+    echo "   curl -fsSL https://deb.nodesource.com/setup_20.x | bash -"
+    echo "   apt-get install -y nodejs"
+    echo "---------------------------------------------------"
     exit 1
 fi
 
