@@ -8,7 +8,12 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/navigation";
 import { PrintProduct } from "@/types/print";
 import { Minus, Plus, User, Phone, MapPin, Mail, Sparkles } from "lucide-react";
-import { CATEGORY_FIELDS, PRINT_CATEGORIES, PrintCategory, SUB_CATEGORY_FIELDS } from "@/config/print-categories";
+import {
+  CATEGORY_FIELDS,
+  PRINT_CATEGORIES,
+  PrintCategory,
+  SUB_CATEGORY_FIELDS,
+} from "@/config/print-categories";
 
 interface OrderFormProps {
   product: PrintProduct;
@@ -36,26 +41,27 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
     const formData = new FormData(event.currentTarget);
 
     // Collect dynamic fields
-    const dynamicData: Record<string, string> = {};
     const dynamicFieldsInstructions: string[] = [];
-    
+
     // Find dynamic fields config
     // 1. Check if there's a sub-category config (e.g. Wedding, Birthday)
     // 2. Fallback to main category config (e.g. Marketing, Merchandise)
-    let categoryConfig = product.sub_category 
+    let categoryConfig = product.sub_category
       ? SUB_CATEGORY_FIELDS[product.sub_category]
       : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
 
     // If still undefined (shouldn't happen if configured correctly), default empty
     if (!categoryConfig && product.category === "Cards") {
-        // Fallback for generic cards if sub-category missing
-        categoryConfig = CATEGORY_FIELDS["Cards"]; 
+      // Fallback for generic cards if sub-category missing
+      categoryConfig = CATEGORY_FIELDS["Cards"];
     }
-    
+
     if (categoryConfig) {
-      categoryConfig.forEach(field => {
-        const val = formData.get(`dynamic_${field.name}`) as string;
-        if (val) {
+      categoryConfig.forEach((field) => {
+        const val = formData.get(`dynamic_${field.name}`);
+        if (val instanceof File && val.size > 0) {
+          dynamicFieldsInstructions.push(`${t(field.label)}: [File Attached]`);
+        } else if (typeof val === "string" && val) {
           const label = t(field.label);
           dynamicFieldsInstructions.push(`${label}: ${val}`);
         }
@@ -65,25 +71,42 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
     const baseNotes = ((formData.get("notes") as string) || "").trim();
     const finalNotes = [
       baseNotes,
-      dynamicFieldsInstructions.length > 0 ? "\n--- Specification ---\n" + dynamicFieldsInstructions.join("\n") : ""
-    ].filter(Boolean).join("\n");
+      dynamicFieldsInstructions.length > 0
+        ? "\n--- Specification ---\n" + dynamicFieldsInstructions.join("\n")
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-    const payload = {
-      product_id: product.id,
-      variation_id: selectedVariationId ?? null,
-      full_name: (formData.get("fullName") as string) ?? "",
-      phone: (formData.get("phone") as string) ?? "",
-      email: ((formData.get("email") as string) || "").trim() || null,
-      location: (formData.get("location") as string) ?? "",
-      quantity: quantity,
-      notes: finalNotes || null,
-    };
+    // Construct FormData for submission
+    const submitData = new FormData();
+    submitData.append("product_id", product.id);
+    if (selectedVariationId)
+      submitData.append("variation_id", selectedVariationId);
+    submitData.append("full_name", (formData.get("fullName") as string) ?? "");
+    submitData.append("phone", (formData.get("phone") as string) ?? "");
+    const emailStr = ((formData.get("email") as string) || "").trim();
+    if (emailStr) submitData.append("email", emailStr);
+    submitData.append("location", (formData.get("location") as string) ?? "");
+    submitData.append("quantity", quantity.toString());
+    if (finalNotes) submitData.append("notes", finalNotes);
+
+    // Append files
+    if (categoryConfig) {
+      categoryConfig.forEach((field) => {
+        if (field.type === "file") {
+          const file = formData.get(`dynamic_${field.name}`);
+          if (file instanceof File && file.size > 0) {
+            submitData.append(`file_${field.name}`, file);
+          }
+        }
+      });
+    }
 
     try {
       const response = await fetch("/api/print-orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: submitData,
       });
 
       if (!response.ok) {
@@ -110,13 +133,13 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
   // Determine which fields to show
   // 1. Check sub-category fields (Wedding, Birthday, etc.)
   // 2. Fallback to category fields (Text only for Cards, Size for Merchandise, etc.)
-  let displayFields = product.sub_category 
+  let displayFields = product.sub_category
     ? SUB_CATEGORY_FIELDS[product.sub_category]
     : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
 
   // Safety fallback for Cards if sub-category is missing but category is Cards
   if (!displayFields && product.category === "Cards") {
-      displayFields = CATEGORY_FIELDS["Cards"];
+    displayFields = CATEGORY_FIELDS["Cards"];
   }
 
   return (
@@ -135,9 +158,9 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
             </div>
           )}
           {product.sub_category && (
-             <div className="text-xs text-gray-500 mt-1 italic">
-               {product.sub_category}
-             </div>
+            <div className="text-xs text-gray-500 mt-1 italic">
+              {product.sub_category}
+            </div>
           )}
         </div>
         <div className="text-right">
@@ -228,7 +251,9 @@ export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
               {displayFields.map((field) => (
                 <div key={field.name} className="space-y-1.5">
                   <label className="text-xs font-medium text-gray-500 uppercase">
-                    {field.label.startsWith("dynamic.") ? t(field.label) : field.label}{" "}
+                    {field.label.startsWith("dynamic.")
+                      ? t(field.label)
+                      : field.label}{" "}
                     {field.required && <span className="text-red-500">*</span>}
                   </label>
                   {field.type === "select" ? (

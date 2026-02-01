@@ -26,7 +26,7 @@
     "title": "Create professional documents online. Fast, easy, and print-ready.",
     "subtitle": "CVs, agreements, and documents fill the form, pay online, and download instantly or print in our office.",
     "ctaPrimary": "Build CV",
-    "ctaSecondary": "View Services",
+    "ctaSecondary": "Apply Job",
     "imageAlt": "Document Preview"
   },
   "HowItWorks": {
@@ -585,11 +585,13 @@
       "desc_Cards": "Business cards, Wedding & Birthday invitations",
       "desc_Marketing": "Flyers, Posters, Banners & Promotional materials",
       "desc_Merchandise": "T-Shirts, Mugs, Caps & Custom branding",
-      "desc_Stationery": "Stickers, Letterheads, Envelopes & Notebooks"
+      "desc_Stationery": "Stickers, Letterheads, Envelopes & Notebooks",
+      "folders": "Categories"
     },
     "viewing": "Viewing",
     "explore": "Explore",
     "collection": "Collection",
+    "items": "items",
     "noProducts": "No products found",
     "checkBackLater": "Check back later for"
   },

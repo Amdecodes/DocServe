@@ -60,7 +60,10 @@ export async function POST(req: Request) {
     }
 
     // Get the base URL for callbacks
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:3000";
 
     // Extract customer info from stored form_data to pass to Chapa
     // formatting relies on the expected structure of form_data.personal (agreements) or personalInfo (CVs)
@@ -92,15 +95,20 @@ export async function POST(req: Request) {
     // Chapa is strict about email format and phone numbers.
     // 1. Email Validation & Fallback
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     // If the provided email is invalid OR contains "example.com"
     // or if it's missing entirely, we MUST provide a valid fallback for the payment gateway.
     let chapaEmail = payloadEmail;
-    const isActuallyValid = chapaEmail && emailRegex.test(chapaEmail) && !chapaEmail.includes("example.com");
+    const isActuallyValid =
+      chapaEmail &&
+      emailRegex.test(chapaEmail) &&
+      !chapaEmail.includes("example.com");
 
     if (!isActuallyValid) {
-       console.warn(`[Chapa Init] Using fallback email for "${chapaEmail}" to avoid initialization failure.`);
-       chapaEmail = "elaemail@gmail.com";
+      console.warn(
+        `[Chapa Init] Using fallback email for "${chapaEmail}" to avoid initialization failure.`,
+      );
+      chapaEmail = "senedxservice@gmail.com";
     }
 
     // 2. Phone Validation & Fallback
@@ -108,12 +116,16 @@ export async function POST(req: Request) {
     let chapaPhone = phone || (personal as any).phone;
     // Simple check: must be at least 8 characters for Chapa to accept it generally
     if (!chapaPhone || String(chapaPhone).length < 8) {
-       chapaPhone = "0913894924";
+      chapaPhone = "0900336928";
     }
-    
+
     // 3. Name Sanitization
-    const chapaFirstName = (payloadFirstName || "Valued").replace(/[^\w\s\u1200-\u137F]/gi, "").substring(0, 30);
-    const chapaLastName = (payloadLastName || "Customer").replace(/[^\w\s\u1200-\u137F]/gi, "").substring(0, 30);
+    const chapaFirstName = (payloadFirstName || "Valued")
+      .replace(/[^\w\s\u1200-\u137F]/gi, "")
+      .substring(0, 30);
+    const chapaLastName = (payloadLastName || "Customer")
+      .replace(/[^\w\s\u1200-\u137F]/gi, "")
+      .substring(0, 30);
     // --- END SANITIZATION ---
 
     // Get price based on service type
@@ -133,8 +145,11 @@ export async function POST(req: Request) {
     }
 
     // Sanitize title and description for Chapa - strictly Latin/ASCII as per error
-    const sanitizedTitle = title.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 16) || "Service Pay";
-    const sanitizedDescription = description.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 50) || "Paperless Digital Service";
+    const sanitizedTitle =
+      title.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 16) || "Service Pay";
+    const sanitizedDescription =
+      description.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 50) ||
+      "Paperless Digital Service";
 
     // Construct payload
     const payload: Record<string, unknown> = {

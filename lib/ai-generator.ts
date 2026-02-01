@@ -47,16 +47,14 @@ const GEMINI_API_URL = process.env.GEMINI_API_URL;
 // ============================================================================
 
 const SYSTEM_PROMPT = `You are a senior career writer and ATS optimization specialist.
-Your output must be clear, concise, factual, and recruiter-readable.
+Your goal is to transform user inputs—no matter how brief—into top-tier, recruiter-ready content.
 
-Hard rules:
-- Do NOT invent facts, tools, metrics, or achievements
-- Do NOT use clichés, buzzwords, or motivational language
-- Do NOT repeat the same sentence structure
-- Do NOT mention AI, prompts, or templates
-- Write in plain professional English suitable for ATS parsing
-- Optimize for clarity, relevance, and hiring manager scanning
-- Follow structure and limits exactly`;
+Core Directives:
+1. **Maximize Impact**: Use strong action verbs and professional phrasing. Transform passive duties into active contributions.
+2. **Handle Sparse Input**: If the user provides little detail, use your knowledge of the Job Title and Industry to infer likely core competencies and professional traits. Write a high-quality "best practice" version for that role.
+3. **Strict Realism**: Do NOT invent specific facts (like "worked at Google" or "increased sales by 50%"). Do NOT mention AI.
+4. **ATS Optimization**: Use standard industry keywords relevant to the role.
+5. **Tone**: confident, professional, and clear.`;
 
 // Experience level translations
 const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
@@ -130,21 +128,18 @@ function buildSummaryPrompt(
 ): string {
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write a professional summary for a ${expLevelText} ${jobTitle} in the ${industry} field.
+  return `Write a high-impact professional summary for a ${expLevelText} ${jobTitle} in the ${industry} field.
+
+Context: "${userNotes ? userNotes : "Standard professional background for this role"}"
 
 Rules:
-- 2–3 sentences only (60–80 words total)
-- Third person only (no "I", "my", "we")
-- Emphasize core skills, impact, and role focus
-- Avoid responsibilities; highlight outcomes and strengths
-- Use concrete language recruiters expect
-- No buzzwords, no clichés, no fluff
-- Do not assume years, tools, or certifications unless stated
+- 2–3 sentences (max 80 words).
+- Third person strictly.
+- If user notes are minimal, infer standard high-value skills and traits for a ${jobTitle}.
+- Focus on value add, expertise, and professional ethos.
+- No fluff, no "hard worker" clichés—use specific professional attributes.
 
-User-provided information:
-${userNotes || "No additional details provided"}
-
-Output only the summary text.`;
+Output only the summary.`;
 }
 
 /**
@@ -161,37 +156,19 @@ function buildCoverLetterPrompt(
   const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write the body of a one-page cover letter for a ${expLevelText} ${jobTitle} in the ${industry} field.
+  return `Write a compelling cover letter body (3 paragraphs) for a ${expLevelText} ${jobTitle} in ${industry}.
 
 Tone: ${toneInstruction}
+Context: "${userNotes ? userNotes : "General interest in this field and role"}"
 
-Structure rules (strict):
-- Exactly 3 short paragraphs
-- Each paragraph: 2–3 sentences
-- No greetings, no closings, no company names
-- No placeholders or assumptions
+Structure:
+Para 1: Firm opening stating role alignment and professional focus.
+Para 2: Highlight key competencies and transferable skills standard for a ${jobTitle}. If user notes are empty, focus on dedication, quick learning, and industry relevance.
+Para 3: Professional closing statement of interest and readiness.
 
-Content rules:
-Paragraph 1 — Role alignment:
-- State professional focus and role relevance
-- Avoid phrases like "I am writing to apply"
-
-Paragraph 2 — Value and capability:
-- Highlight strengths, skills, and transferable value
-- Reference impact or problem-solving (without metrics unless given)
-
-Paragraph 3 — Motivation and fit:
-- Express interest in contributing and growing
-- Keep professional and restrained
-
-General rules:
-- First person allowed
-- No clichés or generic enthusiasm
-- No buzzwords
-- No repetition of resume bullets
-
-User-provided information:
-${userNotes || "No additional details provided"}
+Rules:
+- No greeting/closing/placeholders.
+- If input is sparse, write a "perfect generic" letter that sounds specific but applies to any dedicated professional in this role.
 
 Output only the 3 paragraphs.`;
 }
@@ -205,21 +182,19 @@ function buildBulletPrompt(
   jobTitle: string,
   company: string,
 ): string {
-  return `Rewrite the following resume bullets for ATS and recruiter review.
+  return `Rewrite these resume bullets to be results-oriented and ATS-friendly.
 
 Context:
 Role: ${jobTitle}
 Organization: ${company}
 
-Rules:
-- Preserve original meaning exactly
-- Start each bullet with a strong action verb
-- Emphasize ownership, contribution, or outcome
-- Remove filler words and vague phrasing
-- No invented metrics, tools, or scope
-- One concise sentence per bullet (max 100 characters)
-- Return exactly ${bullets.length} bullets
-- No numbering, symbols, or extra text
+Instructions:
+- Transform simple tasks into professional achievements where possible.
+- Use strong action verbs (e.g., "Orchestrated", "Developed", "Managed").
+- If a bullet is too short, expand it intelligently based on the role.
+- Keep it realistic—don't invent numbers.
+- Return exactly ${bullets.length} bullets.
+- No numbering or bullets in output, just text.
 
 Original bullets:
 ${bullets.map((b) => `- ${b}`).join("\n")}
@@ -233,8 +208,8 @@ Output only the rewritten bullets, one per line.`;
 
 // Fallback models in priority order
 const FALLBACK_MODELS = [
-  "gemini-3-pro",      // Primary
-  "gemini-2.5-flash",  // Fallback 1
+  "gemini-3-pro", // Primary
+  "gemini-2.5-flash", // Fallback 1
   "gemini-2.5-flash-lite", // Fallback 2
   "gemini-1.5-flash", // Legacy fallback
 ];
@@ -251,96 +226,105 @@ async function callGeminiAPI(userPrompt: string): Promise<string> {
 
     while (attempt < maxRetriesPerModel) {
       try {
-        const response = await fetch(`${API_BASE_URL}/${modelId}:generateContent?key=${GEMINI_API_KEY}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
-              },
-            ],
-            generationConfig: {
-              temperature: 0.4,
-              maxOutputTokens: 512,
-              topP: 0.8,
-              topK: 40,
+        const response = await fetch(
+          `${API_BASE_URL}/${modelId}:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-            safetySettings: [
-              {
-                category: "HARM_CATEGORY_HARASSMENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.4,
+                maxOutputTokens: 512,
+                topP: 0.8,
+                topK: 40,
               },
-              {
-                category: "HARM_CATEGORY_HATE_SPEECH",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE",
-              },
-              {
-                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE",
-              },
-              {
-                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold: "BLOCK_MEDIUM_AND_ABOVE",
-              },
-            ],
-          }),
-        });
+              safetySettings: [
+                {
+                  category: "HARM_CATEGORY_HARASSMENT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_HATE_SPEECH",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+              ],
+            }),
+          },
+        );
 
         if (response.status === 429) {
           attempt++;
           const waitTime = Math.pow(2, attempt) * 1000;
-          console.warn(`[Gemini API] ${modelId} 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`);
+          console.warn(
+            `[Gemini API] ${modelId} 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`,
+          );
           if (attempt >= maxRetriesPerModel) break; // Break inner loop to try next model
-          
-          await new Promise(resolve => setTimeout(resolve, waitTime));
+
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
           continue;
         }
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error(`[Gemini API] ${modelId} Error ${response.status}:`, errorText);
+          console.error(
+            `[Gemini API] ${modelId} Error ${response.status}:`,
+            errorText,
+          );
           // 404 means model not found (likely for future/invalid models) - try next immediately
-          if (response.status === 404) break; 
+          if (response.status === 404) break;
           // 5xx errors might be transient, but better to switch model
           break;
         }
 
         const result = await response.json();
-        
+
         // Safety block check
         if (result.promptFeedback?.blockReason) {
-           console.warn(`[Gemini API] ${modelId} Safety Block: ${result.promptFeedback.blockReason}`);
-           // Safety blocks are usually content-related, switching model unlikely to help BUT different models have different sensitivities.
-           // We'll try next model just in case.
-           break; 
+          console.warn(
+            `[Gemini API] ${modelId} Safety Block: ${result.promptFeedback.blockReason}`,
+          );
+          // Safety blocks are usually content-related, switching model unlikely to help BUT different models have different sensitivities.
+          // We'll try next model just in case.
+          break;
         }
 
         const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        
+
         if (!text) {
-           console.warn(`[Gemini API] ${modelId} returned no text candidate.`);
-           break;
+          console.warn(`[Gemini API] ${modelId} returned no text candidate.`);
+          break;
         }
 
         // Success!
         return cleanAIOutput(text);
-
       } catch (e) {
         console.error(`[Gemini API] ${modelId} Exception:`, e);
         lastError = e as Error;
-        // On network exception, maybe retry same model? 
+        // On network exception, maybe retry same model?
         // For now, let's treat it as a failure for this attempt
         attempt++;
         if (attempt >= maxRetriesPerModel) break;
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
   }
-  
+
   // If we get here, all models failed
   console.error("[Gemini API] All fallback models failed.");
   throw lastError || new Error("All AI models failed to generate content.");

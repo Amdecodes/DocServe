@@ -1,10 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PrintProduct } from "@/types/print";
 import { ProductCard } from "@/components/print/ProductCard";
-import { PRINT_CATEGORIES } from "@/config/print-categories";
-import { Megaphone, Shirt, StickyNote, BookOpen, ChevronRight, Store } from "lucide-react";
+import {
+  PRINT_CATEGORIES,
+  CATEGORY_ITEMS,
+  PrintCategory,
+} from "@/config/print-categories";
+import {
+  Megaphone,
+  Shirt,
+  StickyNote,
+  BookOpen,
+  ChevronRight,
+  Store,
+  ArrowLeft,
+  Folder,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -22,11 +35,29 @@ const CATEGORY_ICONS = {
 
 export function PrintCatalog({ products }: PrintCatalogProps) {
   const t = useTranslations("PrintOrders");
-  const [activeCategory, setActiveCategory] = useState<string>(PRINT_CATEGORIES.CARDS);
+  const [activeCategory, setActiveCategory] = useState<string>(
+    PRINT_CATEGORIES.CARDS,
+  );
+  const [activeSubCategory, setActiveSubCategory] = useState<string | null>(
+    null,
+  );
+
+  // Reset subcategory when main category changes
+  useEffect(() => {
+    setActiveSubCategory(null);
+  }, [activeCategory]);
+
+  const subCategories = CATEGORY_ITEMS[activeCategory as PrintCategory] || [];
 
   const filteredProducts = products.filter(
-    (p) => (p.category || PRINT_CATEGORIES.MARKETING) === activeCategory
+    (p) =>
+      (p.category || PRINT_CATEGORIES.MARKETING) === activeCategory &&
+      (!activeSubCategory || p.sub_category === activeSubCategory),
   );
+
+  // Also filter products if we are in "Folder View" (no subcategory selected)
+  // to show a preview count or something, but actually we only need filteredProducts
+  // when activeSubCategory IS set.
 
   return (
     <div className="space-y-12">
@@ -44,28 +75,38 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
                 "relative group flex flex-col items-start p-6 rounded-3xl transition-all duration-300 border text-left outline-none",
                 isActive
                   ? "bg-white border-teal-500 shadow-xl shadow-teal-900/5 scale-[1.02]"
-                  : "bg-white/80 border-transparent hover:border-gray-200 hover:shadow-lg hover:-translate-y-1"
+                  : "bg-white/80 border-transparent hover:border-gray-200 hover:shadow-lg hover:-translate-y-1",
               )}
             >
               {/* Folder Tab Effect */}
-              <div 
+              <div
                 className={cn(
-                   "absolute top-0 left-6 -mt-3 h-4 w-24 rounded-t-lg transition-colors duration-300",
-                   isActive ? "bg-teal-500" : "bg-gray-100 group-hover:bg-gray-200"
-                )} 
+                  "absolute top-0 left-6 -mt-3 h-4 w-24 rounded-t-lg transition-colors duration-300",
+                  isActive
+                    ? "bg-teal-500"
+                    : "bg-gray-100 group-hover:bg-gray-200",
+                )}
               />
-              
-              <div className={cn(
-                "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-colors",
-                isActive ? "bg-teal-50 text-teal-600" : "bg-gray-50 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600"
-              )}>
+
+              <div
+                className={cn(
+                  "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-colors",
+                  isActive
+                    ? "bg-teal-50 text-teal-600"
+                    : "bg-gray-50 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600",
+                )}
+              >
                 <Icon className="w-6 h-6" />
               </div>
 
-              <h3 className={cn(
-                "text-lg font-bold mb-2 transition-colors",
-                isActive ? "text-gray-900" : "text-gray-600 group-hover:text-gray-900"
-              )}>
+              <h3
+                className={cn(
+                  "text-lg font-bold mb-2 transition-colors",
+                  isActive
+                    ? "text-gray-900"
+                    : "text-gray-600 group-hover:text-gray-900",
+                )}
+              >
                 {t(`categories.${category}`)}
               </h3>
 
@@ -73,11 +114,15 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
                 {t(`categories.desc_${category}`)}
               </p>
 
-              <div className={cn(
-                "mt-auto flex items-center text-xs font-bold uppercase tracking-wider transition-colors",
-                isActive ? "text-teal-600" : "text-gray-300 group-hover:text-teal-400"
-              )}>
-                {isActive ? t("viewing") : t("explore")} 
+              <div
+                className={cn(
+                  "mt-auto flex items-center text-xs font-bold uppercase tracking-wider transition-colors",
+                  isActive
+                    ? "text-teal-600"
+                    : "text-gray-300 group-hover:text-teal-400",
+                )}
+              >
+                {isActive ? t("viewing") : t("explore")}
                 <ChevronRight className="w-3 h-3 ml-1" />
               </div>
             </button>
@@ -85,44 +130,107 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
         })}
       </div>
 
-      {/* Products Grid */}
+      {/* Subcategory Folders OR Products Grid */}
       <AnimatePresence mode="wait">
-        <motion.div
-          key={activeCategory}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-          className="min-h-[400px]"
-        >
-          <div className="mb-6 flex items-center gap-3">
-             <Store className="w-5 h-5 text-gray-400" />
-             <h2 className="text-xl font-bold text-gray-900">
-               {t(`categories.${activeCategory}`)} {t("collection")}
-             </h2>
-             <span className="text-sm font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-               {filteredProducts.length}
-             </span>
-          </div>
+        {!activeSubCategory ? (
+          /* Level 2: Subcategory Folders */
+          <motion.div
+            key="subcategories"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center gap-3">
+              <Folder className="w-5 h-5 text-gray-400" />
+              <h2 className="text-xl font-bold text-gray-900">
+                {t(`categories.${activeCategory}`)} {t("categories.folders")}
+              </h2>
+            </div>
 
-          {filteredProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
-               <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-300">
-                 <Store className="w-8 h-8" />
-               </div>
-               <p className="text-gray-900 font-medium">{t("noProducts")}</p>
-               <p className="text-sm text-gray-500 mt-1">
-                 {t("checkBackLater")} {t(`categories.${activeCategory}`)}.
-               </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {subCategories.map((subCat) => {
+                // Count items in this subcategory
+                const count = products.filter(
+                  (p) =>
+                    p.category === activeCategory && p.sub_category === subCat,
+                ).length;
+
+                return (
+                  <button
+                    key={subCat}
+                    onClick={() => setActiveSubCategory(subCat)}
+                    className="group bg-white p-6 rounded-2xl border border-gray-100 hover:border-teal-200 hover:shadow-lg transition-all text-left flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-teal-50 text-teal-600 rounded-lg flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                        <Folder className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">
+                          {subCat}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {count} {t("items")}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-teal-500" />
+                  </button>
+                );
+              })}
+
+              {/* Fallback for items with no subcategory? Optional. */}
             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+          </motion.div>
+        ) : (
+          /* Level 3: Products */
+          <motion.div
+            key="products"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+            className="min-h-[400px]"
+          >
+            <div className="mb-6 flex items-center gap-4">
+              <button
+                onClick={() => setActiveSubCategory(null)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5 text-gray-600" />
+              </button>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  {activeSubCategory}
+                  <span className="text-gray-300 font-light">/</span>
+                  <span className="text-base font-normal text-gray-500">
+                    {t(`categories.${activeCategory}`)}
+                  </span>
+                </h2>
+              </div>
             </div>
-          )}
-        </motion.div>
+
+            {filteredProducts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-300">
+                  <Store className="w-8 h-8" />
+                </div>
+                <p className="text-gray-900 font-medium">{t("noProducts")}</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {t("checkBackLater")}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

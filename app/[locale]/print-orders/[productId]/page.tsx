@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import prisma from "@/lib/prisma";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { PrintProduct } from "@/types/print";
@@ -17,25 +18,30 @@ export default async function PrintOrderProductPage({
   params: Promise<PageProps["params"]>;
 }) {
   const { productId } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  // Fetch product data from our API (which includes variations now)
-  const response = await fetch(
-    `${baseUrl}/api/print-products?id=${productId}`,
-    {
-      cache: "no-store",
+  const productData = await prisma.printProduct.findFirst({
+    where: { id: productId, active: true },
+    include: {
+      variations: {
+        select: {
+          id: true,
+          product_id: true,
+          name: true,
+          image_url: true,
+        },
+      },
     },
-  );
+  });
 
-  if (!response.ok) {
+  if (!productData) {
     notFound();
   }
 
-  const { product }: { product: PrintProduct } = await response.json();
-
-  if (!product) {
-    notFound();
-  }
+  const product: PrintProduct = {
+    ...productData,
+    base_price: Number(productData.base_price),
+    created_at: productData.created_at.toISOString(),
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50/50">

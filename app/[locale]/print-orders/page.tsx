@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import prisma from "@/lib/prisma";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { PrintProduct } from "@/types/print";
@@ -18,16 +19,27 @@ export default async function PrintOrdersPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "PrintOrders" });
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const response = await fetch(`${baseUrl}/api/print-products`, {
-    cache: "no-store",
+
+  const productsData = await prisma.printProduct.findMany({
+    where: { active: true },
+    include: {
+      variations: {
+        select: {
+          id: true,
+          product_id: true,
+          name: true,
+          image_url: true,
+        },
+      },
+    },
+    orderBy: { created_at: "desc" },
   });
 
-  let products: PrintProduct[] = [];
-  if (response.ok) {
-    const json = await response.json();
-    products = json.products ?? [];
-  }
+  const products: PrintProduct[] = productsData.map((p) => ({
+    ...p,
+    base_price: Number(p.base_price),
+    created_at: p.created_at.toISOString(),
+  }));
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

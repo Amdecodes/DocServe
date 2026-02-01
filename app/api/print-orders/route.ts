@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import { uploadTempFile } from "@/lib/upload";
 
 const payloadSchema = z.object({
   product_id: z.string().uuid(),
@@ -9,7 +10,7 @@ const payloadSchema = z.object({
   phone: z.string().min(1),
   email: z.string().email().optional().nullable(),
   location: z.string().min(1),
-  quantity: z.number().int().positive(),
+  quantity: z.coerce.number().int().positive(),
   notes: z.string().optional().nullable(),
 });
 
@@ -17,8 +18,34 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const parsed = payloadSchema.safeParse(body);
+    const contentType = request.headers.get("content-type") || "";
+    let data: any = {};
+    const files: File[] = [];
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      data = {
+        product_id: formData.get("product_id"),
+        variation_id: formData.get("variation_id") || null,
+        full_name: formData.get("full_name"),
+        phone: formData.get("phone"),
+        email: formData.get("email") || null,
+        location: formData.get("location"),
+        quantity: formData.get("quantity"),
+        notes: formData.get("notes") || null,
+      };
+
+      // Extract files
+      for (const [key, value] of formData.entries()) {
+        if (key.startsWith("file_") && value instanceof File) {
+          files.push(value);
+        }
+      }
+    } else {
+      data = await request.json();
+    }
+
+    const parsed = payloadSchema.safeParse(data);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -38,11 +65,54 @@ export async function POST(request: Request) {
       select: {
         id: true,
         name: true,
+        category: true,
+        sub_category: true,
       },
     });
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Handle File Uploads
+    const uploadedUrls: string[] = [];
+
+    for (const file of files) {
+      if (file.size > 0) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        // Clean strings for safe paths
+        const safeCategory = (product.category || "Uncategorized").replace(
+          /[^a-zA-Z0-9-_]/g,
+          "_",
+        );
+        const safeSubCategory = (product.sub_category || "General").replace(
+          /[^a-zA-Z0-9-_]/g,
+          "_",
+        );
+        // Construct fileName with folders: Category/SubCategory/Filename
+        const fileName = `${safeCategory}/${safeSubCategory}/${file.name}`;
+
+        try {
+          const uploadResult = await uploadTempFile(
+            buffer,
+            fileName,
+            file.type,
+          );
+          // Depending on the implementation of uploadTempFile, publicUrl might be null if strictly private,
+          // but usually SignedUrl is returned.
+          uploadedUrls.push(
+            uploadResult.publicUrl || uploadResult.signedUrl || "",
+          );
+        } catch (err) {
+          console.error("Upload error", err);
+        }
+      }
+    }
+
+    // Append URLs to notes
+    let finalNotes = payload.notes || "";
+    if (uploadedUrls.length > 0) {
+      finalNotes += "\n\n--- Attached Files ---\n" + uploadedUrls.join("\n");
     }
 
     let variationName = null;
@@ -68,7 +138,7 @@ export async function POST(request: Request) {
         email: payload.email ?? null,
         location: payload.location,
         quantity: payload.quantity,
-        notes: payload.notes ?? null,
+        notes: finalNotes || null,
         status: "pending",
       },
     });

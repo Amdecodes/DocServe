@@ -39,26 +39,32 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
             >
-                {/* Desktop: Go to Template Gallery */}
-                <Link href="/resumes/templates" className="hidden md:block w-full sm:w-auto">
-                  <Button
-                    size="lg"
-                    className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
-                  >
-                    {t("ctaPrimary")}
-                  </Button>
-                </Link>
+              {/* Desktop: Go to Template Gallery */}
+              <Link
+                href="/resumes/templates"
+                className="hidden md:block w-full sm:w-auto"
+              >
+                <Button
+                  size="lg"
+                  className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
+                >
+                  {t("ctaPrimary")}
+                </Button>
+              </Link>
 
-                {/* Mobile: Direct to Builder (Bypass Gallery) */}
-                <Link href="/form/cv?template=golden" className="md:hidden w-full sm:w-auto">
-                  <Button
-                    size="lg"
-                    className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
-                  >
-                    {t("ctaPrimary")}
-                  </Button>
-                </Link>
-              <Link href="/services">
+              {/* Mobile: Direct to Builder (Bypass Gallery) */}
+              <Link
+                href="/form/cv?template=golden"
+                className="md:hidden w-full sm:w-auto"
+              >
+                <Button
+                  size="lg"
+                  className="bg-primary hover:bg-primary-hover text-white text-lg px-8 py-6 rounded-full w-full"
+                >
+                  {t("ctaPrimary")}
+                </Button>
+              </Link>
+              <Link href="/form/virtual-assistance">
                 <Button
                   variant="outline"
                   size="lg"
@@ -83,18 +89,18 @@ export default function Hero() {
             {/* Image Container */}
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 y: [0, -15, 0],
                 transition: {
                   y: {
                     duration: 4,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   },
                   opacity: { duration: 0.8 },
-                  scale: { duration: 0.8 }
-                }
+                  scale: { duration: 0.8 },
+                },
               }}
               className="relative bg-white p-3 rounded-2xl shadow-2xl border border-gray-100 group overflow-hidden"
             >

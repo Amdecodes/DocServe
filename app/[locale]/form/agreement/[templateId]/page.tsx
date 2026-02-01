@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AGREEMENT_TEMPLATES, AgreementTemplate, AgreementVariable } from "@/config/agreements";
+import {
+  AGREEMENT_TEMPLATES,
+  AgreementTemplate,
+  AgreementVariable,
+} from "@/config/agreements";
 import Header from "@/components/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
@@ -24,7 +28,7 @@ export default function AgreementFormPage() {
       const found = AGREEMENT_TEMPLATES.find((t) => t.id === params.templateId);
       if (found) {
         setTemplate(found);
-        
+
         // Initialize form data
         setFormData({});
       }
@@ -34,11 +38,13 @@ export default function AgreementFormPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInputChange = (variable: AgreementVariable, value: any) => {
     let finalValue = value;
-    
+
     // For checkboxes, handle truthy/falsy values if provided
     if (variable.type === "checkbox") {
       if (variable.truthyValue || variable.falsyValue) {
-        finalValue = value ? (variable.truthyValue || "Yes") : (variable.falsyValue || "No");
+        finalValue = value
+          ? variable.truthyValue || "Yes"
+          : variable.falsyValue || "No";
       }
     }
 
@@ -49,6 +55,19 @@ export default function AgreementFormPage() {
     if (!template) return "";
     let content = template.content;
 
+    // Process conditional blocks: {?KEY=VALUE}content{/?} or {?KEY}content{/?}
+    const conditionalRegex = /{\?(\w+)(?:=([^}]+))?}([\s\S]*?){\/\?}/g;
+    content = content.replace(
+      conditionalRegex,
+      (match, key, value, innerContent) => {
+        const actualValue = formData[key];
+        // Check condition
+        const shouldShow = value ? actualValue == value : !!actualValue;
+
+        return shouldShow ? innerContent : "";
+      },
+    );
+
     // Sort variables by length descending to prevent partial replacements if keys overlap
     const sortedVars = [...template.variables].sort(
       (a, b) => b.key.length - a.key.length,
@@ -56,7 +75,7 @@ export default function AgreementFormPage() {
 
     sortedVars.forEach((v) => {
       const val = formData[v.key];
-      
+
       // Use a distinct placeholder style for empty values to guide the user
       const replacement = val
         ? val
@@ -140,28 +159,39 @@ export default function AgreementFormPage() {
                 if (variable.dependsOn) {
                   const dependencyValue = formData[variable.dependsOn];
                   // If dependency is a checkbox value (truthyValue/falsyValue or boolean)
-                  const dependencyVar = template.variables.find(v => v.key === variable.dependsOn);
-                  
+                  const dependencyVar = template.variables.find(
+                    (v) => v.key === variable.dependsOn,
+                  );
+
                   let isVisible = !!dependencyValue;
-                  if (dependencyVar?.type === "checkbox" && dependencyVar.falsyValue) {
+                  if (
+                    dependencyVar?.type === "checkbox" &&
+                    dependencyVar.falsyValue
+                  ) {
                     isVisible = dependencyValue !== dependencyVar.falsyValue;
                   }
-                  
+
                   if (!isVisible) return null;
                 }
 
                 return (
                   <div key={variable.key}>
-                    <label className={cn(
-                      "block text-sm font-medium text-gray-700 mb-1",
-                      variable.type === "checkbox" && "flex items-center gap-2 cursor-pointer"
-                    )}>
+                    <label
+                      className={cn(
+                        "block text-sm font-medium text-gray-700 mb-1",
+                        variable.type === "checkbox" &&
+                          "flex items-center gap-2 cursor-pointer",
+                      )}
+                    >
                       {variable.type === "checkbox" ? (
                         <>
                           <input
                             type="checkbox"
                             className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
-                            checked={!!formData[variable.key] && formData[variable.key] !== variable.falsyValue}
+                            checked={
+                              !!formData[variable.key] &&
+                              formData[variable.key] !== variable.falsyValue
+                            }
                             onChange={(e) =>
                               handleInputChange(variable, e.target.checked)
                             }
@@ -177,7 +207,7 @@ export default function AgreementFormPage() {
                         </>
                       )}
                     </label>
-                    
+
                     {variable.type === "textarea" ? (
                       <textarea
                         className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 min-h-[100px]"
@@ -232,7 +262,8 @@ export default function AgreementFormPage() {
           <div className="max-w-[210mm] mx-auto bg-white shadow-xl min-h-[297mm] p-[20mm] text-base leading-relaxed text-justify">
             {/* This replicates an A4 paper look */}
             <div
-              className="preview-content font-serif text-gray-800 whitespace-pre-wrap"
+              className="preview-content font-serif text-gray-800 whitespace-pre-wrap select-none"
+              onContextMenu={(e) => e.preventDefault()}
               dangerouslySetInnerHTML={{ __html: getPreviewContent() }}
             />
           </div>

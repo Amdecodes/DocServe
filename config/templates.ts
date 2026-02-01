@@ -6,7 +6,6 @@
 import { ComponentType } from "react";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 
-
 export interface TemplateConfig {
   id: string;
   name: string;
@@ -92,6 +91,30 @@ export const TEMPLATES: TemplateConfig[] = [
   //     })), // fallback for now
   // },
   {
+    id: "freshman-entry",
+    name: "Freshman Entry",
+    description:
+      "Ideal for students and entry-level professionals, highlighting skills and education over work history.",
+    tags: ["Student", "Freshman", "Skills-Focused"],
+    category: "simple",
+    colorScheme: {
+      primary: "#fb7185", // rose-400
+      secondary: "#fef2f2", // rose-50
+      accent: "#f43f5e", // rose-500
+    },
+    previewImage: "/images/templet-previev/fresheman.png",
+    resumeComponent: () =>
+      import("@/components/cv/preview/layouts/FreshmanEntry").then((m) => ({
+        default: m.FreshmanEntryLayout,
+      })),
+    coverLetterComponent: () =>
+      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then(
+        (m) => ({
+          default: m.FreshmanCoverLetter,
+        }),
+      ),
+  },
+  {
     id: "golden",
     name: "Golden Executive",
     description: "Premium dark blue and gold design for executives.",
@@ -129,14 +152,17 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.ElegantLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/ElegantCoverLetter").then((m) => ({
-        default: m.ElegantCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ElegantCoverLetter").then(
+        (m) => ({
+          default: m.ElegantCoverLetter,
+        }),
+      ),
   },
   {
     id: "modern-dark",
     name: "Modern Gold",
-    description: "Clean white design with bold black typography and gold accents.",
+    description:
+      "Clean white design with bold black typography and gold accents.",
     tags: ["Modern", "Gold", "Creative"],
     category: "creative",
     colorScheme: {
@@ -150,9 +176,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.ModernDarkLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/ModernDarkCoverLetter").then((m) => ({
-        default: m.ModernDarkCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ModernDarkCoverLetter").then(
+        (m) => ({
+          default: m.ModernDarkCoverLetter,
+        }),
+      ),
   },
   {
     id: "modern-sidebar",
@@ -171,14 +199,17 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.ModernSidebarLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then((m) => ({
-        default: m.ModernSidebarCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then(
+        (m) => ({
+          default: m.ModernSidebarCoverLetter,
+        }),
+      ),
   },
   {
     id: "corporate-focus",
     name: "Corporate Focus",
-    description: "Professional deep blue layout with comprehensive data support.",
+    description:
+      "Professional deep blue layout with comprehensive data support.",
     tags: ["Professional", "Corporate", "Blue"],
     category: "professional",
     colorScheme: {
@@ -192,9 +223,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.CorporateFocusLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then((m) => ({
-        default: m.CorporateFocusCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then(
+        (m) => ({
+          default: m.CorporateFocusCoverLetter,
+        }),
+      ),
   },
   {
     id: "minimalist-teal",
@@ -213,9 +246,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.MinimalistTealLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then((m) => ({
-        default: m.MinimalistTealCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then(
+        (m) => ({
+          default: m.MinimalistTealCoverLetter,
+        }),
+      ),
   },
   {
     id: "creative-split",
@@ -234,9 +269,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.CreativeSplitLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then((m) => ({
-        default: m.CreativeSplitCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then(
+        (m) => ({
+          default: m.CreativeSplitCoverLetter,
+        }),
+      ),
   },
   {
     id: "executive-maroon",
@@ -255,9 +292,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.ExecutiveMaroonLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then((m) => ({
-        default: m.ExecutiveMaroonCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then(
+        (m) => ({
+          default: m.ExecutiveMaroonCoverLetter,
+        }),
+      ),
   },
   {
     id: "emerald-professional",
@@ -272,39 +311,24 @@ export const TEMPLATES: TemplateConfig[] = [
     },
     previewImage: "/images/templet-previev/emraled.png",
     resumeComponent: () =>
-      import("@/components/cv/preview/layouts/EmeraldProfessional").then((m) => ({
-        default: m.EmeraldProfessionalLayout,
-      })),
+      import("@/components/cv/preview/layouts/EmeraldProfessional").then(
+        (m) => ({
+          default: m.EmeraldProfessionalLayout,
+        }),
+      ),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then((m) => ({
-        default: m.EmeraldProfessionalCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then(
+        (m) => ({
+          default: m.EmeraldProfessionalCoverLetter,
+        }),
+      ),
   },
-  {
-    id: "freshman-entry",
-    name: "Freshman Entry",
-    description: "Ideal for students and entry-level professionals, highlighting skills and education over work history.",
-    tags: ["Student", "Freshman", "Skills-Focused"],
-    category: "simple",
-    colorScheme: {
-      primary: "#fb7185", // rose-400
-      secondary: "#fef2f2", // rose-50
-      accent: "#f43f5e", // rose-500
-    },
-    previewImage: "/images/templet-previev/fresheman.png",
-    resumeComponent: () =>
-      import("@/components/cv/preview/layouts/FreshmanEntry").then((m) => ({
-        default: m.FreshmanEntryLayout,
-      })),
-    coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
-        default: m.FreshmanCoverLetter,
-      })),
-  },
+
   {
     id: "lavender-executive",
     name: "Lavender Executive",
-    description: "Modern, single-column design with violet accents and a clean centered layout.",
+    description:
+      "Modern, single-column design with violet accents and a clean centered layout.",
     tags: ["Modern", "Executive", "Purple"],
     category: "executive",
     colorScheme: {
@@ -318,9 +342,11 @@ export const TEMPLATES: TemplateConfig[] = [
         default: m.LavenderExecutiveLayout,
       })),
     coverLetterComponent: () =>
-      import("@/components/cv/preview/layouts/LavenderCoverLetter").then((m) => ({
-        default: m.LavenderCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/LavenderCoverLetter").then(
+        (m) => ({
+          default: m.LavenderCoverLetter,
+        }),
+      ),
   },
 ];
 
@@ -383,9 +409,11 @@ export const templateComponents: Record<
         default: m.ElegantLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/ElegantCoverLetter").then((m) => ({
-        default: m.ElegantCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ElegantCoverLetter").then(
+        (m) => ({
+          default: m.ElegantCoverLetter,
+        }),
+      ),
   },
   "modern-dark": {
     resume: () =>
@@ -393,9 +421,11 @@ export const templateComponents: Record<
         default: m.ModernDarkLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/ModernDarkCoverLetter").then((m) => ({
-        default: m.ModernDarkCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ModernDarkCoverLetter").then(
+        (m) => ({
+          default: m.ModernDarkCoverLetter,
+        }),
+      ),
   },
   "modern-sidebar": {
     resume: () =>
@@ -403,9 +433,11 @@ export const templateComponents: Record<
         default: m.ModernSidebarLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then((m) => ({
-        default: m.ModernSidebarCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ModernSidebarCoverLetter").then(
+        (m) => ({
+          default: m.ModernSidebarCoverLetter,
+        }),
+      ),
   },
   "corporate-focus": {
     resume: () =>
@@ -413,9 +445,11 @@ export const templateComponents: Record<
         default: m.CorporateFocusLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then((m) => ({
-        default: m.CorporateFocusCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/CorporateFocusCoverLetter").then(
+        (m) => ({
+          default: m.CorporateFocusCoverLetter,
+        }),
+      ),
   },
   "minimalist-teal": {
     resume: () =>
@@ -423,9 +457,11 @@ export const templateComponents: Record<
         default: m.MinimalistTealLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then((m) => ({
-        default: m.MinimalistTealCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/MinimalistTealCoverLetter").then(
+        (m) => ({
+          default: m.MinimalistTealCoverLetter,
+        }),
+      ),
   },
   "creative-split": {
     resume: () =>
@@ -433,9 +469,11 @@ export const templateComponents: Record<
         default: m.CreativeSplitLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then((m) => ({
-        default: m.CreativeSplitCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/CreativeSplitCoverLetter").then(
+        (m) => ({
+          default: m.CreativeSplitCoverLetter,
+        }),
+      ),
   },
   "executive-maroon": {
     resume: () =>
@@ -443,19 +481,25 @@ export const templateComponents: Record<
         default: m.ExecutiveMaroonLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then((m) => ({
-        default: m.ExecutiveMaroonCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/ExecutiveMaroonCoverLetter").then(
+        (m) => ({
+          default: m.ExecutiveMaroonCoverLetter,
+        }),
+      ),
   },
   "emerald-professional": {
     resume: () =>
-      import("@/components/cv/preview/layouts/EmeraldProfessional").then((m) => ({
-        default: m.EmeraldProfessionalLayout,
-      })),
+      import("@/components/cv/preview/layouts/EmeraldProfessional").then(
+        (m) => ({
+          default: m.EmeraldProfessionalLayout,
+        }),
+      ),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then((m) => ({
-        default: m.EmeraldProfessionalCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/EmeraldProfessionalCoverLetter").then(
+        (m) => ({
+          default: m.EmeraldProfessionalCoverLetter,
+        }),
+      ),
   },
   "freshman-entry": {
     resume: () =>
@@ -463,9 +507,11 @@ export const templateComponents: Record<
         default: m.FreshmanEntryLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then((m) => ({
-        default: m.FreshmanCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/FreshmanCoverLetter").then(
+        (m) => ({
+          default: m.FreshmanCoverLetter,
+        }),
+      ),
   },
   "lavender-executive": {
     resume: () =>
@@ -473,9 +519,11 @@ export const templateComponents: Record<
         default: m.LavenderExecutiveLayout,
       })),
     coverLetter: () =>
-      import("@/components/cv/preview/layouts/LavenderCoverLetter").then((m) => ({
-        default: m.LavenderCoverLetter,
-      })),
+      import("@/components/cv/preview/layouts/LavenderCoverLetter").then(
+        (m) => ({
+          default: m.LavenderCoverLetter,
+        }),
+      ),
   },
 };
 
