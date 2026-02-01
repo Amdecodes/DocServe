@@ -180,7 +180,7 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
                       onClick={() => setActiveSubCategory(subCat)}
                       className={cn(
                         "group bg-white p-4 rounded-2xl border border-gray-100 hover:border-teal-200 hover:shadow-lg transition-all text-left flex items-center justify-between overflow-hidden relative",
-                        firstProduct?.image_url ? "h-24 sm:h-28" : "h-auto"
+                        firstProduct?.image_url ? "h-24 sm:h-28" : "h-auto",
                       )}
                     >
                       <div className="flex items-center gap-4 z-10 w-full">
@@ -203,22 +203,22 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
                         <div className="min-w-0 flex-1">
                           <h3 className="font-bold text-gray-900 group-hover:text-teal-700 transition-colors truncate">
                             {/* User requested name instead of folder name if product exists */}
-                            {firstProduct && firstProduct.name 
-                              ? firstProduct.name 
+                            {firstProduct && firstProduct.name
+                              ? firstProduct.name
                               : subCat}
                           </h3>
-                           {/* If we showed product name, show subcat as label, else show count */}
+                          {/* If we showed product name, show subcat as label, else show count */}
                           <p className="text-xs text-gray-500 mt-1 truncate">
                             {firstProduct ? subCat : `${count} ${t("items")}`}
                           </p>
                         </div>
                       </div>
-                      
+
                       {/* Decorative Background for Image Cards */}
                       {firstProduct?.image_url && (
-                         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent z-0 pointer-events-none" />
+                        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent z-0 pointer-events-none" />
                       )}
-                      
+
                       <div className="relative z-10 shrink-0 pl-2">
                         <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-teal-500" />
                       </div>

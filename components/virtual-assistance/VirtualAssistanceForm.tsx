@@ -109,7 +109,12 @@ export function VirtualAssistanceForm({
         fieldsToValidate = ["full_name", "phone_number"];
         break;
       case 1: // Job Details
-        fieldsToValidate = ["job_category", "experience_level", "education_level", "location"];
+        fieldsToValidate = [
+          "job_category",
+          "experience_level",
+          "education_level",
+          "location",
+        ];
         break;
       case 2: // Confirmation
         fieldsToValidate = ["disclaimer_accepted"];
@@ -445,7 +450,8 @@ export function VirtualAssistanceForm({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-gray-700 ml-1">
-                        {t("educationLevel")} <span className="text-red-500">*</span>
+                        {t("educationLevel")}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-gray-400 pointer-events-none z-10" />
@@ -544,34 +550,34 @@ export function VirtualAssistanceForm({
                         <p className="text-sm text-gray-600 mb-3">
                           {t("uploadDescription")}
                         </p>
-                          <UploadButton
-                            endpoint="virtualAssistanceResume"
-                            onUploadBegin={() => setUploadError(null)}
-                            onClientUploadComplete={(res) => {
-                              if (res && res[0]) {
-                                const fileUrl = res[0].url;
-                                const fileName = res[0].name;
-                                setUploadedFile(fileUrl);
-                                setUploadedFileName(fileName);
-                                form.setValue("resume_url", fileUrl);
-                                setUploadError(null);
-                              }
-                            }}
-                            onUploadError={(error: Error) => {
-                              setUploadError(error.message || t("uploadError"));
-                              console.error(error);
-                            }}
-                            appearance={{
-                              button:
-                                "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium ut-ready:bg-teal-600 ut-uploading:bg-teal-500",
-                              allowedContent: "text-xs text-gray-500 mt-2",
-                            }}
-                          />
-                          {uploadError && (
-                            <p className="text-xs text-red-500 mt-2 animate-pulse font-medium bg-red-50 px-2 py-1 rounded">
-                              {uploadError}
-                            </p>
-                          )}
+                        <UploadButton
+                          endpoint="virtualAssistanceResume"
+                          onUploadBegin={() => setUploadError(null)}
+                          onClientUploadComplete={(res) => {
+                            if (res && res[0]) {
+                              const fileUrl = res[0].url;
+                              const fileName = res[0].name;
+                              setUploadedFile(fileUrl);
+                              setUploadedFileName(fileName);
+                              form.setValue("resume_url", fileUrl);
+                              setUploadError(null);
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            setUploadError(error.message || t("uploadError"));
+                            console.error(error);
+                          }}
+                          appearance={{
+                            button:
+                              "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium ut-ready:bg-teal-600 ut-uploading:bg-teal-500",
+                            allowedContent: "text-xs text-gray-500 mt-2",
+                          }}
+                        />
+                        {uploadError && (
+                          <p className="text-xs text-red-500 mt-2 animate-pulse font-medium bg-red-50 px-2 py-1 rounded">
+                            {uploadError}
+                          </p>
+                        )}
                       </div>
                     ) : (
                       <div className="flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-xl">
@@ -580,7 +586,9 @@ export function VirtualAssistanceForm({
                           <p className="text-sm font-medium text-teal-900 truncate">
                             {uploadedFileName || "Resume uploaded"}
                           </p>
-                          <p className="text-xs text-teal-600">Upload successful</p>
+                          <p className="text-xs text-teal-600">
+                            Upload successful
+                          </p>
                         </div>
                         <button
                           type="button"

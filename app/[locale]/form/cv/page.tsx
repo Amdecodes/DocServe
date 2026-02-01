@@ -7,8 +7,9 @@ import { CVProvider, useCV } from "@/components/cv/CVContext";
 import Header from "@/components/landing/Header";
 import dynamic from "next/dynamic";
 const CVPreview = dynamic(
-  () => import("@/components/cv/preview/CVPreview").then((mod) => mod.CVPreview),
-  { ssr: false }
+  () =>
+    import("@/components/cv/preview/CVPreview").then((mod) => mod.CVPreview),
+  { ssr: false },
 );
 import { TemplateSelector } from "@/components/cv/preview/TemplateSelector";
 import { Button } from "@/components/ui/button";
@@ -63,16 +64,18 @@ function CVWizardContent() {
   const t = useTranslations("ReviewStep");
   const navT = useTranslations("CVNavigation");
 
-  const stepsConfig = useMemo(() => [
-    { title: navT("steps.personal"), icon: User },
-    { title: navT("steps.education"), icon: GraduationCap },
-    { title: navT("steps.experience"), icon: Briefcase },
-    { title: navT("steps.skills"), icon: Sparkles },
-    { title: navT("steps.extras"), icon: Layers },
-    { title: navT("steps.coverLetter") || "Cover Letter", icon: FileText },
-    { title: navT("steps.review"), icon: CheckCircle },
-  ], [navT]);
-
+  const stepsConfig = useMemo(
+    () => [
+      { title: navT("steps.personal"), icon: User },
+      { title: navT("steps.education"), icon: GraduationCap },
+      { title: navT("steps.experience"), icon: Briefcase },
+      { title: navT("steps.skills"), icon: Sparkles },
+      { title: navT("steps.extras"), icon: Layers },
+      { title: navT("steps.coverLetter") || "Cover Letter", icon: FileText },
+      { title: navT("steps.review"), icon: CheckCircle },
+    ],
+    [navT],
+  );
 
   const nextStep = () => {
     if (currentStep < stepsConfig.length - 1) {
@@ -153,7 +156,6 @@ function CVWizardContent() {
         return null;
     }
   };
-
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden bg-gray-50/50">
@@ -256,55 +258,54 @@ function CVWizardContent() {
                         {stepsConfig[currentStep].title}
                       </h2>
                       {renderStep()}
-                      
+
                       {/* Mobile Only: Show Preview + Template Selector ONLY on the last step */}
                       <div className="lg:hidden mt-6 border-t border-slate-100 pt-8 bg-slate-50/50 -mx-6 md:-mx-8 px-6 md:px-8 pb-40">
                         {currentStep === stepsConfig.length - 1 && (
                           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                             
                             {/* Template Selector Card */}
                             <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 p-5 relative overflow-hidden">
-                               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-blue-500 opacity-50" />
-                               <div className="flex items-center justify-between mb-4">
-                                  <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-                                     <Sparkles className="w-4 h-4 text-teal-500" />
-                                     Select Template
-                                  </h3>
-                                  <span className="text-[10px] font-bold px-2 py-1 bg-teal-50 text-teal-700 rounded-md uppercase tracking-wide">
-                                    Premium
-                                  </span>
-                               </div>
-                               <TemplateSelector layout="horizontal" />
+                              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-blue-500 opacity-50" />
+                              <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                  <Sparkles className="w-4 h-4 text-teal-500" />
+                                  Select Template
+                                </h3>
+                                <span className="text-[10px] font-bold px-2 py-1 bg-teal-50 text-teal-700 rounded-md uppercase tracking-wide">
+                                  Premium
+                                </span>
+                              </div>
+                              <TemplateSelector layout="horizontal" />
                             </div>
 
                             {/* Live Preview Card */}
                             <div>
-                               <div className="flex items-center justify-center mb-4">
-                                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white px-2 py-1.5 pl-3 pr-4 rounded-full shadow-sm border border-slate-200">
-                                     <div className="relative flex h-2 w-2">
-                                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                                       <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
-                                     </div>
-                                     Live Preview
+                              <div className="flex items-center justify-center mb-4">
+                                <div className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white px-2 py-1.5 pl-3 pr-4 rounded-full shadow-sm border border-slate-200">
+                                  <div className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
                                   </div>
-                               </div>
+                                  Live Preview
+                                </div>
+                              </div>
 
-                               <div className="relative group">
-                                  {/* Glow effect */}
-                                  <div className="absolute -inset-1 bg-gradient-to-b from-teal-500/20 to-blue-500/20 rounded-[28px] blur-xl opacity-50" />
-                                  
-                                  <div className="relative bg-slate-100 rounded-[24px] p-2 ring-1 ring-white/50 shadow-xl">
-                                     <div className="bg-white rounded-[20px] overflow-hidden min-h-[500px] relative shadow-inner">
-                                        {/* Scaling Logic - Fits A4 width on mobile */}
-                                        <div className="origin-top scale-[0.55] sm:scale-[0.65] w-full h-full">
-                                           <CVPreview />
-                                        </div>
-                                        
-                                        {/* Gradient Overlay at bottom */}
-                                        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none" />
-                                     </div>
+                              <div className="relative group">
+                                {/* Glow effect */}
+                                <div className="absolute -inset-1 bg-gradient-to-b from-teal-500/20 to-blue-500/20 rounded-[28px] blur-xl opacity-50" />
+
+                                <div className="relative bg-slate-100 rounded-[24px] p-2 ring-1 ring-white/50 shadow-xl">
+                                  <div className="bg-white rounded-[20px] overflow-hidden min-h-[500px] relative shadow-inner">
+                                    {/* Scaling Logic - Fits A4 width on mobile */}
+                                    <div className="origin-top scale-[0.55] sm:scale-[0.65] w-full h-full">
+                                      <CVPreview />
+                                    </div>
+
+                                    {/* Gradient Overlay at bottom */}
+                                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none" />
                                   </div>
-                               </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -377,7 +378,7 @@ function CVWizardContent() {
               <div className="w-full flex justify-center section-mobile-preview origin-top transition-all duration-300 z-10 scale-[0.7] sm:scale-[0.8] md:scale-[0.85] lg:scale-[0.8] xl:scale-[0.85] 2xl:scale-95 mb-60 lg:mb-20">
                 {/* On mobile, only render preview if active to save CPU/Memory. 
                     Using 'activeTab' check to completely unmount it. */}
-                {typeof window !== 'undefined' && window.innerWidth < 1024 ? (
+                {typeof window !== "undefined" && window.innerWidth < 1024 ? (
                   activeTab === "preview" && <CVPreview />
                 ) : (
                   <CVPreview />
@@ -388,10 +389,10 @@ function CVWizardContent() {
 
           {/* 2. PC-Only Integrated Vertical Sidebar */}
           <div className="hidden lg:flex w-28 bg-white border-l border-gray-200 p-3 flex-col gap-4 sticky top-0 h-screen overflow-y-auto no-scrollbar shrink-0">
-             <div className="flex items-center justify-center opacity-40 mb-2 mt-4">
-                <div className="w-1 h-8 bg-gray-300 rounded-full" />
-             </div>
-             <TemplateSelector layout="vertical" />
+            <div className="flex items-center justify-center opacity-40 mb-2 mt-4">
+              <div className="w-1 h-8 bg-gray-300 rounded-full" />
+            </div>
+            <TemplateSelector layout="vertical" />
           </div>
 
           {/* 3. Mobile-Only Floating Bottom Dock - REMOVED (integrated into Review step) */}

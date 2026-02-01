@@ -42,7 +42,7 @@ export function Step1_Personal({ onNext }: Step1Props) {
 
   useEffect(() => {
     if (hasInitialized) return;
-    
+
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("paperless.personal");
       if (saved) {
@@ -76,7 +76,7 @@ export function Step1_Personal({ onNext }: Step1Props) {
         // Persist to LocalStorage
         localStorage.setItem("paperless.personal", JSON.stringify(value));
       }, 500); // 500ms debounce for typing
-      
+
       return () => clearTimeout(timeoutId);
     });
     return () => subscription.unsubscribe();
