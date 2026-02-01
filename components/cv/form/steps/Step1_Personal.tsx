@@ -37,8 +37,12 @@ export function Step1_Personal({ onNext }: Step1Props) {
     mode: "onChange",
   });
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount (Only once)
+  const [hasInitialized, setHasInitialized] = useState(false);
+
   useEffect(() => {
+    if (hasInitialized) return;
+    
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("paperless.personal");
       if (saved) {
@@ -52,8 +56,9 @@ export function Step1_Personal({ onNext }: Step1Props) {
           console.error("Failed to parse saved personal data", e);
         }
       }
+      setHasInitialized(true);
     }
-  }, [form, cvData.personalInfo]);
+  }, [form, cvData.personalInfo, hasInitialized]);
 
   // 2. Watch for changes to sync with Preview & LocalStorage
   const formValues = form.watch();
@@ -209,7 +214,10 @@ export function Step1_Personal({ onNext }: Step1Props) {
             </div>
             <div className="space-y-2 md:col-span-2">
               <label htmlFor="jobTitle" className="text-sm font-medium">
-                {t("jobTitle")}
+                {t("jobTitle")}{" "}
+                <span className="text-gray-400 font-normal text-xs">
+                  (Optional)
+                </span>
               </label>
               <Input
                 id="jobTitle"

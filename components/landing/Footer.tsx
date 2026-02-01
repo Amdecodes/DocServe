@@ -30,7 +30,7 @@ export default function Footer() {
           </div>
           <div className="flex gap-8">
             <a
-              href="https://t.me/Sende_x"
+              href="https://t.me/senedx"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-primary transition-colors transform hover:scale-110 duration-200"

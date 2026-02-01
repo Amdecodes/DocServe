@@ -41,11 +41,16 @@ export async function POST(req: Request) {
         ? `${firstName || ""} ${lastName || ""}`.trim()
         : undefined;
 
+    // Generate new tx_ref to avoid duplicates on retry
+    // We cannot just use order.id because failed Chapa transactions consume the tx_ref
+    // Format: "TX-{orderID}-{timestamp}"
+    const txRef = `TX-${order.id}-${Date.now()}`;
+
     await prisma.order.update({
       where: { id: orderId },
       data: {
         status: "PENDING",
-        // tx_ref is NOT updated, keeping it same as order.id
+        tx_ref: txRef,
         // Update customer details if provided
         customer_email: email,
         customer_phone: phone,
@@ -155,7 +160,7 @@ export async function POST(req: Request) {
     const payload: Record<string, unknown> = {
       amount: amount.toString(),
       currency: PRICE_CURRENCY,
-      tx_ref: order.tx_ref,
+      tx_ref: txRef,
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
       email: chapaEmail,
@@ -194,7 +199,7 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json(
-        { error: "Payment initialization failed" },
+        { error: data.message || "Payment initialization failed" },
         { status: 400 },
       );
     }

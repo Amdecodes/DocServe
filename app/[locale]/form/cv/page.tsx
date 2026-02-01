@@ -258,35 +258,54 @@ function CVWizardContent() {
                       {renderStep()}
                       
                       {/* Mobile Only: Show Preview + Template Selector ONLY on the last step */}
-                      <div className="lg:hidden mt-12 border-t pt-10 px-2">
+                      <div className="lg:hidden mt-6 border-t border-slate-100 pt-8 bg-slate-50/50 -mx-6 md:-mx-8 px-6 md:px-8 pb-40">
                         {currentStep === stepsConfig.length - 1 && (
-                          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            <div className="text-center">
-                               <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-2 px-4 py-1 bg-yellow-400 inline-block rotate-[-1deg] shadow-sm">
-                                  Your Resume Preview
-                               </h3>
-                               <p className="text-xs text-gray-500 mt-2 italic px-8">Check everything is correct before generating the final PDF.</p>
+                          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                             
+                            {/* Template Selector Card */}
+                            <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 p-5 relative overflow-hidden">
+                               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-blue-500 opacity-50" />
+                               <div className="flex items-center justify-between mb-4">
+                                  <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                     <Sparkles className="w-4 h-4 text-teal-500" />
+                                     Select Template
+                                  </h3>
+                                  <span className="text-[10px] font-bold px-2 py-1 bg-teal-50 text-teal-700 rounded-md uppercase tracking-wide">
+                                    Premium
+                                  </span>
+                               </div>
+                               <TemplateSelector layout="horizontal" />
                             </div>
 
-                            <div className="relative group">
-                               <div className="absolute -inset-2 bg-gradient-to-r from-teal-500/10 to-blue-500/10 rounded-[2rem] blur-xl opacity-50" />
-                               <div className="relative bg-white rounded-3xl p-2 border border-gray-100 shadow-2xl overflow-hidden min-h-[400px]">
-                                  <div className="scale-[0.55] sm:scale-[0.7] origin-top mb-[-300px] sm:mb-[-150px] transition-transform">
-                                     <CVPreview />
+                            {/* Live Preview Card */}
+                            <div>
+                               <div className="flex items-center justify-center mb-4">
+                                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white px-2 py-1.5 pl-3 pr-4 rounded-full shadow-sm border border-slate-200">
+                                     <div className="relative flex h-2 w-2">
+                                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                                       <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                                     </div>
+                                     Live Preview
+                                  </div>
+                               </div>
+
+                               <div className="relative group">
+                                  {/* Glow effect */}
+                                  <div className="absolute -inset-1 bg-gradient-to-b from-teal-500/20 to-blue-500/20 rounded-[28px] blur-xl opacity-50" />
+                                  
+                                  <div className="relative bg-slate-100 rounded-[24px] p-2 ring-1 ring-white/50 shadow-xl">
+                                     <div className="bg-white rounded-[20px] overflow-hidden min-h-[500px] relative shadow-inner">
+                                        {/* Scaling Logic - Fits A4 width on mobile */}
+                                        <div className="origin-top scale-[0.55] sm:scale-[0.65] w-full h-full">
+                                           <CVPreview />
+                                        </div>
+                                        
+                                        {/* Gradient Overlay at bottom */}
+                                        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none" />
+                                     </div>
                                   </div>
                                </div>
                             </div>
-
-                            <div className="bg-white rounded-[2rem] shadow-xl p-6 border border-gray-100 relative overflow-hidden">
-                               <div className="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-full blur-3xl -mr-12 -mt-12" />
-                               <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                  <span className="w-1.5 h-4 bg-teal-500 rounded-full" />
-                                  Choose Template
-                               </h3>
-                               <TemplateSelector layout="horizontal" />
-                            </div>
-                            
-                            <div className="py-20" /> {/* Extra spacing for final scroll */}
                           </div>
                         )}
                       </div>

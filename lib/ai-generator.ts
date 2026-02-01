@@ -40,7 +40,6 @@ const LIMITS = {
 } as const;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = process.env.GEMINI_API_URL;
 
 // ============================================================================
 // SYSTEM PROMPTS (Language-aware)

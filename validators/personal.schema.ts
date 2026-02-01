@@ -7,7 +7,7 @@ export const personalSchema = z.object({
   phone: z.string().optional().or(z.literal("")),
   city: z.string().min(2, "City is required"),
   country: z.string().min(2, "Country is required"),
-  jobTitle: z.string().min(2, "Job title is required"),
+  jobTitle: z.string().optional().or(z.literal("")),
   headline: z.string().optional(),
   linkedin: z.string().optional(),
   website: z.string().optional(),

@@ -50,7 +50,7 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
         {/* Photo Section */}
         <div className="px-8 mb-12 flex justify-center">
           {personalInfo.photo ? (
-            <div className="w-48 h-48 rounded-full border-4 border-white overflow-hidden shadow-sm">
+            <div className="w-48 h-48 rounded-full border-4 border-white overflow-hidden shadow-sm relative">
               <Image
                 src={personalInfo.photo}
                 alt={personalInfo.firstName}

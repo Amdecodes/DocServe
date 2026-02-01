@@ -192,7 +192,7 @@ export function VirtualAssistanceForm({
             className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-8 py-6 h-auto text-lg flex-1 shadow-lg shadow-blue-100"
           >
             <a
-              href="https://t.me/elutesh123"
+              href="https://t.me/senedx"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2"
