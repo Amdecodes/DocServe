@@ -2,9 +2,9 @@ import { AGREEMENT_TEMPLATES } from "./agreements";
 
 export const SERVICE_PRICES = {
   // Service ID corresponds to service_type in Order model
-  cv_writing: 150,
+  cv_writing: 100,
   // Fallback for unknown services
-  default: 150,
+  default: 100,
 };
 
 export const PRICE_CURRENCY = "ETB";

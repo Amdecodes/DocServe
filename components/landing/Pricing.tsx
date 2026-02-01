@@ -73,7 +73,7 @@ export default function Pricing() {
 
                 <div className="flex items-baseline mb-8">
                   <span className="text-5xl font-extrabold text-gray-900">
-                    150
+                    100
                   </span>
                   <span className="text-xl text-gray-500 ml-2">ETB</span>
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PrintProduct } from "@/types/print";
 import { ProductCard } from "@/components/print/ProductCard";
 import {
@@ -41,6 +41,17 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
   const [activeSubCategory, setActiveSubCategory] = useState<string | null>(
     null,
   );
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to content when category/subcategory changes (Mobile UX)
+  useEffect(() => {
+    if (contentRef.current && window.innerWidth < 1024) {
+      // Small timeout to allow render to complete
+      setTimeout(() => {
+        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [activeCategory, activeSubCategory]);
 
   // Reset subcategory when main category changes
   useEffect(() => {
@@ -131,6 +142,7 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
       </div>
 
       {/* Subcategory Folders OR Products Grid */}
+      <div ref={contentRef} className="scroll-mt-24">
       <AnimatePresence mode="wait">
         {!activeSubCategory ? (
           /* Level 2: Subcategory Folders */
@@ -232,6 +244,7 @@ export function PrintCatalog({ products }: PrintCatalogProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
