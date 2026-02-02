@@ -118,15 +118,19 @@ export async function POST(req: Request) {
     }
 
     // 2. Phone Validation & Fallback
-    // Ensure phone number never causes failure.
+    // Ensure phone number NEVER causes payment failure.
     const rawPhone = phone || (personal as { phone?: string }).phone;
     // Sanitize: Remove all non-numeric characters
     let chapaPhone = String(rawPhone || "").replace(/[^0-9]/g, "");
 
-    // Valid Ethiopian/International phone is usually > 8 digits.
-    // If invalid/missing, use a hardcoded fallback to ensure Chapa initializes.
-    if (!chapaPhone || chapaPhone.length < 9) {
-      console.warn(`[Chapa] Invalid phone "${rawPhone}", using fallback.`);
+    // Ethiopian phone validation (must be 10 digits starting with 0, or 9 digits starting with 9)
+    const isValidEthiopianPhone = 
+      (chapaPhone.length === 10 && chapaPhone.startsWith("0")) ||
+      (chapaPhone.length === 9 && !chapaPhone.startsWith("0"));
+
+    // If invalid/missing, ALWAYS use fallback to ensure Chapa never rejects payment
+    if (!chapaPhone || !isValidEthiopianPhone) {
+      console.warn(`[Chapa] Invalid phone "${rawPhone}" (sanitized: "${chapaPhone}"), using fallback.`);
       chapaPhone = "0900336928";
     }
 
