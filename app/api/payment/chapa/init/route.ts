@@ -124,13 +124,15 @@ export async function POST(req: Request) {
     let chapaPhone = String(rawPhone || "").replace(/[^0-9]/g, "");
 
     // Ethiopian phone validation (must be 10 digits starting with 0, or 9 digits starting with 9)
-    const isValidEthiopianPhone = 
+    const isValidEthiopianPhone =
       (chapaPhone.length === 10 && chapaPhone.startsWith("0")) ||
       (chapaPhone.length === 9 && !chapaPhone.startsWith("0"));
 
     // If invalid/missing, ALWAYS use fallback to ensure Chapa never rejects payment
     if (!chapaPhone || !isValidEthiopianPhone) {
-      console.warn(`[Chapa] Invalid phone "${rawPhone}" (sanitized: "${chapaPhone}"), using fallback.`);
+      console.warn(
+        `[Chapa] Invalid phone "${rawPhone}" (sanitized: "${chapaPhone}"), using fallback.`,
+      );
       chapaPhone = "0900336928";
     }
 
