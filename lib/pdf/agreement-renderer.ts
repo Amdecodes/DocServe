@@ -166,6 +166,7 @@ const HTML_SHELL = (content: string, title: string) => `
       font-weight: 700;
       margin-bottom: 15px;
       font-size: 11pt;
+      text-align: left;
     }
 
     .witness-list {
@@ -203,6 +204,22 @@ const HTML_SHELL = (content: string, title: string) => `
       border-bottom: 1px solid #000;
       min-height: 20px;
       padding: 0 5px;
+    }
+
+    /* SCREEN-ONLY: Preview adjustments that don't affect PDF */
+    @media screen {
+      .witness-list-item {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .witness-list-item .name-field,
+      .witness-list-item .address-field {
+        display: inline;
+        border-bottom: none;
+        min-height: auto;
+        padding: 0;
+      }
     }
 
     /* THE SKELETON: 3-column signature table */
