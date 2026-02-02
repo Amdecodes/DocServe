@@ -238,7 +238,7 @@ Now write the professional summary for the ${jobTitle}:`;
 
 /**
  * Cover Letter Body Prompt (Main Value)
- * Output: 3 paragraphs, no greetings/signatures
+ * Output: 4 paragraphs, premium quality, no greetings/signatures
  */
 function buildCoverLetterPrompt(
   jobTitle: string,
@@ -249,47 +249,69 @@ function buildCoverLetterPrompt(
 ): string {
   const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
+  
+  // Get role-specific guidance for cover letter
+  const roleGuidance = getRoleSpecificGuidance(jobTitle);
 
-  return `Write a PREMIUM, compelling cover letter body for a ${expLevelText} ${jobTitle} in ${industry}.
+  return `You are writing a PREMIUM cover letter for a PAYING customer. This must be exceptional quality that justifies their investment.
 
-Writing Style: ${toneInstruction}
-Candidate Context: "${userNotes ? userNotes : `Experienced ${jobTitle} seeking to leverage comprehensive expertise in ${industry}`}"
+CANDIDATE PROFILE:
+- Position: ${expLevelText} ${jobTitle}
+- Industry: ${industry}
+- Writing Tone: ${toneInstruction}
+- Background: "${userNotes ? userNotes : `Dedicated ${jobTitle} professional with solid experience in ${industry}`}"
 
-PREMIUM QUALITY REQUIREMENTS:
+${roleGuidance}
 
-**Paragraph 1 - Powerful Opening (4-5 sentences):**
-- Open with a compelling hook that demonstrates passion for the field
-- State your experience level and core expertise areas
-- Reference what draws you to opportunities in this industry
-- Establish credibility through professional positioning
+COVER LETTER STRUCTURE (Write ALL 4 paragraphs):
 
-**Paragraph 2 - Value Proposition (5-7 sentences):**
-- Detail 3-4 core competencies with specific context
-- Describe your approach to challenges in this role
-- Highlight what sets you apart from other ${jobTitle} professionals
-- Include industry-relevant terminology and methodologies
-- Demonstrate understanding of what success looks like in this role
+**PARAGRAPH 1 - COMPELLING INTRODUCTION (5-6 sentences, ~80 words)**
+Write a powerful opening that immediately captures attention. Start with your passion for this profession and why you excel at it. Mention your experience level and what drives you. Show that you understand the demands and rewards of being a ${jobTitle}. End with a statement about the value you bring to any organization.
 
-**Paragraph 3 - Achievements & Impact (4-5 sentences):**
-- Share patterns of success and recognition (without inventing specific facts)
-- Describe your professional philosophy and work ethic
-- Mention collaborative abilities and stakeholder management
-- Reference continuous improvement mindset
+**PARAGRAPH 2 - CORE EXPERTISE & SKILLS (6-8 sentences, ~120 words)**
+This is the meat of your letter. Detail your specific competencies as a ${jobTitle}:
+- What are your 4-5 strongest professional skills?
+- How do you approach your daily responsibilities?
+- What methodologies or best practices do you follow?
+- What makes your approach to ${jobTitle} work exceptional?
+Use industry terminology. Be specific about what you DO, not just what you ARE.
 
-**Paragraph 4 - Strong Close (3-4 sentences):**
-- Express genuine enthusiasm for the opportunity
-- State your readiness to contribute immediately
-- Professional call-to-action for next steps
-- End with confidence, not desperation
+**PARAGRAPH 3 - PROFESSIONAL CHARACTER & ACHIEVEMENTS (5-6 sentences, ~100 words)**
+Describe your work ethic and professional reputation:
+- How do colleagues and supervisors describe you?
+- What consistent feedback do you receive?
+- Describe a pattern of success (e.g., "consistently recognized for...", "known for maintaining...")
+- Mention your approach to challenges and problem-solving
+- Reference your commitment to continuous improvement
 
-RULES:
-- NO greeting lines ("Dear...") or signature blocks
-- Write 300-400 words total - this is a PAID premium service
-- Sound like a professional who commands respect
-- ATS-friendly keywords naturally woven throughout
-- Avoid clichés like "team player" or "hard worker" - be specific
+**PARAGRAPH 4 - STRONG CLOSING (4-5 sentences, ~60 words)**
+End with confidence and enthusiasm:
+- Express genuine interest in contributing your skills
+- State your readiness to bring immediate value
+- Mention your flexibility and commitment
+- Include a professional call-to-action
+- Close with confidence, not desperation
 
-Write the cover letter body now:`;
+CRITICAL RULES:
+1. FIRST PERSON throughout ("I am...", "My experience...", "I have...")
+2. NO greeting ("Dear Hiring Manager") or signature ("Sincerely, Name")
+3. Total length: 350-450 words - PAID customers expect substantial content
+4. NO generic phrases like "team player", "hard worker", "go-getter"
+5. NO invented facts, company names, or specific percentages
+6. Include industry keywords naturally for ATS optimization
+7. Sound like a confident professional, not desperate for a job
+8. Each paragraph should flow naturally into the next
+
+EXAMPLE QUALITY LEVEL (for a Marketing Manager - DO NOT COPY, just match this caliber):
+"My passion for strategic marketing began over a decade ago, and every campaign since has reinforced my dedication to creating meaningful brand connections that drive measurable business results. As a marketing professional, I thrive on the challenge of translating complex business objectives into compelling narratives that resonate with target audiences. The constantly evolving digital landscape energizes me—each algorithm change, each new platform, each shift in consumer behavior presents an opportunity to innovate and outperform. I bring this enthusiasm, combined with proven expertise in multi-channel campaign orchestration, to every role I undertake.
+
+My core competencies span the full spectrum of modern marketing operations. I excel at developing data-driven strategies that align marketing initiatives with overarching business goals, leveraging analytics to optimize performance in real-time. My approach to content marketing emphasizes authentic storytelling supported by rigorous A/B testing and audience segmentation. I am particularly skilled at managing cross-functional teams, coordinating between creative, analytics, and sales departments to ensure cohesive campaign execution. Additionally, my proficiency with marketing automation platforms and CRM systems enables me to streamline workflows while maintaining personalized customer experiences at scale.
+
+Throughout my career, I have consistently been recognized for exceeding performance targets and delivering campaigns that surpass industry benchmarks. Colleagues describe me as someone who combines creative vision with analytical rigor—a professional who can both conceptualize innovative ideas and execute them with precision. I approach challenges with a solution-oriented mindset, viewing obstacles as opportunities for creative problem-solving. My commitment to staying current with industry trends and emerging technologies has allowed me to introduce forward-thinking strategies that keep organizations ahead of competitors.
+
+I am genuinely excited about the opportunity to bring my strategic marketing expertise to a new challenge. My combination of creative thinking, analytical capability, and proven execution makes me confident I can deliver immediate value. I am flexible, dedicated, and ready to contribute from day one. I welcome the opportunity to discuss how my background aligns with your organization's marketing objectives."
+
+Now write the cover letter body for the ${jobTitle}:`;
 }
 
 /**
