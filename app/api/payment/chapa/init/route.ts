@@ -43,8 +43,9 @@ export async function POST(req: Request) {
 
     // Generate new tx_ref to avoid duplicates on retry
     // We cannot just use order.id because failed Chapa transactions consume the tx_ref
-    // Format: "TX-{orderID}-{timestamp}"
-    const txRef = `TX-${order.id}-${Date.now()}`;
+    // Format: "TX-{shortID}-{timestamp}" (Must be < 50 chars)
+    // UUID (36) + 3 + 13 = 52 (Too long). We take last 12 chars of UUID.
+    const txRef = `TX-${order.id.slice(-12)}-${Date.now()}`;
 
     await prisma.order.update({
       where: { id: orderId },
