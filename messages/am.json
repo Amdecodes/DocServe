@@ -11,8 +11,9 @@
     "amharicDesc": "ሙያዊ CV በአማርኛ"
   },
   "Header": {
-    "logo": "DocuServe",
+    "logo": "SENEDX",
     "services": "አገልግሎቶች",
+    "about": "ስለ እኛ",
     "howItWorks": "እንዴት እንደሚሰራ",
     "pricing": "ዋጋዎች",
     "contact": "ያግኙን",
@@ -25,8 +26,8 @@
   "Hero": {
     "title": "ፕሮፌሽናል ዶክመንቶችን በመስመር ላይ በፍጥነት እና በቀላሉ ያዘጋጁ።",
     "subtitle": "CV፣ ውሎች እና ሌሎች ሰነዶች ቅጹን ይሙሉ፣ ይክፈሉ፣ እና ወዲያውኑ ያውርዱ ወይም ቢሮአችን ውስጥ ያትሙ።",
-    "ctaPrimary": "አሁን ይጀምሩ",
-    "ctaSecondary": "አገልግሎቶችን ይመልከቱ",
+    "ctaPrimary": "CV ይፍጠሩ",
+    "ctaSecondary": "ለስራ ያመልክቱ",
     "imageAlt": "የዶክመንት ምሳሌ"
   },
   "HowItWorks": {
@@ -57,13 +58,26 @@
       "academic": "ትምህርታዊ ሰነዶች",
       "action": "ጥያቄ ያቅርቡ"
     },
-    "promotional": {
-      "title": "ብራንዲንግ እና ፕሮሞሽናል",
-      "banners": "ባነሮች",
-      "tshirts": "ቲ-ሸርቶች",
-      "mugs": "ማጎች",
-      "stickers": "ስቲከሮች",
-      "action": "ዋጋ ይጠይቁ"
+    "virtualAssistance": {
+      "title": "ቨርቹዋል አሲስታንስ (የስራ ማመልከቻ)",
+      "jobApplications": "የስራ ማመልከቻዎች",
+      "emails": "ኢሜይል አስተዳደር",
+      "admin": "አስተዳደራዊ ድጋፍ",
+      "action": "አገልግሎት ይጠይቁ"
+    },
+    "agreements": {
+      "title": "የውል አገልግሎቶች",
+      "car": "የመኪና ሽያጭ ውሎች",
+      "house": "የቤት ኪራይ ውሎች",
+      "business": "የቢዝነስ ውሎች",
+      "action": "ውል ይፃፉ"
+    },
+    "webDev": {
+      "title": "የዌብሳይት ልማት",
+      "portfolio": "ፖርትፎሊዮ እና የግል",
+      "saas": "የሶፍትዌር አገልግሎት (SaaS)",
+      "ecommerce": "የገበያ ድረ-ገጾች",
+      "action": "አይነት ይምረጡ"
     }
   },
   "WhyChooseUs": {
@@ -105,20 +119,52 @@
     "pricing": "ዋጋዎች",
     "contact": "ያግኙን",
     "addressLine1": "አዲስ አበባ፣ ኢትዮጵያ",
-    "addressLine2": "ፈረንሳይ፣ ጉራራ",
+    "addressLine2": "",
     "terms": "ደንቦች እና ሁኔታዎች",
     "privacyPolicy": "ፕራይቬሲ ፖሊሲ",
     "rightsReserved": "መብቱ በህግ የተጠበቀ ነው።"
+  },
+  "AboutPage": {
+    "title": "ስለ ሰነድክስ",
+    "metaTitle": "ስለ ሰነድክስ - ፕሪሚየም የሰነድ አገልግሎቶች",
+    "metaDescription": "ስለ ሰነድክስ ይወቁ። ለCV፣ ለህጋዊ ውሎች እና ለህትመት አገልግሎቶች ታማኝ አጋርዎ።",
+    "subtitle": "ፕሪሚየም የሰነድ አገልግሎቶች በኢትዮጵያ",
+    "description": "ለስኬትዎ የሚረዱ የሙያዊ ሰነድ ዝግጅት፣ የህትመት እና የቨርቹዋል አሲስታንስ አገልግሎቶችን እንሰጣለን።",
+    "missionTitle": "ተልዕኳችን",
+    "missionDescription": "የሰነድ ዝግጅት እና ሙያዊ አገልግሎቶችን ለሁሉም ኢትዮጵያውያን ማቅለል እና በዲጂታል እና አካላዊ ፍላጎቶች መካከል ያለውን ክፍተት መሙላት ነው።",
+    "premiumTitle": "የላቀ አገልግሎት",
+    "premiumDescription": "እያንዳንዱ ሰነድ የራሱ ታሪክ እንዳለው እናምናለን። ህልምዎን እውን የሚያደርግ CV ይሁን ወይም አስተማማኝ የውል ሰነድ፣ በጥራት እናዘጋጃለን።",
+    "whyUsTitle": "ለምን ሰነድክስን ይምረጡ",
+    "value1Title": "ያልተወዳደረ ጥራት",
+    "value2Title": "ፍጥነት እና ብቃት",
+    "value3Title": "የቅርብ ድጋፍ",
+    "qualityTitle": "ያልተወዳደረ ጥራት",
+    "qualityDesc": "በባለሙያ የተዘጋጁ ቴምፕሌቶች እና ከፍተኛ ጥራት ያላቸው የህትመት ግብዓቶች።",
+    "speedTitle": "ፍጥነት እና ብቃት",
+    "speedDesc": "ሰነዶችዎን ወዲያውኑ ያግኙ ወይንም በደቂቃዎች ውስጥ አትመን እናስረክቦታለን።",
+    "supportTitle": "የቅርብ ድጋፍ",
+    "supportDesc": "ቡድናችን በእያንዳንዱ ደረጃ እርስዎን ለማገዝ ዝግጁ ነው።",
+    "ctaTitle": "ለመጀመር ዝግጁ ነዎት?",
+    "ctaButton": "አገልግሎቶችን ይመልከቱ"
   },
   "ServicesPage": {
     "title": "አገልግሎት ይምረጡ",
     "description": "ፍላጎትዎን የሚያሟላውን አገልግሎት ይምረጡ። ፕሮፌሽናል ዶክመንቶችን እንዲያዘጋጁ እንረዳዎታለን።",
     "resumeTitle": "CV ማዘጋጃ",
     "resumeDescription": "በደቂቃዎች ውስጥ ፕሮፌሽናል እና ደረጃውን የጠበቀ CV ያዘጋጁ።",
-    "resumePrice": "ከ 199 ብር ይጀምራል",
-    "vaTitle": "ቨርቹዋል አሲስታንስ",
+    "resumePrice": "ከ 100 ብር ይጀምራል",
+    "vaTitle": "ቨርቹዋል አሲስታንስ (የስራ ማመልከቻ)",
     "vaDescription": "ለርቀት ስራዎችዎ እና ለአስተዳደራዊ ፍላጎቶችዎ የባለሙያ ድጋፍ ያግኙ።",
     "vaPrice": "ዋጋ ይጠይቁ",
+    "printTitle": "ህትመት እና ልዩ ትዕዛዞች",
+    "printDescription": "ሜኑዎች፣ ፖስተሮች፣ ቢዝነስ ካርዶች እና ሌሎች የህትመት ስራዎች እዘዙ።",
+    "printPrice": "በስምምነት",
+    "agreementTitle": "የውል አገልግሎቶች",
+    "agreementDescription": "ለመኪና ሽያጭ፣ የቤት ኪራይ እና የቢዝነስ ውሎች ህጋዊ የሆኑ ውሎች።",
+    "agreementPrice": "ከ 150 ብር ይጀምራል",
+    "webDevTitle": "የዌብሳይት ልማት",
+    "webDevDescription": "ለቢዝነስዎ የሚሆኑ ዘመናዊ ድረ-ገጾች፣ SaaS ፕላትፎርሞች እና የዲጂታል መፍትሄዎች።",
+    "webDevPrice": "ዋጋ ይጠይቁ",
     "comingSoon": "ተጨማሪ አገልግሎቶች በቅርብ ቀን"
   },
   "ServiceCard": {
@@ -126,6 +172,7 @@
     "startNow": "ጀምር"
   },
   "Templates": {
+    "title": "የቴምፕሌት ምርጫ",
     "modern": {
       "name": "ዘመናዊ ፕሮፌሽናል",
       "description": "ለኮርፖሬት ሚናዎች ፍጹም የሆነ ንፁህ ፣ የተደራጀ አቀማመጥ።"
@@ -137,6 +184,50 @@
     "classic": {
       "name": "ጊዜ የማይሽረው ክላሲክ",
       "description": "በጭራሽ ጊዜ የማይሽረው ባህላዊ አቀማመጥ።"
+    },
+    "golden": {
+      "name": "Golden Executive",
+      "description": "Premium dark blue and gold design for executives."
+    },
+    "elegant": {
+      "name": "Elegant Sidebar",
+      "description": "Clean sidebar layout with serif typography."
+    },
+    "modern-dark": {
+      "name": "Modern Dark",
+      "description": "Bold black design with gold accents for creative professionals."
+    },
+    "modern-sidebar": {
+      "name": "Modern Sidebar",
+      "description": "Timeline-based design with gray sidebar and ribbon headers."
+    },
+    "corporate-focus": {
+      "name": "Corporate Focus",
+      "description": "Professional layout with deep blue styling."
+    },
+    "minimalist-teal": {
+      "name": "Minimalist Teal",
+      "description": "Clean design with fresh teal accents."
+    },
+    "creative-split": {
+      "name": "Creative Split",
+      "description": "Bold indigo layout with unique split header."
+    },
+    "executive-maroon": {
+      "name": "Executive Maroon",
+      "description": "Distinguished deep burgundy design."
+    },
+    "emerald-professional": {
+      "name": "Emerald Professional",
+      "description": "Fresh and airy design with green accents."
+    },
+    "freshman-entry": {
+      "name": "የጀማሪ ሲቪ (Freshman)",
+      "description": "ለተማሪዎች እና ለጀማሪዎች ተስማሚ የሆነ፣ ከስራ ልምድ ይልቅ ችሎታን እና ትምህርትን የሚያጎላ ዲዛይን።"
+    },
+    "lavender-executive": {
+      "name": "ላቬንደር ኤክስኪዩቲቭ",
+      "description": "ዘመናዊ እና ግልጽ የሆነ፣ ደማቅ የቫዮሌት ቀለሞች ያሉት ፕሮፌሽናል ዲዛይን።"
     },
     "useThisTemplate": "ይህንን ቅጽ ተጠቀም",
     "previewNotAvailable": "ቅድመ እይታ አይገኝም"
@@ -236,6 +327,7 @@
     "phone": "ስልክ ቁጥር",
     "city": "ከተማ",
     "country": "ሀገር",
+    "dateOfBirth": "የልደት ቀን (አማራጭ)",
     "summaryTitle": "ስለ እርስዎ",
     "summaryDescription": "ስለ እርስዎ ልምድ እና ብቃት የሚገልጽ ከ2-4 ዓረፍተ ነገር ይጻፉ።",
     "placeholders": {
@@ -243,9 +335,10 @@
       "lastName": "ምሳሌ: ከበደ",
       "jobTitle": "ምሳሌ: ሶፍትዌር ኢንጂነር",
       "email": "abebe@example.com",
-      "phone": "+251 911 234 567",
+      "phone": "+251 911 223 344",
       "city": "አዲስ አበባ",
       "country": "ኢትዮጵያ",
+      "dateOfBirth": "ምሳሌ: 1990-01-01",
       "summary": "ምሳሌ: በሶፍትዌር ምህንድስና የ5 ዓመት ልምድ ያለኝ..."
     }
   },
@@ -337,6 +430,40 @@
     "letterBody": "የደብዳቤው አካል",
     "letterPlaceholder": "የተከበሩ የስራ ሃላፊ፣\n\nበድርጅታችሁ ለወጣው የስራ ማስታወቂያ ለማመልከት ነው..."
   },
+  "WebDevelopment": {
+    "title": "ፕሪሚየም የዌብሳይት ልማት",
+    "description": "ለእርስዎ ብራንድ የሚመጥኑ፣ ከፍተኛ ጥራት ያላቸው እና ማራኪ ድረ-ገጾችን እንገነባለን።",
+    "steps": {
+      "type": "የፕሮጀክት አይነት",
+      "typeDesc": "የሚፈልጉትን የፕሮጀክት አይነት ይምረጡ",
+      "details": "የፕሮጀክት ዝርዝር",
+      "detailsDesc": "ስለራስዎ እና ስለ ፕሮጀክቱ የበለጠ ይንገሩን",
+      "contact": "የመገኛ መረጃ"
+    },
+    "types": {
+      "PORTFOLIO": "ፖርትፎሊዮ",
+      "LANDING_PAGE": "ላንዲንግ ፔጅ",
+      "E_COMMERCE": "የገበያ ድረ-ገጽ",
+      "SAAS": "የሶፍትዌር አገልግሎት (SaaS)",
+      "CORPORATE": "የድርጅት ድረ-ገጽ",
+      "BLOG": "ብሎግ / ዜና",
+      "OTHER": "ሌላ ልዩ ፍላጎት"
+    },
+    "form": {
+      "fullName": "ሙሉ ስም",
+      "email": "ኢሜይል አድራሻ",
+      "phone": "ስልክ ቁጥር",
+      "budget": "የታሰበ በጀት (አማራጭ)",
+      "description": "የፕሮጀክት መግለጫ",
+      "descriptionPlaceholder": "ስለ ራዕይዎ፣ ስለሚፈለጉት ነገሮች እና ስለ ጊዜው ይግለጹልን...",
+      "submit": "ጥያቄውን ላክ",
+      "submitting": "በመላክ ላይ...",
+      "startNew": "አዲስ ጥያቄ ጀምር",
+      "back": "ተመለስ",
+      "successTitle": "ጥያቄው ደርሷል!",
+      "successMessage": "የፕሮጀክትዎን ዝርዝር ተቀብለናል። ቡድናችን መረጃውን መርምሮ በቅርቡ ያነጋግርዎታል።"
+    }
+  },
   "VirtualAssistance": {
     "pageTitle": "ቨርቿል እርዳታ ይጠይቁ",
     "pageDescription": "ለስራ ፍለጋ ቨርቿል እርዳታ ጥያቄ ያቅርቡ",
@@ -368,6 +495,7 @@
     "errorMessage": "ጥያቄዎን ሲያስገቡ ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ።",
     "back": "ተመለስ",
     "next": "ቀጥል",
+    "telegramJoin": "በቴሌግራም ያግኙን",
     "steps": {
       "contact": "መረጃ",
       "job": "ስራ",
@@ -382,6 +510,22 @@
       "senior": "ከፍተኛ ደረጃ",
       "executive": "አስፈፃሚ ደረጃ"
     },
+    "educationLevel": "የትምህርት ደረጃ",
+    "selectEducationLevel": "የትምህርት ደረጃዎን ይምረጡ",
+    "educationLevels": {
+      "high_school_certificate": "የሁለተኛ ደረጃ ትምህርት ማጠናቀቂያ ሰርተፊኬት (12ኛ ክፍል)",
+      "tvet_level_1": "TVET ደረጃ 1",
+      "tvet_level_2": "TVET ደረጃ 2",
+      "tvet_level_3": "TVET ደረጃ 3",
+      "tvet_level_4": "TVET ደረጃ 4",
+      "tvet_level_5_diploma": "TVET ደረጃ 5 (ዲፕሎማ)",
+      "bachelors_degree": "የመጀመሪያ ዲግሪ (Bachelor's Degree)",
+      "masters_degree": "የሁለተኛ ዲግሪ (Master's Degree)",
+      "doctorate_phd": "የዶክትሬት ዲግሪ (PhD)"
+    },
+    "resumeUpload": "CV/Resume መ ስቀል",
+    "uploadDescription": "የእርስዎን CV ያስቀምጡ (PDF, DOC, DOCX - ከ4MB በታች)",
+    "uploadError": "ፋይሉን ማስቀመጥ አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
     "jobs": {
       "technology_it": "ቴክኖሎጂ እና IT",
       "business_finance": "ቢዝነስ እና ፋይናንስ",
@@ -393,6 +537,118 @@
       "skilled_trades": "ቴክኒካል ሙያዎች",
       "hospitality_service": "ሆስፒታሊቲ እና አገልግሎት",
       "other": "ሌላ"
+    }
+  },
+  "PrintOrders": {
+    "pageTitle": "ህትመት እና ልዩ ትዕዛዞች",
+    "subtitle": "ሜኑዎች፣ የሰርግ ካርዶች፣ ፍላየሮች፣ ማጎች፣ ቲ-ሸርቶች እና ሌሎችም።",
+    "orderNow": "እዘዝ",
+    "basePrice": "ዋጋ",
+    "form": {
+      "title": "የትዕዛዝ ጥያቄ",
+      "fullName": "ሙሉ ስም",
+      "phone": "ስልክ ቁጥር",
+      "location": "አድራሻ (ከተማ / አካባቢ)",
+      "quantity": "ብዛት",
+      "email": "ኢሜይል (አማራጭ)",
+      "notes": "ተጨማሪ ማስታወሻ / መመሪያ",
+      "notesPlaceholder": "ስለ ዲዛይን ፍላጎትዎ፣ መጠን፣ ወይም ልዩ መስፈርቶች ይግለጹ...",
+      "disclaimer": "ይህ ጥያቄ ብቻ ነው። የመጨረሻ ዋጋ፣ የዲዛይን ማረጋገጫ እና ክፍያ ከመስመር ውጭ ይከናወናሉ።",
+      "agreeCheckbox": "ተረድቻለሁ እና እስማማለሁ",
+      "submitButton": "ትዕዛዙን ላክ",
+      "submitting": "በመላክ ላይ...",
+      "productDetails": "የምርት ዝርዝሮች",
+      "selectOption": "እባክዎ ይምረጡ",
+      "dynamic": {
+        "brideName": "የሙሽሪት ስም",
+        "groomName": "የሙሽራ ስም",
+        "eventDate": "ቀን",
+        "eventTime": "ሰዓት",
+        "eventPlace": "ቦታ",
+        "birthdayPerson": "የልደት ባለቤት ስም",
+        "location": "ቦታ",
+        "deceasedName": "የሟች ስም",
+        "purpose": "የካርዱ ዓላማ",
+        "fullName": "ሙሉ ስም",
+        "jobTitle": "የስራ መደብ",
+        "phone": "ስልክ ቁጥር",
+        "email": "ኢሜይል",
+        "address": "አድራሻ",
+        "website": "ድህረ ገጽ",
+        "size": "መጠን",
+        "paperType": "የወረቀት አይነት",
+        "quantity": "ብዛት",
+        "lamination": "ላሚኔሽን",
+        "width": "ስፋት",
+        "height": "ቁመት",
+        "eyelets": "Eyelets (ቀዳዳ)",
+        "foldType": "የታጠፈ አይነት",
+        "mugType": "የኩባያ አይነት",
+        "color": "ቀለም",
+        "gender": "ፆታ",
+        "style": "ስታይል",
+        "shape": "ቅርጽ",
+        "cover": "ሽፋን"
+      }
+    },
+    "success": {
+      "title": "ትዕዛዞ ደርሷል",
+      "message": "እናመሰግናለን። ለዝርዝሮች ቡድናችን በቅርቡ ያገኘዎታል።",
+      "backButton": "ወደ አገልግሎቶች ተመለስ"
+    },
+    "errors": {
+      "generic": "ችግር አጋጥሟል። እባክዎ እንደገና ይሞክሩ።"
+    },
+    "categories": {
+      "Cards": "ካርዶች",
+      "Marketing": "ማርኬቲንግ",
+      "Merchandise": "ምርቶች",
+      "Stationery": "የቢሮ መገልገያዎች",
+      "desc_Cards": "የቢዝነስ ካርዶች፣ የሰርግ እና የልደት ካርዶች",
+      "desc_Marketing": "ፍላየሮች፣ ፖስተሮች፣ ባነሮች እና ማስታወቂያዎች",
+      "desc_Merchandise": "ቲሸርቶች፣ ኩባያዎች፣ ኮፍያዎች እና ብራንዲንግ",
+      "desc_Stationery": "ስቲከሮች፣ ደብዳቤዎች፣ ኤንቨሎፖች እና ማስታወሻ ደብተሮች",
+      "folders": "ምድቦች"
+    },
+    "viewing": "እየታየ ነው",
+    "explore": "ይመልከቱ",
+    "collection": "ስብስብ",
+    "items": "እቃዎች",
+    "noProducts": "ምንም ምርት አልተገኘም",
+    "checkBackLater": "እባክዎ ለሚከተለው ምድብ በኋላ ተመልሰው ያረጋግጡ፦"
+  },
+  "PrintProducts": {
+    "menus": {
+      "name": "የምግብ ሜኑዎች",
+      "description": "ከፍተኛ ጥራት ያላቸው ላሚኔትድ ሜኑዎች፣ በሶስት ወይም በመጽሐፍ አይነት የተዘጋጁ።"
+    },
+    "business-cards": {
+      "name": "ቢዝነስ ካርዶች",
+      "description": "ፕሪሚየም ማት ወይም ግሎሲ የቢዝነስ ካርዶች።"
+    },
+    "flyers": {
+      "name": "ፍላየሮች እና ብሮሸሮች",
+      "description": "A5፣ A4 ፍላየሮች ለዝግጅቶች እና ማስታወቂያዎች።"
+    },
+    "wedding-cards": {
+      "name": "የሰርግ ካርዶች",
+      "description": "የሚያማምሩ ልዩ ዲዛይኖች ከፕሪሚየም ኤንቨሎፖች ጋር።"
+    },
+    "banners": {
+      "name": "ሮል-አፕ ባነሮች",
+      "description": "መደበኛ 85x200 ሴ.ሜ ሮል-አፕ ባነሮች በተገጠመ ስታንዲ።"
+    },
+    "stickers": {
+      "name": "ስቲከሮች",
+      "description": "ለምርቶች ወይም ለብራንዲንግ የሚሆኑ የተቆረጡ መለያዎች።"
+    },
+    "tshirts": {
+      "name": "ቲ-ሸርት ህትመት",
+      "description": "የጥጥ ቲ-ሸርቶች በሙቀት ወይም በስክሪን ህትመት።"
+    },
+    "mugs": {
+      "name": "የሙግ ህትመት",
+      "description": "የሴራሚክ ሙጎች በእርስዎ ሎጎ ወይም ፎቶ።"
     }
   },
   "Pricing": {
@@ -419,7 +675,7 @@
       "mostPopular": "በጣም ተፈላጊ",
       "outcomeLabel": "ውጤት",
       "notesTitle": "አስፈላጊ ማስታወሻዎች",
-      "positioningLine": "ስራዎችን በእርስዎ ስም እንጠይቃለን—በሙያዊ፣ በስልት እና በቋሚነት።",
+      "positioningLine": "ስራዎችን በእርስዎ ስም እንጠይቃለን በሙያዊ፣ በስልት እና በቋሚነት።",
       "notes": {
         "1": "የCV ማጻፍ አገልግሎት ለብቻ ነው",
         "2": "ደንበኛው የCV ዝርዝሮችን ማቅረብ አለበት",
@@ -428,19 +684,19 @@
       },
       "packages": {
         "basic": {
-          "title": "Apply Assist – Basic",
+          "title": "Basic",
           "bestFor": "ለጀማሪዎች እና ለመጀመሪያ ጊዜ ስራ ፈላጊዎች",
           "features": {
             "1": "ለ10 የስራ ቦታዎች ማመልከት",
             "2": "የደንበኛውን ያለ CV መጠቀም",
             "3": "መሰረታዊ የCV ማስተካከያ",
             "4": "የማመልከቻ ክትትል",
-            "5": "ሳምንታዊ ማሻሻያ (WhatsApp/Email)"
+            "5": "ሳምንታዊ ማሻሻያ (Telegram/Email)"
           },
           "outcome": "በትንሹ ጥረት ተከታታይ ማመልከቻዎች"
         },
         "professional": {
-          "title": "Apply Assist – Professional",
+          "title": "Professional",
           "bestFor": "ለስራ ለይ ላሉ ባለሙያዎች",
           "features": {
             "1": "ለ25 የስራ ቦታዎች ማመልከት",
@@ -452,7 +708,7 @@
           "outcome": "ከፍተኛ ጥራት ያላቸው ማመልከቻዎች"
         },
         "elite": {
-          "title": "Apply Assist – Elite",
+          "title": "Elite",
           "bestFor": "ለአስቸኳይ ስራ ፈላጊዎች",
           "features": {
             "1": "ለ50 የስራ ቦታዎች ማመልከት",

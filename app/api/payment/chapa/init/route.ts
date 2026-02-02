@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getPriceForService, PRICE_CURRENCY } from "@/config/pricing";
 
 export async function POST(req: Request) {
   try {
@@ -40,11 +41,17 @@ export async function POST(req: Request) {
         ? `${firstName || ""} ${lastName || ""}`.trim()
         : undefined;
 
+    // Generate new tx_ref to avoid duplicates on retry
+    // We cannot just use order.id because failed Chapa transactions consume the tx_ref
+    // Format: "TX-{shortID}-{timestamp}" (Must be < 50 chars)
+    // UUID (36) + 3 + 13 = 52 (Too long). We take last 12 chars of UUID.
+    const txRef = `TX-${order.id.slice(-12)}-${Date.now()}`;
+
     await prisma.order.update({
       where: { id: orderId },
       data: {
         status: "PENDING",
-        // tx_ref is NOT updated, keeping it same as order.id
+        tx_ref: txRef,
         // Update customer details if provided
         customer_email: email,
         customer_phone: phone,
@@ -59,45 +66,122 @@ export async function POST(req: Request) {
     }
 
     // Get the base URL for callbacks
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:3000";
 
     // Extract customer info from stored form_data to pass to Chapa
-    // formatting relies on the expected structure of form_data.personal
+    // formatting relies on the expected structure of form_data.personal (agreements) or personalInfo (CVs)
     type ChapaFormData = {
       personal?: {
         email?: string;
         firstName?: string;
         lastName?: string;
         phone?: string;
-        [key: string]: unknown;
+      };
+      personalInfo?: {
+        email?: string;
+        firstName?: string;
+        lastName?: string;
+        phone?: string;
       };
       [key: string]: unknown;
     };
-    const formData =
-      typeof order.form_data === "object" && order.form_data !== null
-        ? (order.form_data as ChapaFormData)
-        : undefined;
-    const personal = formData?.personal || {};
+
+    const formData = order.form_data as unknown as ChapaFormData;
+    const personal = formData?.personal || formData?.personalInfo || {};
 
     // Use passed values or fallback to stored values
     const payloadEmail = email || personal.email;
     const payloadFirstName = firstName || personal.firstName;
     const payloadLastName = lastName || personal.lastName;
-    const payloadPhone = phone || personal.phone;
 
-    const payload = {
-      amount: "500", // Fixed amount for now as per requirement (500 ETB in UI)
-      currency: "ETB",
-      email: payloadEmail,
-      first_name: payloadFirstName,
-      last_name: payloadLastName,
-      phone_number: payloadPhone,
-      tx_ref: order.tx_ref, // Use the existing tx_ref (which is order.id)
+    // --- DATA ROBUSTNESS & SANITIZATION (FOR CHAPA PAYLOAD ONLY) ---
+    // Chapa is strict about email format and phone numbers.
+    // 1. Email Validation & Fallback
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // If the provided email is invalid OR contains "example.com"
+    // or if it's missing entirely, we MUST provide a valid fallback for the payment gateway.
+    let chapaEmail = payloadEmail;
+    const isActuallyValid =
+      chapaEmail &&
+      emailRegex.test(chapaEmail) &&
+      !chapaEmail.includes("example.com");
+
+    if (!isActuallyValid) {
+      console.warn(
+        `[Chapa Init] Using fallback email for "${chapaEmail}" to avoid initialization failure.`,
+      );
+      chapaEmail = "senedxservice@gmail.com";
+    }
+
+    // 2. Phone Validation & Fallback
+    // Ensure phone number NEVER causes payment failure.
+    const rawPhone = phone || (personal as { phone?: string }).phone;
+    // Sanitize: Remove all non-numeric characters
+    let chapaPhone = String(rawPhone || "").replace(/[^0-9]/g, "");
+
+    // Ethiopian phone validation (must be 10 digits starting with 0, or 9 digits starting with 9)
+    const isValidEthiopianPhone =
+      (chapaPhone.length === 10 && chapaPhone.startsWith("0")) ||
+      (chapaPhone.length === 9 && !chapaPhone.startsWith("0"));
+
+    // If invalid/missing, ALWAYS use fallback to ensure Chapa never rejects payment
+    if (!chapaPhone || !isValidEthiopianPhone) {
+      console.warn(
+        `[Chapa] Invalid phone "${rawPhone}" (sanitized: "${chapaPhone}"), using fallback.`,
+      );
+      chapaPhone = "0900336928";
+    }
+
+    // 3. Name Sanitization
+    const chapaFirstName = (payloadFirstName || "Valued")
+      .replace(/[^\w\s\u1200-\u137F]/gi, "")
+      .substring(0, 30);
+    const chapaLastName = (payloadLastName || "Customer")
+      .replace(/[^\w\s\u1200-\u137F]/gi, "")
+      .substring(0, 30);
+    // --- END SANITIZATION ---
+
+    // Get price based on service type
+    const amount = getPriceForService(order.service_type);
+
+    // Determine Display Info for Chapa
+    let title = "Service";
+    let description = "Paperless Service";
+
+    if (order.service_type === "cv_writing") {
+      title = "CV Writing";
+      description = "Premium CV Design Service";
+    } else if (order.service_type.startsWith("agreement:")) {
+      const templateId = order.service_type.split(":")[1];
+      title = "Agreement";
+      description = `Payment for ${templateId.replace(/-/g, " ")}`;
+    }
+
+    // Sanitize title and description for Chapa - strictly Latin/ASCII as per error
+    const sanitizedTitle =
+      title.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 16) || "Service Pay";
+    const sanitizedDescription =
+      description.replace(/[^a-zA-Z0-9.\-_ ]/g, "").substring(0, 50) ||
+      "Paperless Digital Service";
+
+    // Construct payload
+    const payload: Record<string, unknown> = {
+      amount: amount.toString(),
+      currency: PRICE_CURRENCY,
+      tx_ref: txRef,
       callback_url: `${baseUrl}/api/payment/chapa/webhook`,
       return_url: `${baseUrl}/checkout/success?orderId=${order.id}`,
+      email: chapaEmail,
+      phone_number: chapaPhone,
+      first_name: chapaFirstName,
+      last_name: chapaLastName,
       customization: {
-        title: "CV Service",
-        description: "Premium CV Design",
+        title: sanitizedTitle,
+        description: sanitizedDescription,
       },
     };
 
@@ -127,7 +211,7 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json(
-        { error: "Payment initialization failed" },
+        { error: data.message || "Payment initialization failed" },
         { status: 400 },
       );
     }

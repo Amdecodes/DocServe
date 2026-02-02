@@ -11,12 +11,7 @@
  * - No placeholders / no assumptions → avoids hallucinations
  */
 
-import {
-  CVData,
-  ExperienceItem,
-  CoverLetterTone,
-  DocumentLanguage,
-} from "@/types/cv";
+import { CVData, ExperienceItem, CoverLetterTone } from "@/types/cv";
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -30,19 +25,10 @@ interface AIGenerationOutput {
 }
 
 // Tone mapping (UI dropdown → prompt language style)
-const TONE_MAP: Record<CoverLetterTone, Record<DocumentLanguage, string>> = {
-  Formal: {
-    en: "conservative, respectful wording",
-    am: "ባህላዊ እና አክብሮታዊ አጻጻፍ",
-  },
-  Neutral: {
-    en: "neutral, ATS-safe language",
-    am: "ገለልተኛ እና ሙያዊ ቋንቋ",
-  },
-  Confident: {
-    en: "strong verbs, assertive tone",
-    am: "ጠንካራ ግሦች፣ በራስ መተማመን ያለው ድምጽ",
-  },
+const TONE_MAP: Record<CoverLetterTone, string> = {
+  Formal: "conservative, respectful wording",
+  Neutral: "neutral, ATS-safe language",
+  Confident: "strong verbs, assertive tone",
 };
 
 // Input limits (backend-enforced safeguards)
@@ -54,43 +40,28 @@ const LIMITS = {
 } as const;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = process.env.GEMINI_API_URL;
 
 // ============================================================================
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPTS: Record<DocumentLanguage, string> = {
-  en: `You are a professional career writer specializing in ATS-friendly resumes and cover letters.
-Write concise, human-sounding, non-generic content.
-Do not invent facts.
-Do not mention AI, prompts, or templates.
-Follow the structure and limits exactly.`,
+const SYSTEM_PROMPT = `You are an elite Executive Resume Writer with 15+ years of experience crafting resumes for Fortune 500 executives, senior professionals, and career changers. You specialize in creating compelling, ATS-optimized content that transforms careers.
 
-  am: `ROLE: You are an expert CV writer for the Ethiopian market.
-  
-STRICT OUTPUT RULE: You MUST write ONLY in Amharic (አማርኛ).
-- If the user input is in English, you MUST translate it to Amharic.
-- Do NOT generate English sentences.
-- Use Amharic script (ፊደል) for the entire response.
-- Technical terms can remain in English if there is no common Amharic equivalent, but the sentence structure MUST be Amharic.
-- Use standard Amharic punctuation (። ፣ ፤ ፥ ፦ !).
-
-FORBIDDEN:
-- Do not respond in English.
-- Do not provide translations in brackets.
-- Do not include AI meta-talk ("Here is the summary in Amharic").`,
-};
+Your Writing Philosophy:
+1. **Transform, Don't Describe**: Convert mundane duties into powerful value propositions. "Drove a car" becomes "Ensured seamless executive mobility through proactive route planning, punctual scheduling, and unwavering commitment to discretion and safety protocols."
+2. **Depth Over Brevity**: PAID users expect PREMIUM content. Write comprehensive, rich descriptions that demonstrate deep expertise. Never write less than 3 substantial sentences for summaries.
+3. **Industry Authority**: Demonstrate mastery of role-specific terminology, methodologies, and value drivers. Research-level knowledge of what makes professionals in each field exceptional.
+4. **Quantify Intelligently**: Use realistic, believable metrics and timeframes. "Maintained 100% on-time performance across 500+ executive transports annually."
+5. **ATS Mastery**: Naturally weave in industry keywords, certifications, and technical terms that recruiters search for.
+6. **No Hallucinations**: Never invent company names, specific percentages, or false claims. Use patterns like "consistently delivered", "maintained exceptional standards", "recognized for".
+7. **Premium Quality**: This is a PAID service. Output must reflect executive-level writing that justifies the investment.`;
 
 // Experience level translations
-const EXPERIENCE_LEVEL_MAP: Record<
-  ExperienceLevel,
-  Record<DocumentLanguage, string>
-> = {
-  "Entry-level": { en: "Entry-level", am: "የመጀመሪያ ደረጃ" },
-  "Mid-level": { en: "Mid-level", am: "መካከለኛ ደረጃ" },
-  Senior: { en: "Senior", am: "ከፍተኛ ደረጃ" },
-  Executive: { en: "Executive", am: "አስተዳዳሪ ደረጃ" },
+const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
+  "Entry-level": "Entry-level",
+  "Mid-level": "Mid-level",
+  Senior: "Senior",
+  Executive: "Executive",
 };
 
 // Experience level type
@@ -142,67 +113,132 @@ function extractIndustry(experience: ExperienceItem[]): string {
 }
 
 // ============================================================================
-// PROMPT BUILDERS (Low token, high control, language-aware)
+// ROLE-SPECIFIC ENHANCEMENT GUIDANCE
+// ============================================================================
+
+/**
+ * Get role-specific keywords and focus areas for premium content
+ */
+function getRoleSpecificGuidance(jobTitle: string): string {
+  const titleLower = jobTitle.toLowerCase();
+
+  // Driver roles
+  if (titleLower.includes("driver") || titleLower.includes("chauffeur")) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Safety record, punctuality, discretion, route optimization, VIP handling
+- Key skills: Defensive driving, vehicle maintenance awareness, GPS/navigation expertise, professional presentation
+- Value drivers: Executive confidentiality, schedule reliability, crisis management, hospitality mindset
+- Metrics to reference: On-time performance, safe driving record, years without incidents, client satisfaction`;
+  }
+
+  // Healthcare roles
+  if (
+    titleLower.includes("nurse") ||
+    titleLower.includes("medical") ||
+    titleLower.includes("health")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Patient care quality, clinical expertise, regulatory compliance, interdisciplinary collaboration
+- Key skills: Patient assessment, care planning, medication management, EMR proficiency, family communication
+- Value drivers: Patient outcomes, safety protocols, quality metrics, continuous education
+- Certifications to mention pattern: relevant licensure, specialized training, life support certifications`;
+  }
+
+  // Tech roles
+  if (
+    titleLower.includes("developer") ||
+    titleLower.includes("engineer") ||
+    titleLower.includes("programmer")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Technical architecture, code quality, system scalability, cross-functional collaboration
+- Key skills: Full-stack development, agile methodology, code review, testing strategies, DevOps practices
+- Value drivers: System uptime, performance optimization, technical debt reduction, mentorship
+- Technologies to reference pattern: relevant frameworks, cloud platforms, development methodologies`;
+  }
+
+  // Management roles
+  if (
+    titleLower.includes("manager") ||
+    titleLower.includes("director") ||
+    titleLower.includes("supervisor")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Team leadership, strategic planning, stakeholder management, operational excellence
+- Key skills: Performance management, budget oversight, process improvement, change management
+- Value drivers: Team productivity, cost optimization, employee retention, goal achievement
+- Metrics patterns: team size managed, budget responsibility, efficiency improvements`;
+  }
+
+  // Sales/Business Development
+  if (
+    titleLower.includes("sales") ||
+    titleLower.includes("account") ||
+    titleLower.includes("business development")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Revenue generation, client relationship building, pipeline management, negotiation expertise
+- Key skills: Consultative selling, CRM proficiency, territory management, presentation skills
+- Value drivers: Quota achievement, client retention, deal size growth, market expansion
+- Metrics patterns: quota percentage, revenue figures, client portfolio size, growth percentages`;
+  }
+
+  // Default professional guidance
+  return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Research and apply industry-standard competencies for this role
+- Identify key performance indicators typical for ${jobTitle} professionals
+- Include relevant technical skills, soft skills, and domain expertise
+- Reference typical career progression and areas of specialization`;
+}
+
+// ============================================================================
+// PROMPT BUILDERS (Premium content, high quality output)
 // ============================================================================
 
 /**
  * Professional Summary Prompt (CV)
- * Output: ~60-80 words, ATS-safe
+ * Output: 120-180 words, premium quality, ATS-optimized
  */
 function buildSummaryPrompt(
   jobTitle: string,
   experienceLevel: ExperienceLevel,
   industry: string,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
+  // Build role-specific enhancement guidance
+  const roleEnhancements = getRoleSpecificGuidance(jobTitle);
 
-[TASK]
-Write a professional summary for a CV.
+  return `Craft a PREMIUM executive-level professional summary for a ${expLevelText} ${jobTitle} professional.
 
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
-- Industry: ${industry}
-- Notes: ${userNotes || "N/A"}
+Candidate Context:
+"${userNotes ? userNotes : `Dedicated ${jobTitle} professional with comprehensive expertise in ${industry}`}"
 
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate any English concepts from inputs into Amharic.
-3. Length: 2-3 sentences.
-4. Focus: Impact, skills, professional value.
-5. Tone: Professional, formal.
-6. NO English sentences allowed.
+Industry/Field: ${industry}
+Experience Level: ${expLevelText}
 
-[OUTPUT]
-Write only the Amharic summary text now:`;
-  }
+${roleEnhancements}
 
-  return `Write a professional summary for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+CRITICAL Requirements:
+1. Write 3-4 concise sentences (80-120 words) - formal CV style.
+2. Opening sentence: Clear statement of expertise and experience level.
+3. Second sentence: Core competencies and key skills.
+4. Third sentence: Notable achievements or strengths.
+5. Optional fourth: Value proposition or professional approach.
+6. Third person throughout ("Accomplished ${jobTitle}..." not "I am...").
+7. Include industry-specific keywords for ATS optimization.
+8. Professional, direct, and impactful - no fluff.
 
-Rules:
-- 2-3 sentences only
-- Focus on impact and skills, not responsibilities
-- Use clear, professional language
-- No buzzwords, no clichés
-- Do not mention years unless provided
-- Do not use first person ("I", "my")
+Example Quality Level (DO NOT COPY, just match this caliber):
+"Senior Marketing Director with 12+ years of experience leading data-driven brand campaigns for Fortune 500 organizations. Core expertise in digital transformation, customer journey optimization, and go-to-market strategy development. Recognized for consistently delivering 40%+ ROI improvements while building high-performing teams. Trusted advisor to C-suite on brand positioning and competitive differentiation."
 
-User notes:
-${userNotes || "None provided"}
-
-Output only the summary text, nothing else.`;
+Now write the professional summary for the ${jobTitle}:`;
 }
 
 /**
  * Cover Letter Body Prompt (Main Value)
- * Output: 3 paragraphs, no greetings/signatures
+ * Output: 4 paragraphs, premium quality, no greetings/signatures
  */
 function buildCoverLetterPrompt(
   jobTitle: string,
@@ -210,57 +246,63 @@ function buildCoverLetterPrompt(
   industry: string,
   tone: CoverLetterTone,
   userNotes: string,
-  language: DocumentLanguage,
 ): string {
-  const toneInstruction =
-    TONE_MAP[tone]?.[language] || TONE_MAP.Neutral[language];
-  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel][language];
+  const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
+  const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
+  // Get role-specific guidance for cover letter
+  const roleGuidance = getRoleSpecificGuidance(jobTitle);
 
-[TASK]
-Write the body of a cover letter.
+  return `You are writing a PREMIUM cover letter for a PAYING customer. This must be exceptional quality that justifies their investment.
 
-[INPUTS]
-- Role: ${jobTitle}
-- Level: ${expLevelText}
+CANDIDATE PROFILE:
+- Position: ${expLevelText} ${jobTitle}
 - Industry: ${industry}
-- Tone: ${toneInstruction}
-- Notes: ${userNotes || "N/A"}
+- Writing Tone: ${toneInstruction}
+- Background: "${userNotes ? userNotes : `Dedicated ${jobTitle} professional with solid experience in ${industry}`}"
 
-[RULES]
-1. Output MUST be in Amharic script.
-2. Structure: 3 short paragraphs.
-3. Content: Value proposition, skills, motivation.
-4. NO greetings ("Dear..."), NO sign-off ("Sincerely...").
-5. NO placeholders like [Company Name].
-6. Translate all English inputs to Amharic context.
-7. NO English sentences.
+${roleGuidance}
 
-[OUTPUT]
-Write only the 3 Amharic paragraphs now:`;
-  }
+COVER LETTER STRUCTURE (Write 3 distinct paragraphs with blank lines between them):
 
-  return `Write a one-page cover letter body for a ${experienceLevel} ${jobTitle} in the ${industry} industry.
+**PARAGRAPH 1 - OPENING (4-5 sentences, ~60-80 words)**
+Start with a strong opening that establishes your professional identity and interest. Mention your experience level and what drives your passion for this role. Highlight your key value proposition. Keep it punchy and engaging.
 
-Tone: ${toneInstruction}
+**PARAGRAPH 2 - CORE QUALIFICATIONS (5-7 sentences, ~100-130 words)**
+This is the main body. Detail your relevant skills and experience:
+- Your strongest competencies as a ${jobTitle}
+- Specific methodologies or approaches you use
+- Key achievements or consistent patterns of success
+- How your expertise aligns with typical role requirements
+Use concrete examples and industry terminology.
 
-Rules:
-- 3 short paragraphs only
-- No company names or specific references
-- No placeholders like [Company Name]
-- No greetings or signatures
-- Focus on value, skills, and motivation
-- Avoid generic phrases like "I am writing to apply"
-- Each paragraph should be 2-3 sentences max
+**PARAGRAPH 3 - CLOSING (3-4 sentences, ~50-70 words)**
+End with professional confidence:
+- Reiterate your enthusiasm for the opportunity
+- Express readiness to contribute immediately
+- Include a confident call-to-action
+- Thank them for their consideration
 
-User notes:
-${userNotes || "None provided"}
+CRITICAL RULES:
+1. FIRST PERSON throughout ("I am...", "My experience...", "I have...")
+2. NO greeting ("Dear Hiring Manager") or signature ("Sincerely, Name")
+3. Total length: 250-330 words - concise yet comprehensive
+4. SEPARATE paragraphs with a blank line (use \n\n between paragraphs)
+5. NO generic phrases like "team player", "hard worker", "go-getter"
+6. NO invented facts, company names, or specific percentages
+7. Include industry keywords naturally for ATS optimization
+8. Sound confident and professional, not desperate
 
-Output only the 3 paragraphs, nothing else.`;
+EXAMPLE QUALITY LEVEL (for a Marketing Manager - DO NOT COPY, just match this caliber):
+"My passion for strategic marketing began over a decade ago, and every campaign since has reinforced my dedication to creating meaningful brand connections that drive measurable business results. As a marketing professional, I thrive on the challenge of translating complex business objectives into compelling narratives that resonate with target audiences. The constantly evolving digital landscape energizes me—each algorithm change, each new platform, each shift in consumer behavior presents an opportunity to innovate and outperform. I bring this enthusiasm, combined with proven expertise in multi-channel campaign orchestration, to every role I undertake.
+
+My core competencies span the full spectrum of modern marketing operations. I excel at developing data-driven strategies that align marketing initiatives with overarching business goals, leveraging analytics to optimize performance in real-time. My approach to content marketing emphasizes authentic storytelling supported by rigorous A/B testing and audience segmentation. I am particularly skilled at managing cross-functional teams, coordinating between creative, analytics, and sales departments to ensure cohesive campaign execution. Additionally, my proficiency with marketing automation platforms and CRM systems enables me to streamline workflows while maintaining personalized customer experiences at scale.
+
+Throughout my career, I have consistently been recognized for exceeding performance targets and delivering campaigns that surpass industry benchmarks. Colleagues describe me as someone who combines creative vision with analytical rigor—a professional who can both conceptualize innovative ideas and execute them with precision. I approach challenges with a solution-oriented mindset, viewing obstacles as opportunities for creative problem-solving. My commitment to staying current with industry trends and emerging technologies has allowed me to introduce forward-thinking strategies that keep organizations ahead of competitors.
+
+I am genuinely excited about the opportunity to bring my strategic marketing expertise to a new challenge. My combination of creative thinking, analytical capability, and proven execution makes me confident I can deliver immediate value. I am flexible, dedicated, and ready to contribute from day one. I welcome the opportunity to discuss how my background aligns with your organization's marketing objectives."
+
+Now write the cover letter body for the ${jobTitle}:`;
 }
 
 /**
@@ -271,117 +313,171 @@ function buildBulletPrompt(
   bullets: string[],
   jobTitle: string,
   company: string,
-  language: DocumentLanguage,
 ): string {
-  const bulletList = bullets.map((b, i) => `${i + 1}. ${b}`).join("\n");
+  return `Transform these resume bullets into PREMIUM, executive-level achievement statements.
 
-  if (language === "am") {
-    return `[CONFIGURATION]
-TARGET_LANGUAGE: AMHARIC (አማርኛ)
-STRICT_MODE: ON
+Role: ${jobTitle}
+Organization: ${company}
 
-[TASK]
-Rewrite these CV bullet points to be professional and impact-focused in Amharic.
+TRANSFORMATION GUIDELINES:
 
-[CONTEXT]
-Role: ${jobTitle} at ${company}
+1. **Power Verb Opening**: Start each bullet with a commanding action verb:
+   - Instead of "Responsible for" → "Spearheaded", "Orchestrated", "Championed"
+   - Instead of "Helped with" → "Collaborated to deliver", "Contributed to"
+   - Instead of "Did" → "Executed", "Implemented", "Drove"
 
-[RULES]
-1. Output MUST be in Amharic script.
-2. Translate the input bullet points from English (if applicable) to Amharic.
-3. Start each bullet with a strong Amharic verb.
-4. Keep the meaning but improve the phrasing.
-5. Length: 1 line per bullet.
-6. Count: Exactly ${bullets.length} bullets.
-7. NO English sentences.
+2. **Context + Action + Result Pattern**:
+   - What was the situation/scope?
+   - What action did you take?
+   - What was the impact/outcome?
 
-[BULLETS TO REWRITE]
-${bulletList}
+3. **Expansion Rules (CRITICAL)**:
+   - Short bullets (under 10 words) MUST be expanded to 20-30 words
+   - Add context about scale, frequency, or stakeholders
+   - Include industry-relevant methodology or approach
 
-[OUTPUT]
-Write only the Amharic bullets, one per line:`;
-  }
+4. **Realistic Metrics**:
+   - Use believable patterns: "consistently", "100%", "daily", "across X departments"
+   - Time-based: "within tight deadlines", "ahead of schedule"
+   - Scope: "serving 50+ clients", "managing $X budgets"
 
-  return `Rewrite the following bullet points to be concise, results-oriented, and ATS-friendly.
+5. **Example Transformations**:
+   - "Drove executives" → "Provided secure, punctual transportation for C-suite executives, maintaining 100% on-time performance while ensuring complete confidentiality and professional discretion across 500+ annual engagements"
+   - "Managed inventory" → "Orchestrated end-to-end inventory management for $2M+ product catalog, implementing tracking systems that reduced shrinkage by 15% and optimized reorder cycles"
 
-Context: ${jobTitle} at ${company}
+Original bullets to transform:
+${bullets.map((b, i) => `${i + 1}. ${b}`).join("\n")}
 
-Rules:
-- Keep meaning unchanged
-- Start each with a strong action verb
-- No exaggeration or invented metrics
-- Max 1 line per bullet (under 100 characters)
-- Return exactly ${bullets.length} bullets
-- No numbering in output
-
-Bullets:
-${bulletList}
-
-Output only the rewritten bullets, one per line.`;
+Return EXACTLY ${bullets.length} transformed bullets, one per line, no numbering or bullet symbols.
+Each bullet MUST be 20-40 words minimum.`;
 }
 
 // ============================================================================
 // GEMINI API CALL
 // ============================================================================
 
-async function callGeminiAPI(
-  userPrompt: string,
-  language: DocumentLanguage,
-): Promise<string> {
-  const systemPrompt = SYSTEM_PROMPTS[language];
+// Fallback models in priority order
+const FALLBACK_MODELS = [
+  "gemini-3-pro", // Primary
+  "gemini-2.5-flash", // Fallback 1
+  "gemini-2.5-flash-lite", // Fallback 2
+  "gemini-1.5-flash", // Legacy fallback
+];
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: systemPrompt }, { text: userPrompt }],
-        },
-      ],
-      generationConfig: {
-        temperature: 0.4, // Lower = more consistent, less creative
-        maxOutputTokens: 512, // Limit output length
-        topP: 0.8,
-        topK: 40,
-      },
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_HARASSMENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_HATE_SPEECH",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE",
-        },
-      ],
-    }),
-  });
+const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error("[Gemini API] Error response:", error);
-    throw new Error(`Gemini API failed: ${response.status}`);
+async function callGeminiAPI(userPrompt: string): Promise<string> {
+  const maxRetriesPerModel = 2; // Reduced retries per model since we have fallbacks
+  let lastError: Error | null = null;
+
+  for (const modelId of FALLBACK_MODELS) {
+    let attempt = 0;
+    console.log(`[Gemini API] Attempting generation with model: ${modelId}`);
+
+    while (attempt < maxRetriesPerModel) {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/${modelId}:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [{ text: SYSTEM_PROMPT }, { text: userPrompt }],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 4096,
+                topP: 0.9,
+                topK: 50,
+              },
+              safetySettings: [
+                {
+                  category: "HARM_CATEGORY_HARASSMENT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_HATE_SPEECH",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+                {
+                  category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                  threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                },
+              ],
+            }),
+          },
+        );
+
+        if (response.status === 429) {
+          attempt++;
+          const waitTime = Math.pow(2, attempt) * 1000;
+          console.warn(
+            `[Gemini API] ${modelId} 429 Limit Hit. Retrying in ${waitTime}ms... (Attempt ${attempt}/${maxRetriesPerModel})`,
+          );
+          if (attempt >= maxRetriesPerModel) break; // Break inner loop to try next model
+
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+          continue;
+        }
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            `[Gemini API] ${modelId} Error ${response.status}:`,
+            errorText,
+          );
+          // 404 means model not found (likely for future/invalid models) - try next immediately
+          if (response.status === 404) break;
+          // 5xx errors might be transient, but better to switch model
+          break;
+        }
+
+        const result = await response.json();
+
+        // Safety block check
+        if (result.promptFeedback?.blockReason) {
+          console.warn(
+            `[Gemini API] ${modelId} Safety Block: ${result.promptFeedback.blockReason}`,
+          );
+          // Safety blocks are usually content-related, switching model unlikely to help BUT different models have different sensitivities.
+          // We'll try next model just in case.
+          break;
+        }
+
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) {
+          console.warn(`[Gemini API] ${modelId} returned no text candidate.`);
+          break;
+        }
+
+        // Success!
+        return cleanAIOutput(text);
+      } catch (e) {
+        console.error(`[Gemini API] ${modelId} Exception:`, e);
+        lastError = e as Error;
+        // On network exception, maybe retry same model?
+        // For now, let's treat it as a failure for this attempt
+        attempt++;
+        if (attempt >= maxRetriesPerModel) break;
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
   }
 
-  const result = await response.json();
-
-  // Extract text from response
-  const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-  // Clean up common AI artifacts
-  return cleanAIOutput(text);
+  // If we get here, all models failed
+  console.error("[Gemini API] All fallback models failed.");
+  throw lastError || new Error("All AI models failed to generate content.");
 }
 
 /**
@@ -441,15 +537,16 @@ export async function generateAIContent(
   );
 
   // Get document language (default to English)
-  const language: DocumentLanguage = cvData?.documentLanguage || "en";
+  const language = "en" as const;
   console.log(`[AI Generator] Final language used: ${language}`);
   console.log(
-    `[AI Generator] System prompt preview: ${SYSTEM_PROMPTS[language].substring(0, 100)}...`,
+    `[AI Generator] System prompt preview: ${SYSTEM_PROMPT.substring(0, 100)}...`,
   );
 
   // Extract and sanitize inputs
+  const personalInfo = cvData.personalInfo || {};
   const jobTitle =
-    sanitize(cvData.personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
+    sanitize(personalInfo.jobTitle, LIMITS.jobTitle) || "Professional";
   const experienceLevel = calculateExperienceLevel(cvData.experience);
   const industry = sanitize(
     extractIndustry(cvData.experience),
@@ -469,9 +566,8 @@ export async function generateAIContent(
       experienceLevel,
       industry,
       userNotes,
-      language,
     );
-    const professionalSummary = await callGeminiAPI(summaryPrompt, language);
+    const professionalSummary = await callGeminiAPI(summaryPrompt);
 
     // 2. Generate Cover Letter (only if user has cover letter data)
     let coverLetterBody: string | undefined;
@@ -483,9 +579,8 @@ export async function generateAIContent(
         industry,
         tone,
         userNotes,
-        language,
       );
-      coverLetterBody = await callGeminiAPI(coverLetterPrompt, language);
+      coverLetterBody = await callGeminiAPI(coverLetterPrompt);
     }
 
     // 3. Optimize Experience Bullets (only if user provided bullets)
@@ -500,9 +595,8 @@ export async function generateAIContent(
           sanitizedBullets,
           exp.jobTitle,
           exp.company,
-          language,
         );
-        const optimized = await callGeminiAPI(bulletPrompt, language);
+        const optimized = await callGeminiAPI(bulletPrompt);
 
         // Parse output - one bullet per line
         const parsedBullets = optimized
@@ -524,7 +618,7 @@ export async function generateAIContent(
 
     return {
       professionalSummary:
-        professionalSummary || generateFallbackSummary(jobTitle, language),
+        professionalSummary || generateFallbackSummary(jobTitle),
       coverLetterBody,
       optimizedBullets,
       generatedAt: new Date().toISOString(),
@@ -534,9 +628,9 @@ export async function generateAIContent(
 
     // Return fallback content - never fail the order
     return {
-      professionalSummary: generateFallbackSummary(jobTitle, language),
+      professionalSummary: generateFallbackSummary(jobTitle),
       coverLetterBody: cvData.coverLetter
-        ? generateFallbackCoverLetter(language)
+        ? generateFallbackCoverLetter()
         : undefined,
       optimizedBullets: cvData.experience.map((exp) => exp.achievements),
       generatedAt: new Date().toISOString(),
@@ -548,31 +642,18 @@ export async function generateAIContent(
 // FALLBACK CONTENT (When AI fails)
 // ============================================================================
 
-function generateFallbackSummary(
-  jobTitle: string,
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `በ${jobTitle} መስክ ከፍተኛ ልምድ ያለው እና ለተቋማት ስኬት ጉልህ አስተዋጽኦ ያበረከተ ሙያተኛ። ስትራቴጂያዊ እቅዶችን በመንደፍ እና በመተግበር የላቀ ውጤት ማስመዝገብ የሚችል።`;
-  }
-  return `Results-driven ${jobTitle} with demonstrated expertise in delivering high-impact solutions. Proven ability to drive organizational success through strategic initiatives and collaborative leadership.`;
+function generateFallbackSummary(jobTitle: string): string {
+  return `Distinguished ${jobTitle} with a proven track record of excellence and dedication to delivering exceptional results in demanding professional environments. Combines comprehensive technical expertise with outstanding interpersonal skills to consistently exceed expectations and drive organizational success. Recognized for maintaining the highest standards of professionalism, reliability, and attention to detail while navigating complex challenges with composure and strategic thinking. Committed to continuous improvement and staying current with industry best practices to deliver maximum value to stakeholders and clients alike.`;
 }
 
-function generateFallbackCoverLetter(
-  language: DocumentLanguage = "en",
-): string {
-  if (language === "am") {
-    return `ችሎታዬን እና ልምዴን ተጠቅሜ ለድርጅትዎ አስተዋጽኦ ለማበርከት ዝግጁ ነኝ። በሙያዬ ያካበትኩት ልምድ በተለያዩ የስራ ሁኔታዎች ውስጥ ውጤታማ እንድሆን አስችሎኛል።
+function generateFallbackCoverLetter(): string {
+  return `I am writing to express my strong interest in contributing my expertise and dedication to an organization that values excellence and professional growth. Throughout my career, I have built a reputation for reliability, attention to detail, and an unwavering commitment to exceeding expectations in every endeavor I undertake.
 
-ጠንካራ የስራ ስነ-ምግባር ያለኝ ሲሆን፣ አዳዲስ ነገሮችን ለመማር እና ራሴን ለማሻሻል ሁሌም ትጉ ነኝ። ለድርጅትዎ እሴት የሚጨምር ስራ ለመስራት ቆርጫለሁ።
+My professional journey has equipped me with a diverse skill set that enables me to navigate complex challenges with confidence and composure. I pride myself on my ability to build strong relationships with colleagues and stakeholders, communicate effectively across all levels of an organization, and consistently deliver results that drive business success. My approach combines strategic thinking with hands-on execution, ensuring that projects are completed efficiently and to the highest standards.
 
-ስለ ብቃቴ እና ልምዴ በዝርዝር ለመወያየት ዝግጁ ነኝ። ስለሰጡኝ ጊዜ ከልብ አመሰግናለሁ።`;
-  }
-  return `I am excited to bring my skills and experience to a role where I can make a meaningful contribution. My background has equipped me with the expertise needed to excel in challenging environments and deliver results.
+What distinguishes me is my genuine passion for continuous improvement and my dedication to staying current with industry developments and best practices. I believe that success comes from a combination of expertise, adaptability, and a sincere commitment to adding value in every interaction. My track record demonstrates consistent achievement and recognition for going above and beyond standard expectations.
 
-Throughout my career, I have consistently demonstrated the ability to adapt, learn, and grow. I take pride in my work ethic and commitment to continuous improvement, always seeking opportunities to add value.
-
-I welcome the opportunity to discuss how my qualifications align with your needs. Thank you for your consideration.`;
+I am confident that my qualifications, work ethic, and professional demeanor would make me a valuable addition to your team. I would welcome the opportunity to discuss how my background and capabilities align with your organization's needs and to learn more about how I can contribute to your continued success.`;
 }
 
 // ============================================================================

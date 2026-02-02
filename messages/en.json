@@ -11,8 +11,9 @@
     "amharicDesc": "Professional CV in Amharic"
   },
   "Header": {
-    "logo": "DocuServe",
+    "logo": "SENEDX",
     "services": "Services",
+    "about": "About Us",
     "howItWorks": "How it Works",
     "pricing": "Pricing",
     "contact": "Contact",
@@ -25,8 +26,8 @@
   "Hero": {
     "title": "Create professional documents online. Fast, easy, and print-ready.",
     "subtitle": "CVs, agreements, and documents fill the form, pay online, and download instantly or print in our office.",
-    "ctaPrimary": "Start Now",
-    "ctaSecondary": "View Services",
+    "ctaPrimary": "Build CV",
+    "ctaSecondary": "Apply Job",
     "imageAlt": "Document Preview"
   },
   "HowItWorks": {
@@ -43,11 +44,11 @@
   "Services": {
     "title": "Our Services",
     "digital": {
-      "title": "Digital Document Services",
-      "cv": "CV / Resume Writing",
-      "agreement": "Agreement Documents",
-      "editing": "Document Editing & Typing",
-      "action": "Order Online"
+      "title": "Resume Builder",
+      "cv": "Professional CV Templates",
+      "agreement": "ATS Optimization",
+      "editing": "Cover Letter Generation",
+      "action": "Build Resume"
     },
     "printing": {
       "title": "Printing Services",
@@ -57,13 +58,26 @@
       "academic": "Academic Documents",
       "action": "Submit Request"
     },
-    "promotional": {
-      "title": "Branding & Promotional Items",
-      "banners": "Banners",
-      "tshirts": "T-Shirts",
-      "mugs": "Mugs",
-      "stickers": "Stickers",
-      "action": "Request a Quote"
+    "virtualAssistance": {
+      "title": "Virtual Assistance (Apply Job)",
+      "jobApplications": "Job Applications",
+      "emails": "Email Management",
+      "admin": "Admin Support",
+      "action": "Request Service"
+    },
+    "agreements": {
+      "title": "Agreement Services",
+      "car": "Car Sale Agreements",
+      "house": "House Rent Agreements",
+      "business": "Business Contracts",
+      "action": "Draft Agreement"
+    },
+    "webDev": {
+      "title": "Web Development",
+      "portfolio": "Portfolio & Personal",
+      "saas": "SaaS & Web Apps",
+      "ecommerce": "E-Commerce Stores",
+      "action": "Select Type"
     }
   },
   "WhyChooseUs": {
@@ -105,20 +119,52 @@
     "pricing": "Pricing",
     "contact": "Contact",
     "addressLine1": "Addis Ababa, Ethiopia",
-    "addressLine2": "Ferensay legasion, Gurara",
+    "addressLine2": "",
     "terms": "Terms & Privacy",
     "privacyPolicy": "Privacy Policy",
     "rightsReserved": "All rights reserved."
+  },
+  "AboutPage": {
+    "title": "About Senedx",
+    "metaTitle": "About Senedx - Premium Document Services",
+    "metaDescription": "Learn about Senedx, your partner for professional CVs, legal agreements, and premium printing services in Ethiopia.",
+    "subtitle": "Premium Document Services in Ethiopia",
+    "description": "We provide professional document creation, printing, and virtual assistance services designed to help you succeed.",
+    "missionTitle": "Our Mission",
+    "missionDescription": "To simplify document creation and professional services for everyone in Ethiopia, bridging the gap between digital convenience and physical necessities.",
+    "premiumTitle": "The Premium Experience",
+    "premiumDescription": "We believe that every document tells a story. Whether it's a CV that lands your dream job or a contract that secures your deal, we ensure it looks professional and stands out.",
+    "whyUsTitle": "Why Choose Senedx",
+    "value1Title": "Unmatched Quality",
+    "value2Title": "Speed & Efficiency",
+    "value3Title": "Dedicated Support",
+    "qualityTitle": "Unmatched Quality",
+    "qualityDesc": "Expertly designed templates and high-grade printing materials.",
+    "speedTitle": "Speed & Efficiency",
+    "speedDesc": "Get your documents instantly or printed within minutes.",
+    "supportTitle": "Dedicated Support",
+    "supportDesc": "Our team is here to assist you every step of the way.",
+    "ctaTitle": "Ready to get started?",
+    "ctaButton": "Explore Services"
   },
   "ServicesPage": {
     "title": "Choose Your Service",
     "description": "Select the service that best fits your needs. We help you create professional documents that stand out.",
     "resumeTitle": "Resume Builder",
     "resumeDescription": "Create a professional, standardized CV in minutes with our AI-powered builder.",
-    "resumePrice": "Starting from 199 ETB",
-    "vaTitle": "Virtual Assistance",
+    "resumePrice": "Starting from 100 ETB",
+    "vaTitle": "Virtual Assistance (Apply Job)",
     "vaDescription": "Get professional virtual assistance for your remote tasks and administrative needs.",
     "vaPrice": "Request a Quote",
+    "printTitle": "Premium Printing",
+    "printDescription": "Custom menus, flyers, business cards, and promotional materials printed with high quality.",
+    "printPrice": "Custom Quote",
+    "agreementTitle": "Agreement Services",
+    "agreementDescription": "Legally binding agreements for car sales, house rentals, and business contracts.",
+    "agreementPrice": "Starting from 150 ETB",
+    "webDevTitle": "Web Development",
+    "webDevDescription": "Custom high-performance websites, SaaS platforms, and digital solutions for your business.",
+    "webDevPrice": "Request a Quote",
     "comingSoon": "More Services Coming Soon"
   },
   "ServiceCard": {
@@ -126,6 +172,7 @@
     "startNow": "Start Now"
   },
   "Templates": {
+    "title": "Template Selection",
     "modern": {
       "name": "Modern Professional",
       "description": "Clean, organized layout perfect for corporate roles."
@@ -137,6 +184,50 @@
     "classic": {
       "name": "Timeless Classic",
       "description": "Traditional layout that never goes out of style."
+    },
+    "golden": {
+      "name": "Golden Executive",
+      "description": "Premium dark blue and gold design for executives."
+    },
+    "elegant": {
+      "name": "Elegant Sidebar",
+      "description": "Clean sidebar layout with serif typography."
+    },
+    "modern-dark": {
+      "name": "Modern Dark",
+      "description": "Bold black design with gold accents for creative professionals."
+    },
+    "modern-sidebar": {
+      "name": "Modern Sidebar",
+      "description": "Timeline-based design with gray sidebar and ribbon headers."
+    },
+    "corporate-focus": {
+      "name": "Corporate Focus",
+      "description": "Professional layout with deep blue styling."
+    },
+    "minimalist-teal": {
+      "name": "Minimalist Teal",
+      "description": "Clean design with fresh teal accents."
+    },
+    "creative-split": {
+      "name": "Creative Split",
+      "description": "Bold indigo layout with unique split header."
+    },
+    "executive-maroon": {
+      "name": "Executive Maroon",
+      "description": "Distinguished deep burgundy design."
+    },
+    "emerald-professional": {
+      "name": "Emerald Professional",
+      "description": "Fresh and airy design with green accents."
+    },
+    "freshman-entry": {
+      "name": "Freshman Entry",
+      "description": "Ideal for students and entry-level professionals, highlighting skills and education over work history."
+    },
+    "lavender-executive": {
+      "name": "Lavender Executive",
+      "description": "Modern, clean design with bold violet accents and a centered professional layout."
     },
     "useThisTemplate": "Use This Template",
     "previewNotAvailable": "Preview Not Available"
@@ -236,6 +327,7 @@
     "phone": "Phone",
     "city": "City",
     "country": "Country",
+    "dateOfBirth": "Date of Birth (Optional)",
     "summaryTitle": "Professional Summary",
     "summaryDescription": "Write 2-4 sentences that highlight your value and years of experience.",
     "placeholders": {
@@ -243,9 +335,10 @@
       "lastName": "e.g. Kebede",
       "jobTitle": "e.g. Software Engineer",
       "email": "abebe@example.com",
-      "phone": "+251 911 234 567",
+      "phone": "+251 911 223 344",
       "city": "Addis Ababa",
       "country": "Ethiopia",
+      "dateOfBirth": "e.g. 1990-01-01",
       "summary": "e.g. Experienced software engineer with 5 years of experience..."
     }
   },
@@ -290,6 +383,40 @@
     "add": "Add",
     "noSkills": "No skills added yet.",
     "placeholder": "e.g. JavaScript, Project Management"
+  },
+  "WebDevelopment": {
+    "title": "Premium Web Development",
+    "description": "We build high-performance, stunning websites tailored to your brand.",
+    "steps": {
+      "type": "Project Type",
+      "typeDesc": "Select the type of project you need",
+      "details": "Project Details",
+      "detailsDesc": "Tell us more about yourself and the project",
+      "contact": "Contact Info"
+    },
+    "types": {
+      "PORTFOLIO": "Portfolio",
+      "LANDING_PAGE": "Landing Page",
+      "E_COMMERCE": "E-Commerce",
+      "SAAS": "SaaS Platform",
+      "CORPORATE": "Corporate Site",
+      "BLOG": "Blog / News",
+      "OTHER": "Other Custom Solution"
+    },
+    "form": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "budget": "Estimated Budget (Optional)",
+      "description": "Project Description",
+      "descriptionPlaceholder": "Tell us about your vision, features, and timeline...",
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "startNew": "Start New Request",
+      "back": "Back",
+      "successTitle": "Request Received!",
+      "successMessage": "We have received your project details. Our team will review it and get back to you shortly."
+    }
   },
   "CVNavigation": {
     "next": "Next",
@@ -370,6 +497,7 @@
     "errorMessage": "There was an error submitting your request. Please try again.",
     "back": "Back",
     "next": "Next",
+    "telegramJoin": "Contact us on Telegram",
     "steps": {
       "contact": "Contact",
       "job": "Job Info",
@@ -384,6 +512,22 @@
       "senior": "Senior Level",
       "executive": "Executive Level"
     },
+    "educationLevel": "Education Level",
+    "selectEducationLevel": "Select your education level",
+    "educationLevels": {
+      "high_school_certificate": "High School Leaving Certificate (Grade 12 Complete)",
+      "tvet_level_1": "TVET Certificate Level 1",
+      "tvet_level_2": "TVET Certificate Level 2",
+      "tvet_level_3": "TVET Certificate Level 3",
+      "tvet_level_4": "TVET Certificate Level 4",
+      "tvet_level_5_diploma": "TVET Level 5 (Diploma)",
+      "bachelors_degree": "Bachelor's Degree",
+      "masters_degree": "Master's Degree",
+      "doctorate_phd": "Doctorate (PhD)"
+    },
+    "resumeUpload": "Resume Upload",
+    "uploadDescription": "Upload your resume (PDF, DOC, DOCX - max 4MB)",
+    "uploadError": "Failed to upload file. Please try again.",
     "jobs": {
       "technology_it": "Technology & IT",
       "business_finance": "Business & Finance",
@@ -395,6 +539,118 @@
       "skilled_trades": "Skilled & Technical Trades",
       "hospitality_service": "Hospitality & Service",
       "other": "Other"
+    }
+  },
+  "PrintOrders": {
+    "pageTitle": "Print & Custom Orders",
+    "subtitle": "Menus, wedding cards, flyers, mugs, t-shirts, and more.",
+    "orderNow": "Order Now",
+    "basePrice": "Price",
+    "form": {
+      "title": "Order Request",
+      "fullName": "Full Name",
+      "phone": "Phone Number",
+      "location": "Location (City / Area)",
+      "quantity": "Quantity",
+      "email": "Email (Optional)",
+      "notes": "Notes / Instructions",
+      "notesPlaceholder": "Describe your design needs, size, or specific requirements...",
+      "disclaimer": "This is a request only. Final pricing, design confirmation, and payment are handled offline.",
+      "agreeCheckbox": "I understand and agree",
+      "submitButton": "Submit Order Request",
+      "submitting": "Submitting...",
+      "productDetails": "Product Details",
+      "selectOption": "Select an option",
+      "dynamic": {
+        "brideName": "Bride's Name",
+        "groomName": "Groom's Name",
+        "eventDate": "Date",
+        "eventTime": "Time",
+        "eventPlace": "Place / Venue",
+        "birthdayPerson": "Birthday Person's Name",
+        "location": "Location",
+        "deceasedName": "Deceased Person's Name",
+        "purpose": "Purpose of Card",
+        "fullName": "Full Name",
+        "jobTitle": "Job Title",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "address": "Address",
+        "website": "Website",
+        "size": "Size",
+        "paperType": "Paper Type",
+        "quantity": "Quantity",
+        "lamination": "Lamination",
+        "width": "Width",
+        "height": "Height",
+        "eyelets": "Eyelets",
+        "foldType": "Fold Type",
+        "mugType": "Mug Type",
+        "color": "Color",
+        "gender": "Gender",
+        "style": "Style",
+        "shape": "Shape",
+        "cover": "Cover Material"
+      }
+    },
+    "success": {
+      "title": "Order Received",
+      "message": "Thank you. Our team will contact you shortly to confirm details.",
+      "backButton": "Back to Services"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    },
+    "categories": {
+      "Cards": "Cards",
+      "Marketing": "Marketing",
+      "Merchandise": "Merchandise",
+      "Stationery": "Stationery",
+      "desc_Cards": "Business cards, Wedding & Birthday invitations",
+      "desc_Marketing": "Flyers, Posters, Banners & Promotional materials",
+      "desc_Merchandise": "T-Shirts, Mugs, Caps & Custom branding",
+      "desc_Stationery": "Stickers, Letterheads, Envelopes & Notebooks",
+      "folders": "Categories"
+    },
+    "viewing": "Viewing",
+    "explore": "Explore",
+    "collection": "Collection",
+    "items": "items",
+    "noProducts": "No products found",
+    "checkBackLater": "Check back later for"
+  },
+  "PrintProducts": {
+    "menus": {
+      "name": "Restaurant Menus",
+      "description": "High-quality laminated menus, tri-fold or booklet styles."
+    },
+    "business-cards": {
+      "name": "Business Cards",
+      "description": "Premium matte or glossy finish business cards."
+    },
+    "flyers": {
+      "name": "Flyers & Brochures",
+      "description": "A5, A4 flyers for events and promotions."
+    },
+    "wedding-cards": {
+      "name": "Wedding Invitations",
+      "description": "Elegant custom designs with premium envelopes."
+    },
+    "banners": {
+      "name": "Roll-up Banners",
+      "description": "Standard 85x200cm roll-up banners with stand."
+    },
+    "stickers": {
+      "name": "Custom Stickers",
+      "description": "Die-cut labels for products or branding."
+    },
+    "tshirts": {
+      "name": "T-Shirt Printing",
+      "description": "Cotton t-shirts with heat press or screen printing."
+    },
+    "mugs": {
+      "name": "Custom Mugs",
+      "description": "Ceramic mugs with your logo or photo."
     }
   },
   "Pricing": {
@@ -421,7 +677,7 @@
       "mostPopular": "Most Popular",
       "outcomeLabel": "Outcome",
       "notesTitle": "Important Notes",
-      "positioningLine": "We apply for jobs on your behalf—professionally, strategically, and consistently.",
+      "positioningLine": "We apply for jobs on your behalf,professionally, strategically, and consistently.",
       "notes": {
         "1": "CV writing is a separate service",
         "2": "Client must provide CV details",
@@ -430,7 +686,7 @@
       },
       "packages": {
         "basic": {
-          "title": "Apply Assist – Basic",
+          "title": "Basic",
           "bestFor": "Best for: Fresh graduates & first-time job seekers",
           "features": {
             "1": "Apply to 10 job vacancies",
@@ -442,7 +698,7 @@
           "outcome": "Consistent applications with minimal effort"
         },
         "professional": {
-          "title": "Apply Assist – Professional",
+          "title": "Professional",
           "bestFor": "Best for: Working professionals",
           "features": {
             "1": "Apply to 25 job vacancies",
@@ -454,7 +710,7 @@
           "outcome": "Higher-quality applications with improved chances"
         },
         "elite": {
-          "title": "Apply Assist – Elite",
+          "title": "Elite",
           "bestFor": "Best for: Serious or urgent job seekers",
           "features": {
             "1": "Apply to 50 job vacancies",

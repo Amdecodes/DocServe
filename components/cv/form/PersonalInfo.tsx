@@ -3,13 +3,26 @@
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { useCV } from "@/components/cv/CVContext";
+import React, { useState, useEffect } from "react";
 
 export function PersonalInfo() {
   const { cvData, updateCVData } = useCV();
+  const [localData, setLocalData] = useState(cvData.personalInfo);
+
+  // Sync with externals updates
+  useEffect(() => {
+    setLocalData(cvData.personalInfo);
+  }, [cvData.personalInfo]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    updateCVData("personalInfo", { ...cvData.personalInfo, [name]: value });
+    setLocalData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    // Only update context on blur to prevent preview flickering
+    updateCVData("personalInfo", { ...localData, [name]: value });
   };
 
   type PersonalInfo = typeof cvData.personalInfo;
@@ -27,8 +40,9 @@ export function PersonalInfo() {
           <Input
             id="firstName"
             name="firstName"
-            value={cvData.personalInfo.firstName}
+            value={localData.firstName}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="e.g. John"
           />
         </div>
@@ -39,20 +53,25 @@ export function PersonalInfo() {
           <Input
             id="lastName"
             name="lastName"
-            value={cvData.personalInfo.lastName}
+            value={localData.lastName}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="e.g. Doe"
           />
         </div>
         <div className="space-y-2 md:col-span-2">
           <label htmlFor="jobTitle" className="text-sm font-medium">
-            Job Title
+            Job Title{" "}
+            <span className="text-gray-400 font-normal text-xs">
+              (Optional)
+            </span>
           </label>
           <Input
             id="jobTitle"
             name="jobTitle"
-            value={cvData.personalInfo.jobTitle}
+            value={localData.jobTitle}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="e.g. Software Engineer"
           />
         </div>
@@ -63,8 +82,9 @@ export function PersonalInfo() {
           <Input
             id="headline"
             name="headline"
-            value={cvData.personalInfo.headline || ""}
+            value={localData.headline || ""}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="e.g. Senior Software Engineer specializing in React and Node.js"
           />
         </div>
@@ -76,8 +96,9 @@ export function PersonalInfo() {
             id="email"
             name="email"
             type="email"
-            value={cvData.personalInfo.email}
+            value={localData.email}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="john@example.com"
           />
         </div>
@@ -89,8 +110,9 @@ export function PersonalInfo() {
             id="phone"
             name="phone"
             type="tel"
-            value={cvData.personalInfo.phone}
+            value={localData.phone}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="+251 911 234 567"
           />
         </div>
@@ -101,8 +123,9 @@ export function PersonalInfo() {
           <Input
             id="city"
             name="city"
-            value={cvData.personalInfo.city}
+            value={localData.city}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="Addis Ababa"
           />
         </div>
@@ -113,8 +136,9 @@ export function PersonalInfo() {
           <Input
             id="country"
             name="country"
-            value={cvData.personalInfo.country}
+            value={localData.country}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="Ethiopia"
           />
         </div>
@@ -125,8 +149,9 @@ export function PersonalInfo() {
           <Input
             id="linkedin"
             name="linkedin"
-            value={cvData.personalInfo.linkedin || ""}
+            value={localData.linkedin || ""}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="linkedin.com/in/johndoe"
           />
         </div>
@@ -137,8 +162,9 @@ export function PersonalInfo() {
           <Input
             id="website"
             name="website"
-            value={cvData.personalInfo.website || ""}
+            value={localData.website || ""}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="johndoe.com"
           />
         </div>

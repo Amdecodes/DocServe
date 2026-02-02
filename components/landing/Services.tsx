@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
-import { FileText, Printer, Megaphone, ArrowRight } from "lucide-react";
+import { FileText, Printer, Headset, ArrowRight, Scroll, Laptop } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Services() {
@@ -19,8 +19,23 @@ export default function Services() {
         { label: t("digital.agreement") },
         { label: t("digital.editing") },
       ],
+      comingSoon: false,
       action: t("digital.action"),
       color: "bg-blue-50 text-blue-600",
+    },
+    {
+      id: "agreements",
+      title: t("agreements.title"),
+      icon: Scroll,
+      items: [
+        { label: t("agreements.car") },
+        { label: t("agreements.house") },
+        // { label: t("agreements.business") },
+      ],
+      comingSoon: false,
+      action: t("agreements.action"),
+      color: "bg-orange-50 text-orange-600",
+      href: "/agreements",
     },
     {
       id: "printing",
@@ -30,23 +45,39 @@ export default function Services() {
         { label: t("printing.invitations") },
         { label: t("printing.certificates") },
         { label: t("printing.menus") },
-        { label: t("printing.academic") },
       ],
+      comingSoon: false,
       action: t("printing.action"),
       color: "bg-teal-50 text-teal-600",
+      href: "/print-orders",
     },
     {
-      id: "promotional",
-      title: t("promotional.title"),
-      icon: Megaphone,
+      id: "virtual-assistance",
+      title: t("virtualAssistance.title"),
+      icon: Headset,
       items: [
-        { label: t("promotional.banners") },
-        { label: t("promotional.tshirts") },
-        { label: t("promotional.mugs") },
-        { label: t("promotional.stickers") },
+        { label: t("virtualAssistance.jobApplications") },
+        { label: t("virtualAssistance.emails") },
+        { label: t("virtualAssistance.admin") },
       ],
-      action: t("promotional.action"),
+      comingSoon: false,
+      action: t("virtualAssistance.action"),
       color: "bg-purple-50 text-purple-600",
+      href: "/form/virtual-assistance",
+    },
+    {
+      id: "web-development",
+      title: t("webDev.title"),
+      icon: Laptop,
+      items: [
+        { label: t("webDev.portfolio") },
+        { label: t("webDev.saas") },
+        { label: t("webDev.ecommerce") },
+      ],
+      comingSoon: false,
+      action: t("webDev.action"),
+      color: "bg-blue-50 text-blue-600",
+      href: "/services/web-development",
     },
   ];
 
@@ -60,7 +91,7 @@ export default function Services() {
           <div className="h-1 w-20 bg-secondary mx-auto rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -80,27 +111,41 @@ export default function Services() {
                 {category.title}
               </h3>
 
-              <ul className="space-y-4 mb-8 flex-grow">
-                {category.items.map((item, idx) => (
-                  <li key={idx} className="flex items-center text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mr-3" />
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
+              {category.comingSoon ? (
+                <div className="mb-8 grow flex items-center justify-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                  <span className="text-gray-400 font-medium italic">
+                    Coming Soon
+                  </span>
+                </div>
+              ) : (
+                <ul className="space-y-4 mb-8 grow">
+                  {category.items.map((item, idx) => (
+                    <li key={idx} className="flex items-center text-gray-600">
+                      <div className="w-1.5 h-1.5 bg-secondary rounded-full mr-3" />
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <Link
                 href={
-                  category.id === "digital" ? "/resumes/templates" : "/contact"
+                  category.href ||
+                  (category.id === "digital"
+                    ? "/resumes/templates"
+                    : "/contact")
                 }
-                className="w-full"
+                className={`w-full ${category.comingSoon ? "pointer-events-none opacity-50" : ""}`}
               >
                 <Button
                   variant="outline"
+                  disabled={category.comingSoon}
                   className="w-full justify-between group"
                 >
-                  {category.action}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  {category.comingSoon ? "Not Available" : category.action}
+                  {!category.comingSoon && (
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  )}
                 </Button>
               </Link>
             </motion.div>

@@ -13,6 +13,7 @@ export interface PersonalInfo {
   linkedin?: string;
   website?: string;
   photo?: string;
+  dateOfBirth?: string;
   summary?: string; // Added summary here if it's sometimes part of personal info, though context separates it
 }
 
@@ -61,8 +62,8 @@ export interface VolunteerItem {
 
 export type CoverLetterTone = "Formal" | "Neutral" | "Confident";
 
-// Document language - English default, Amharic option
-export type DocumentLanguage = "en" | "am";
+// Document language (CV content is English-only)
+export type DocumentLanguage = "en";
 
 export interface CoverLetterData {
   recipientName: string;
@@ -79,7 +80,8 @@ export interface AIMetadata {
 }
 
 export interface CVData {
-  documentLanguage: DocumentLanguage; // "en" or "am"
+  documentLanguage: DocumentLanguage; // CVs are generated in English
+  selectedTemplate?: string; // Track which template was selected for this data
   personalInfo: PersonalInfo;
   summary: string; // User's brief notes before payment, AI-generated after
   summaryNotes?: string; // Original user input for AI context

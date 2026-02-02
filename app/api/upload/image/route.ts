@@ -2,7 +2,7 @@
 // Returns a temporary signed URL usable for preview and PDF generation
 
 import { NextResponse } from "next/server";
-import { uploadImage } from "@/lib/upload";
+import { uploadTempFile } from "@/lib/upload";
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const safeName = file.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
     const fileName = `temp/${Date.now()}-${safeName}`;
 
-    const result = await uploadImage(buffer, fileName, file.type);
+    const result = await uploadTempFile(buffer, fileName, file.type);
 
     return NextResponse.json({
       url: result.publicUrl,

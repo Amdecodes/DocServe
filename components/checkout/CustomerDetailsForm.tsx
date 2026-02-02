@@ -52,7 +52,7 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
     }
   }
 
-  const form = useForm<CustomerSchema>({
+  const { register, watch, formState, ...form } = useForm<CustomerSchema>({
     resolver: zodResolver(customerSchema),
     defaultValues: getInitialValues(),
     mode: "onChange"
@@ -60,7 +60,7 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
 
   // Watch for changes to persist
   useEffect(() => {
-    const subscription = form.watch((value) => {
+    const subscription = watch((value) => {
       // Persist to local storage
       localStorage.setItem("paperless.customer", JSON.stringify(value))
       
@@ -70,12 +70,12 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
       // We want to block payment if invalid.
     })
     return () => subscription.unsubscribe()
-  }, [form.watch])
+  }, [watch])
 
   // Effect to report validity to parent
   useEffect(() => {
-      onValidityChange(form.formState.isValid)
-  }, [form.formState.isValid, onValidityChange])
+      onValidityChange(formState.isValid)
+  }, [formState.isValid, onValidityChange])
 
   return (
     <Card className="mb-6">
@@ -88,22 +88,22 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
                 <label htmlFor="firstName" className="text-sm font-medium">First Name</label>
                 <Input 
                     id="firstName" 
-                    {...form.register("firstName")}
-                    className={form.formState.errors.firstName ? "border-red-500 focus-visible:ring-red-500" : ""}
+                    {...register("firstName")}
+                    className={formState.errors.firstName ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
-                 {form.formState.errors.firstName && (
-                    <p className="text-xs text-red-500">{form.formState.errors.firstName.message}</p>
+                 {formState.errors.firstName && (
+                    <p className="text-xs text-red-500">{formState.errors.firstName.message}</p>
                 )}
             </div>
             <div className="space-y-2">
                 <label htmlFor="lastName" className="text-sm font-medium">Last Name</label>
                 <Input 
                     id="lastName" 
-                    {...form.register("lastName")}
-                    className={form.formState.errors.lastName ? "border-red-500 focus-visible:ring-red-500" : ""}
+                    {...register("lastName")}
+                    className={formState.errors.lastName ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
-                 {form.formState.errors.lastName && (
-                    <p className="text-xs text-red-500">{form.formState.errors.lastName.message}</p>
+                 {formState.errors.lastName && (
+                    <p className="text-xs text-red-500">{formState.errors.lastName.message}</p>
                 )}
             </div>
         </div>
@@ -113,11 +113,11 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
             <Input 
                 id="email" 
                 type="email"
-                {...form.register("email")}
-                className={form.formState.errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+                {...register("email")}
+                className={formState.errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
             />
-             {form.formState.errors.email && (
-                <p className="text-xs text-red-500">{form.formState.errors.email.message}</p>
+             {formState.errors.email && (
+                <p className="text-xs text-red-500">{formState.errors.email.message}</p>
             )}
         </div>
 
@@ -126,11 +126,11 @@ export function CustomerDetailsForm({ onValidityChange }: CustomerDetailsFormPro
             <Input 
                 id="phone" 
                 type="tel"
-                {...form.register("phone")}
-                className={form.formState.errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
+                {...register("phone")}
+                className={formState.errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
             />
-             {form.formState.errors.phone && (
-                <p className="text-xs text-red-500">{form.formState.errors.phone.message}</p>
+             {formState.errors.phone && (
+                <p className="text-xs text-red-500">{formState.errors.phone.message}</p>
             )}
         </div>
       </CardContent>

@@ -6,7 +6,10 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useCallback,
+  Suspense,
 } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   PersonalInfo,
   ExperienceItem,
@@ -17,7 +20,6 @@ import {
   AIMetadata,
   CVData,
   CoverLetterData,
-  DocumentLanguage,
 } from "@/types/cv";
 
 export type {
@@ -27,7 +29,6 @@ export type {
   SkillItem,
   CVData,
   CoverLetterData,
-  DocumentLanguage,
 };
 
 interface CVContextType {
@@ -49,8 +50,6 @@ interface CVContextType {
   ) => void;
   selectedTemplate: string;
   setTemplate: (id: string) => void;
-  // Language selection
-  setDocumentLanguage: (language: DocumentLanguage) => void;
   // Helpers for arrays
   addItem: (
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
@@ -94,6 +93,7 @@ const defaultCVData: CVData = {
     headline: "",
     linkedin: "",
     website: "",
+    dateOfBirth: "",
   },
   summary: "",
   coreCompetencies: [],
@@ -113,31 +113,55 @@ const defaultCVData: CVData = {
 
 const CVContext = createContext<CVContextType | undefined>(undefined);
 
+import { DEFAULT_TEMPLATE, TEMPLATES } from "@/config/templates";
+
 export function CVProvider({ children }: { children: React.ReactNode }) {
   const [cvData, setCvData] = useState<CVData>(defaultCVData);
-  const [selectedTemplate, setSelectedTemplate] = useState("modern");
+  const [selectedTemplate, setSelectedTemplate] = useState(DEFAULT_TEMPLATE);
   const isMountedRef = useRef(false);
 
-  // Track mount state and load persisted data
+  const searchParams = useSearchParams();
+  const templateFromUrl = searchParams.get("template");
+
+  // Track mount state and load persisted data (Async to avoid blocking)
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Load template
-    const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
-    if (savedTemplate) {
-      setSelectedTemplate(savedTemplate);
-    }
-
-    // Load cvData
-    try {
-      const savedCV = localStorage.getItem("paperless.cvData");
-      if (savedCV) {
-        setCvData(JSON.parse(savedCV));
+    const loadData = async () => {
+      // 1. Immediate Phase: Load structure (Template)
+      if (templateFromUrl && TEMPLATES.some((t) => t.id === templateFromUrl)) {
+        setSelectedTemplate(templateFromUrl);
+      } else {
+        const savedTemplate = localStorage.getItem("paperless.selectedTemplate");
+        if (savedTemplate && TEMPLATES.some((t) => t.id === savedTemplate)) {
+          setSelectedTemplate(savedTemplate);
+        }
       }
-    } catch (e) {
-      console.error("Failed to load CV data", e);
-    }
-  }, []);
+
+      // 2. Delayed Phase: Load heavy content data
+      // This ensures the page is interactive and the template shell is ready first.
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      try {
+        const savedCV = localStorage.getItem("paperless.cvData");
+        if (savedCV) {
+          const parsed = JSON.parse(savedCV) as CVData;
+          setCvData(prev => ({
+            ...parsed,
+            documentLanguage: "en",
+          }));
+          
+          if (!templateFromUrl && parsed.selectedTemplate && TEMPLATES.some((t) => t.id === parsed.selectedTemplate)) {
+            setSelectedTemplate(parsed.selectedTemplate);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load CV data", e);
+      }
+    };
+
+    loadData();
+  }, [templateFromUrl]);
 
   // Persist template selection to localStorage
   useEffect(() => {
@@ -146,14 +170,17 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }
   }, [selectedTemplate]);
 
-  // Persist cvData to localStorage
+  // Debounced persistence of cvData to localStorage
   useEffect(() => {
     if (isMountedRef.current) {
-      localStorage.setItem("paperless.cvData", JSON.stringify(cvData));
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem("paperless.cvData", JSON.stringify(cvData));
+      }, 1000); // 1s debounce for global state persistence
+      return () => clearTimeout(timeoutId);
     }
   }, [cvData]);
 
-  const updateCVData = (
+  const updateCVData = useCallback((
     section: keyof CVData,
     data:
       | Partial<PersonalInfo>
@@ -180,9 +207,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
               }
             : data,
     }));
-  };
+  }, []);
 
-  const addItem = (
+  const addItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     item:
       | Partial<ExperienceItem>
@@ -197,9 +224,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       ...prev,
       [section]: [...((prev[section] as Array<any>) ?? []), newItem],
     }));
-  };
+  }, []);
 
-  const removeItem = (
+  const removeItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
   ) => {
@@ -209,9 +236,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         (item) => item.id !== id,
       ),
     }));
-  };
+  }, []);
 
-  const updateItem = (
+  const updateItem = useCallback((
     section: "experience" | "education" | "skills" | "languages" | "volunteer",
     id: string,
     data:
@@ -228,25 +255,20 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         item.id === id ? { ...item, ...data } : item,
       ),
     }));
-  };
+  }, []);
 
-  const updateCoverLetter = (data: Partial<CoverLetterData>) => {
+  const updateCoverLetter = useCallback((data: Partial<CoverLetterData>) => {
     setCvData((prev) => ({
       ...prev,
       coverLetter: { ...prev.coverLetter!, ...data },
     }));
-  };
+  }, []);
 
-  const setDocumentLanguage = (language: DocumentLanguage) => {
-    setCvData((prev) => ({
-      ...prev,
-      documentLanguage: language,
-    }));
-  };
-
-  const setTemplate = (id: string) => {
+  const setTemplate = useCallback((id: string) => {
     setSelectedTemplate(id);
-  };
+    // Sync to cvData explicitly
+    setCvData(prev => ({ ...prev, selectedTemplate: id }));
+  }, []);
 
   return (
     <CVContext.Provider
@@ -255,14 +277,15 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
         updateCVData,
         selectedTemplate,
         setTemplate,
-        setDocumentLanguage,
         addItem,
         removeItem,
         updateItem,
         updateCoverLetter,
       }}
     >
-      {children}
+      <Suspense fallback={null}>
+        {children}
+      </Suspense>
     </CVContext.Provider>
   );
 }

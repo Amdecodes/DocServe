@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
@@ -11,12 +12,19 @@ import { useTranslations } from "next-intl";
 
 export default function CheckoutPage() {
   const t = useTranslations("CheckoutPage");
+  const searchParams = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
   // Order state
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<{
+    title: string;
+    description: string;
+    amount: number;
+    currency: string;
+  } | null>(null);
 
   // Prevent double firing in Strict Mode
   const isInitializedRef = useRef(false);
@@ -50,11 +58,43 @@ export default function CheckoutPage() {
     isInitializedRef.current = true;
 
     const initOrder = async () => {
-      // 1. Try to get existing order from storage
-      const storedOrderId = localStorage.getItem("paperless.orderId");
+      // 1. Try to get existing order from URL or storage
+      const urlOrderId = searchParams.get("orderId");
+      const storedOrderId =
+        urlOrderId || localStorage.getItem("paperless.orderId");
 
       if (storedOrderId) {
         setOrderId(storedOrderId);
+
+        // Sync to localStorage if currently failing
+        if (
+          urlOrderId &&
+          urlOrderId !== localStorage.getItem("paperless.orderId")
+        ) {
+          localStorage.setItem("paperless.orderId", urlOrderId);
+        }
+
+        // Fetch order details
+        try {
+          const res = await fetch(`/api/orders/${storedOrderId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setOrderDetails({
+              title: data.title,
+              description: data.description,
+              amount: data.amount,
+              currency: data.currency,
+            });
+          } else if (res.status === 404) {
+            // If order doesn't exist on server (bad local storage), clear it
+            // console.warn("Order not found, clearing local storage");
+            localStorage.removeItem("paperless.orderId");
+            setOrderId(null);
+          }
+        } catch (error) {
+          console.error("Failed to fetch order details", error);
+        }
+
         setIsCreatingOrder(false);
         return;
       }
@@ -75,6 +115,8 @@ export default function CheckoutPage() {
     setPaymentError(null);
     try {
       // Initialize Chapa Payment
+      // Note: gatherCVFormData() depends on localStorage which might be empty on cross-device
+      // The server (api/payment/chapa/init) has robust fallbacks using the stored order data.
       const cvData = gatherCVFormData();
       const personal = cvData?.personal || {};
 
@@ -163,20 +205,22 @@ export default function CheckoutPage() {
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                 <div className="space-y-1">
                   <h3 className="font-semibold text-slate-900">
-                    Premium CV Service
+                    {orderDetails?.title || "Service"}
                   </h3>
                   <div className="flex items-center gap-2 text-xs text-slate-500">
                     {/* <span className="bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-medium">
                       PD
                     </span> */}
-                    <span>Professional Design</span>
+                    <span>
+                      {orderDetails?.description || "Service Description"}
+                    </span>
                   </div>
                 </div>
                 <div className="text-right">
                   <span className="block text-2xl font-bold text-slate-900">
-                    500{" "}
+                    {orderDetails?.amount || "..."}{" "}
                     <span className="text-sm font-medium text-slate-500">
-                      ETB
+                      {orderDetails?.currency || "ETB"}
                     </span>
                   </span>
                 </div>

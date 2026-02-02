@@ -1,7 +1,7 @@
 "use client";
 
 import { useCV } from "@/components/cv/CVContext";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useTranslations } from "next-intl";
 import { TEMPLATES } from "@/config/templates";
 import { Badge } from "@/components/ui/Badge";
@@ -16,15 +16,25 @@ export function TemplateGallery() {
 
   const handleSelect = (templateId: string) => {
     setTemplate(templateId);
-    router.push("/form/cv");
+    // Pass template ID as query param as backup in case localStorage doesn't sync in time
+    router.push(`/form/cv?template=${templateId}`);
   };
+
+  if (TEMPLATES.length === 0) {
+    return (
+      <div className="col-span-full py-20 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+        <p className="text-gray-500 font-medium">No templates available at the moment.</p>
+        <p className="text-sm text-gray-400 mt-2">Please check back later.</p>
+      </div>
+    );
+  }
 
   return (
     <>
       {TEMPLATES.map((template, idx) => (
         <div
           key={template.id}
-          className="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
+          className="group relative bg-white rounded-xl shadow-xs md:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col transform-gpu"
         >
           {/* Badge overlays */}
           <div className="absolute top-3 left-3 z-10 flex gap-2">
@@ -36,7 +46,7 @@ export function TemplateGallery() {
             {template.tags.includes("ats") && (
               <Badge
                 variant="secondary"
-                className="bg-white/90 backdrop-blur-sm shadow-sm font-medium"
+                className="bg-white/90 lg:backdrop-blur-sm shadow-sm font-medium"
               >
                 <Check className="w-3 h-3 mr-1" /> ATS
               </Badge>
@@ -46,19 +56,21 @@ export function TemplateGallery() {
           {/* Preview Image Area */}
           <div className="aspect-[210/297] bg-gray-100 relative overflow-hidden group-hover:bg-gray-50 transition-colors">
             {/* Real preview image or fallback */}
-            <div className="absolute inset-0 p-4 transition-transform duration-500 group-hover:scale-[1.02]">
+            <div className="absolute inset-0 p-4 transition-transform duration-500 lg:group-hover:scale-[1.02]">
               <div className="relative w-full h-full shadow-lg rounded-sm overflow-hidden bg-white">
                 <Image
                   src={template.previewImage || "/images/cv-preview.jpg"}
                   alt={template.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover object-top"
+                  priority={idx < 4}
                 />
               </div>
             </div>
 
-            {/* Hover overlay with Action */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-6 backdrop-blur-[2px]">
+            {/* Hover overlay with Action - Hidden on mobile, visible on lg hover */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex items-center justify-center p-6 backdrop-blur-[2px]">
               <Button
                 onClick={() => handleSelect(template.id)}
                 size="lg"
@@ -80,6 +92,16 @@ export function TemplateGallery() {
               <p className="text-sm text-gray-500 line-clamp-2 mt-1">
                 {t(`${template.id}.description`)}
               </p>
+            </div>
+
+            {/* Mobile-only Action Button - Visible only on small/medium screens */}
+            <div className="lg:hidden mt-4">
+              <Button
+                onClick={() => handleSelect(template.id)}
+                className="w-full font-bold bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+              >
+                {t("useThisTemplate")}
+              </Button>
             </div>
 
             <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
