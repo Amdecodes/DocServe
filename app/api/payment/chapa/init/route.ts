@@ -117,10 +117,15 @@ export async function POST(req: Request) {
     }
 
     // 2. Phone Validation & Fallback
-    // Chapa also validates phone numbers if provided. We'll sanitize and fallback if needed.
-    let chapaPhone = phone || (personal as any).phone;
-    // Simple check: must be at least 8 characters for Chapa to accept it generally
-    if (!chapaPhone || String(chapaPhone).length < 8) {
+    // Ensure phone number never causes failure.
+    let rawPhone = phone || (personal as any).phone;
+    // Sanitize: Remove all non-numeric characters
+    let chapaPhone = String(rawPhone || "").replace(/[^0-9]/g, "");
+
+    // Valid Ethiopian/International phone is usually > 8 digits.
+    // If invalid/missing, use a hardcoded fallback to ensure Chapa initializes.
+    if (!chapaPhone || chapaPhone.length < 9) {
+      console.warn(`[Chapa] Invalid phone "${rawPhone}", using fallback.`);
       chapaPhone = "0900336928";
     }
 
