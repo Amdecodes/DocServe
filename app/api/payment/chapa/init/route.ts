@@ -119,7 +119,7 @@ export async function POST(req: Request) {
 
     // 2. Phone Validation & Fallback
     // Ensure phone number never causes failure.
-    let rawPhone = phone || (personal as any).phone;
+    const rawPhone = phone || (personal as { phone?: string }).phone;
     // Sanitize: Remove all non-numeric characters
     let chapaPhone = String(rawPhone || "").replace(/[^0-9]/g, "");
 

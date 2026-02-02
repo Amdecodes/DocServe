@@ -1,5 +1,5 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
+// import Image from "next/image"; // Disabled for PDF compatibility
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake, Award, GraduationCap, Briefcase, Star } from "lucide-react";
 
@@ -45,12 +45,11 @@ export function FreshmanEntryLayout({ data }: { data: CVData }) {
           
           {personalInfo.photo && (
             <div className="ml-8 w-32 h-32 rounded-lg border-2 border-[#fb7185]/20 overflow-hidden shadow-sm shrink-0 relative">
-              <Image
+              {/* Use standard img for PDF compatibility */}
+              <img
                 src={personalInfo.photo}
                 alt={personalInfo.firstName}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover w-full h-full"
               />
             </div>
           )}
