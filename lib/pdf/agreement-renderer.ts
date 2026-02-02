@@ -132,14 +132,21 @@ const HTML_SHELL = (content: string, title: string) => `
       display: inline;
     }
 
-    /* Variable placeholders - highlighted and underlined */
+    /* Variable placeholders - normal text style */
     .variable {
+      font-weight: 400;
+      border-bottom: none;
+      padding: 0;
+      background: none;
+      display: inline;
+    }
+
+    /* Special styling for seller/buyer names only */
+    .variable-name {
       font-weight: 700;
       border-bottom: 1.5px solid #000;
       padding: 0 4px;
-      background: rgba(255, 255, 200, 0.3);
       display: inline;
-      white-space: nowrap;
     }
 
     .variable-empty {
@@ -407,13 +414,17 @@ export async function renderAgreementToHtml(
     const rawVal = formData[v.key];
     let displayVal: string;
 
+    // Determine if this is a seller/buyer name field
+    const isNameField = v.key.includes("SELLER_FULL_NAME") || v.key.includes("BUYER_FULL_NAME");
+    const varClass = isNameField ? "variable-name" : "variable";
+
     if (rawVal === null || rawVal === undefined || rawVal === "") {
       displayVal = `<span class="variable-empty">...........................</span>`;
     } else if (typeof rawVal === "boolean") {
       // Handle checkbox variables with truthy/falsy values
-      displayVal = `<span class="variable">${rawVal ? v.truthyValue || "✓" : v.falsyValue || "✗"}</span>`;
+      displayVal = `<span class="${varClass}">${rawVal ? v.truthyValue || "✓" : v.falsyValue || "✗"}</span>`;
     } else {
-      displayVal = `<span class="variable">${String(rawVal)}</span>`;
+      displayVal = `<span class="${varClass}">${String(rawVal)}</span>`;
     }
 
     // Replace all occurrences of this variable
@@ -421,16 +432,22 @@ export async function renderAgreementToHtml(
   });
 
   // 8. HANDLE CONDITIONAL SECTIONS {?VAR=value}...{/?}
+  // Remove the entire conditional block if condition is not met
   bodyText = bodyText.replace(
-    /\{\?(\w+)=(\w+)\}([\s\S]*?)\{\/\?\}/g,
+    /\{\?(\w+)=([^}]+)\}([\s\S]*?)\{\/\?\}/g,
     (match, varKey, expectedValue, innerContent) => {
       const actualValue = formData[varKey];
+      
+      // Only show content if:
+      // 1. Value matches expected value exactly
+      // 2. OR it's a checkbox (boolean true) and expected value is the truthy option
       if (
         String(actualValue) === expectedValue ||
         (actualValue === true && expectedValue === "በወኪል")
       ) {
         return innerContent;
       }
+      // Return empty string to remove the entire conditional block
       return "";
     },
   );
