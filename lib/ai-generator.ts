@@ -221,17 +221,17 @@ Experience Level: ${expLevelText}
 ${roleEnhancements}
 
 CRITICAL Requirements:
-1. Write 4-6 impactful sentences (120-180 words minimum).
-2. Opening sentence: Bold statement of expertise and years/level of experience.
-3. Second section: Core competencies and specialized skills relevant to ${jobTitle}.
-4. Third section: Key achievements patterns and professional reputation.
-5. Closing: Career philosophy or value proposition statement.
+1. Write 3-4 concise sentences (80-120 words) - formal CV style.
+2. Opening sentence: Clear statement of expertise and experience level.
+3. Second sentence: Core competencies and key skills.
+4. Third sentence: Notable achievements or strengths.
+5. Optional fourth: Value proposition or professional approach.
 6. Third person throughout ("Accomplished ${jobTitle}..." not "I am...").
-7. Include industry-specific terminology and keywords for ATS optimization.
-8. Sound like a $500/hour executive resume writer crafted this.
+7. Include industry-specific keywords for ATS optimization.
+8. Professional, direct, and impactful - no fluff.
 
 Example Quality Level (DO NOT COPY, just match this caliber):
-"Distinguished Senior Marketing Director with 12+ years of progressive experience orchestrating multi-million dollar brand campaigns across Fortune 500 organizations. Recognized for pioneering data-driven marketing strategies that consistently deliver 40%+ ROI improvements while building high-performing cross-functional teams of 20+ professionals. Core expertise spans digital transformation, customer journey optimization, and go-to-market strategy development. Trusted advisor to C-suite executives on brand positioning, market expansion, and competitive differentiation initiatives. Passionate about leveraging emerging technologies and consumer insights to create memorable brand experiences that drive sustainable business growth."
+"Senior Marketing Director with 12+ years of experience leading data-driven brand campaigns for Fortune 500 organizations. Core expertise in digital transformation, customer journey optimization, and go-to-market strategy development. Recognized for consistently delivering 40%+ ROI improvements while building high-performing teams. Trusted advisor to C-suite on brand positioning and competitive differentiation."
 
 Now write the professional summary for the ${jobTitle}:`;
 }
@@ -263,44 +263,35 @@ CANDIDATE PROFILE:
 
 ${roleGuidance}
 
-COVER LETTER STRUCTURE (Write ALL 4 paragraphs):
+COVER LETTER STRUCTURE (Write 3 distinct paragraphs with blank lines between them):
 
-**PARAGRAPH 1 - COMPELLING INTRODUCTION (5-6 sentences, ~80 words)**
-Write a powerful opening that immediately captures attention. Start with your passion for this profession and why you excel at it. Mention your experience level and what drives you. Show that you understand the demands and rewards of being a ${jobTitle}. End with a statement about the value you bring to any organization.
+**PARAGRAPH 1 - OPENING (4-5 sentences, ~60-80 words)**
+Start with a strong opening that establishes your professional identity and interest. Mention your experience level and what drives your passion for this role. Highlight your key value proposition. Keep it punchy and engaging.
 
-**PARAGRAPH 2 - CORE EXPERTISE & SKILLS (6-8 sentences, ~120 words)**
-This is the meat of your letter. Detail your specific competencies as a ${jobTitle}:
-- What are your 4-5 strongest professional skills?
-- How do you approach your daily responsibilities?
-- What methodologies or best practices do you follow?
-- What makes your approach to ${jobTitle} work exceptional?
-Use industry terminology. Be specific about what you DO, not just what you ARE.
+**PARAGRAPH 2 - CORE QUALIFICATIONS (5-7 sentences, ~100-130 words)**
+This is the main body. Detail your relevant skills and experience:
+- Your strongest competencies as a ${jobTitle}
+- Specific methodologies or approaches you use
+- Key achievements or consistent patterns of success
+- How your expertise aligns with typical role requirements
+Use concrete examples and industry terminology.
 
-**PARAGRAPH 3 - PROFESSIONAL CHARACTER & ACHIEVEMENTS (5-6 sentences, ~100 words)**
-Describe your work ethic and professional reputation:
-- How do colleagues and supervisors describe you?
-- What consistent feedback do you receive?
-- Describe a pattern of success (e.g., "consistently recognized for...", "known for maintaining...")
-- Mention your approach to challenges and problem-solving
-- Reference your commitment to continuous improvement
-
-**PARAGRAPH 4 - STRONG CLOSING (4-5 sentences, ~60 words)**
-End with confidence and enthusiasm:
-- Express genuine interest in contributing your skills
-- State your readiness to bring immediate value
-- Mention your flexibility and commitment
-- Include a professional call-to-action
-- Close with confidence, not desperation
+**PARAGRAPH 3 - CLOSING (3-4 sentences, ~50-70 words)**
+End with professional confidence:
+- Reiterate your enthusiasm for the opportunity
+- Express readiness to contribute immediately
+- Include a confident call-to-action
+- Thank them for their consideration
 
 CRITICAL RULES:
 1. FIRST PERSON throughout ("I am...", "My experience...", "I have...")
 2. NO greeting ("Dear Hiring Manager") or signature ("Sincerely, Name")
-3. Total length: 350-450 words - PAID customers expect substantial content
-4. NO generic phrases like "team player", "hard worker", "go-getter"
-5. NO invented facts, company names, or specific percentages
-6. Include industry keywords naturally for ATS optimization
-7. Sound like a confident professional, not desperate for a job
-8. Each paragraph should flow naturally into the next
+3. Total length: 250-330 words - concise yet comprehensive
+4. SEPARATE paragraphs with a blank line (use \n\n between paragraphs)
+5. NO generic phrases like "team player", "hard worker", "go-getter"
+6. NO invented facts, company names, or specific percentages
+7. Include industry keywords naturally for ATS optimization
+8. Sound confident and professional, not desperate
 
 EXAMPLE QUALITY LEVEL (for a Marketing Manager - DO NOT COPY, just match this caliber):
 "My passion for strategic marketing began over a decade ago, and every campaign since has reinforced my dedication to creating meaningful brand connections that drive measurable business results. As a marketing professional, I thrive on the challenge of translating complex business objectives into compelling narratives that resonate with target audiences. The constantly evolving digital landscape energizes me—each algorithm change, each new platform, each shift in consumer behavior presents an opportunity to innovate and outperform. I bring this enthusiasm, combined with proven expertise in multi-channel campaign orchestration, to every role I undertake.
