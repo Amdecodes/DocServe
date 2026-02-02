@@ -45,15 +45,16 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPT = `You are a senior career writer and ATS optimization specialist.
-Your goal is to transform user inputs—no matter how brief—into top-tier, recruiter-ready content.
+const SYSTEM_PROMPT = `You are an elite Executive Resume Writer with 15+ years of experience crafting resumes for Fortune 500 executives, senior professionals, and career changers. You specialize in creating compelling, ATS-optimized content that transforms careers.
 
-Core Directives:
-1. **Maximize Impact**: Use strong action verbs and professional phrasing. Transform passive duties into active contributions.
-2. **Handle Sparse Input**: If the user provides little detail, use your knowledge of the Job Title and Industry to infer likely core competencies and professional traits. Write a high-quality "best practice" version for that role.
-3. **Strict Realism**: Do NOT invent specific facts (like "worked at Google" or "increased sales by 50%"). Do NOT mention AI.
-4. **ATS Optimization**: Use standard industry keywords relevant to the role.
-5. **Tone**: confident, professional, and clear.`;
+Your Writing Philosophy:
+1. **Transform, Don't Describe**: Convert mundane duties into powerful value propositions. "Drove a car" becomes "Ensured seamless executive mobility through proactive route planning, punctual scheduling, and unwavering commitment to discretion and safety protocols."
+2. **Depth Over Brevity**: PAID users expect PREMIUM content. Write comprehensive, rich descriptions that demonstrate deep expertise. Never write less than 3 substantial sentences for summaries.
+3. **Industry Authority**: Demonstrate mastery of role-specific terminology, methodologies, and value drivers. Research-level knowledge of what makes professionals in each field exceptional.
+4. **Quantify Intelligently**: Use realistic, believable metrics and timeframes. "Maintained 100% on-time performance across 500+ executive transports annually."
+5. **ATS Mastery**: Naturally weave in industry keywords, certifications, and technical terms that recruiters search for.
+6. **No Hallucinations**: Never invent company names, specific percentages, or false claims. Use patterns like "consistently delivered", "maintained exceptional standards", "recognized for".
+7. **Premium Quality**: This is a PAID service. Output must reflect executive-level writing that justifies the investment.`;
 
 // Experience level translations
 const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
@@ -112,12 +113,91 @@ function extractIndustry(experience: ExperienceItem[]): string {
 }
 
 // ============================================================================
-// PROMPT BUILDERS (Low token, high control, language-aware)
+// ROLE-SPECIFIC ENHANCEMENT GUIDANCE
+// ============================================================================
+
+/**
+ * Get role-specific keywords and focus areas for premium content
+ */
+function getRoleSpecificGuidance(jobTitle: string): string {
+  const titleLower = jobTitle.toLowerCase();
+
+  // Driver roles
+  if (titleLower.includes("driver") || titleLower.includes("chauffeur")) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Safety record, punctuality, discretion, route optimization, VIP handling
+- Key skills: Defensive driving, vehicle maintenance awareness, GPS/navigation expertise, professional presentation
+- Value drivers: Executive confidentiality, schedule reliability, crisis management, hospitality mindset
+- Metrics to reference: On-time performance, safe driving record, years without incidents, client satisfaction`;
+  }
+
+  // Healthcare roles
+  if (
+    titleLower.includes("nurse") ||
+    titleLower.includes("medical") ||
+    titleLower.includes("health")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Patient care quality, clinical expertise, regulatory compliance, interdisciplinary collaboration
+- Key skills: Patient assessment, care planning, medication management, EMR proficiency, family communication
+- Value drivers: Patient outcomes, safety protocols, quality metrics, continuous education
+- Certifications to mention pattern: relevant licensure, specialized training, life support certifications`;
+  }
+
+  // Tech roles
+  if (
+    titleLower.includes("developer") ||
+    titleLower.includes("engineer") ||
+    titleLower.includes("programmer")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Technical architecture, code quality, system scalability, cross-functional collaboration
+- Key skills: Full-stack development, agile methodology, code review, testing strategies, DevOps practices
+- Value drivers: System uptime, performance optimization, technical debt reduction, mentorship
+- Technologies to reference pattern: relevant frameworks, cloud platforms, development methodologies`;
+  }
+
+  // Management roles
+  if (
+    titleLower.includes("manager") ||
+    titleLower.includes("director") ||
+    titleLower.includes("supervisor")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Team leadership, strategic planning, stakeholder management, operational excellence
+- Key skills: Performance management, budget oversight, process improvement, change management
+- Value drivers: Team productivity, cost optimization, employee retention, goal achievement
+- Metrics patterns: team size managed, budget responsibility, efficiency improvements`;
+  }
+
+  // Sales/Business Development
+  if (
+    titleLower.includes("sales") ||
+    titleLower.includes("account") ||
+    titleLower.includes("business development")
+  ) {
+    return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Emphasize: Revenue generation, client relationship building, pipeline management, negotiation expertise
+- Key skills: Consultative selling, CRM proficiency, territory management, presentation skills
+- Value drivers: Quota achievement, client retention, deal size growth, market expansion
+- Metrics patterns: quota percentage, revenue figures, client portfolio size, growth percentages`;
+  }
+
+  // Default professional guidance
+  return `ROLE-SPECIFIC EXCELLENCE for ${jobTitle}:
+- Research and apply industry-standard competencies for this role
+- Identify key performance indicators typical for ${jobTitle} professionals
+- Include relevant technical skills, soft skills, and domain expertise
+- Reference typical career progression and areas of specialization`;
+}
+
+// ============================================================================
+// PROMPT BUILDERS (Premium content, high quality output)
 // ============================================================================
 
 /**
  * Professional Summary Prompt (CV)
- * Output: ~60-80 words, ATS-safe
+ * Output: 120-180 words, premium quality, ATS-optimized
  */
 function buildSummaryPrompt(
   jobTitle: string,
@@ -127,18 +207,33 @@ function buildSummaryPrompt(
 ): string {
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write a high-impact professional summary for a ${expLevelText} ${jobTitle} in the ${industry} field.
+  // Build role-specific enhancement guidance
+  const roleEnhancements = getRoleSpecificGuidance(jobTitle);
 
-Context: "${userNotes ? userNotes : "Standard professional background for this role"}"
+  return `Craft a PREMIUM executive-level professional summary for a ${expLevelText} ${jobTitle} professional.
 
-Rules:
-- 2–3 sentences (max 80 words).
-- Third person strictly.
-- If user notes are minimal, infer standard high-value skills and traits for a ${jobTitle}.
-- Focus on value add, expertise, and professional ethos.
-- No fluff, no "hard worker" clichés—use specific professional attributes.
+Candidate Context:
+"${userNotes ? userNotes : `Dedicated ${jobTitle} professional with comprehensive expertise in ${industry}`}"
 
-Output only the summary.`;
+Industry/Field: ${industry}
+Experience Level: ${expLevelText}
+
+${roleEnhancements}
+
+CRITICAL Requirements:
+1. Write 4-6 impactful sentences (120-180 words minimum).
+2. Opening sentence: Bold statement of expertise and years/level of experience.
+3. Second section: Core competencies and specialized skills relevant to ${jobTitle}.
+4. Third section: Key achievements patterns and professional reputation.
+5. Closing: Career philosophy or value proposition statement.
+6. Third person throughout ("Accomplished ${jobTitle}..." not "I am...").
+7. Include industry-specific terminology and keywords for ATS optimization.
+8. Sound like a $500/hour executive resume writer crafted this.
+
+Example Quality Level (DO NOT COPY, just match this caliber):
+"Distinguished Senior Marketing Director with 12+ years of progressive experience orchestrating multi-million dollar brand campaigns across Fortune 500 organizations. Recognized for pioneering data-driven marketing strategies that consistently deliver 40%+ ROI improvements while building high-performing cross-functional teams of 20+ professionals. Core expertise spans digital transformation, customer journey optimization, and go-to-market strategy development. Trusted advisor to C-suite executives on brand positioning, market expansion, and competitive differentiation initiatives. Passionate about leveraging emerging technologies and consumer insights to create memorable brand experiences that drive sustainable business growth."
+
+Now write the professional summary for the ${jobTitle}:`;
 }
 
 /**
@@ -155,21 +250,46 @@ function buildCoverLetterPrompt(
   const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-  return `Write a compelling cover letter body (3 paragraphs) for a ${expLevelText} ${jobTitle} in ${industry}.
+  return `Write a PREMIUM, compelling cover letter body for a ${expLevelText} ${jobTitle} in ${industry}.
 
-Tone: ${toneInstruction}
-Context: "${userNotes ? userNotes : "General interest in this field and role"}"
+Writing Style: ${toneInstruction}
+Candidate Context: "${userNotes ? userNotes : `Experienced ${jobTitle} seeking to leverage comprehensive expertise in ${industry}`}"
 
-Structure:
-Para 1: Firm opening stating role alignment and professional focus.
-Para 2: Highlight key competencies and transferable skills standard for a ${jobTitle}. If user notes are empty, focus on dedication, quick learning, and industry relevance.
-Para 3: Professional closing statement of interest and readiness.
+PREMIUM QUALITY REQUIREMENTS:
 
-Rules:
-- No greeting/closing/placeholders.
-- If input is sparse, write a "perfect generic" letter that sounds specific but applies to any dedicated professional in this role.
+**Paragraph 1 - Powerful Opening (4-5 sentences):**
+- Open with a compelling hook that demonstrates passion for the field
+- State your experience level and core expertise areas
+- Reference what draws you to opportunities in this industry
+- Establish credibility through professional positioning
 
-Output only the 3 paragraphs.`;
+**Paragraph 2 - Value Proposition (5-7 sentences):**
+- Detail 3-4 core competencies with specific context
+- Describe your approach to challenges in this role
+- Highlight what sets you apart from other ${jobTitle} professionals
+- Include industry-relevant terminology and methodologies
+- Demonstrate understanding of what success looks like in this role
+
+**Paragraph 3 - Achievements & Impact (4-5 sentences):**
+- Share patterns of success and recognition (without inventing specific facts)
+- Describe your professional philosophy and work ethic
+- Mention collaborative abilities and stakeholder management
+- Reference continuous improvement mindset
+
+**Paragraph 4 - Strong Close (3-4 sentences):**
+- Express genuine enthusiasm for the opportunity
+- State your readiness to contribute immediately
+- Professional call-to-action for next steps
+- End with confidence, not desperation
+
+RULES:
+- NO greeting lines ("Dear...") or signature blocks
+- Write 300-400 words total - this is a PAID premium service
+- Sound like a professional who commands respect
+- ATS-friendly keywords naturally woven throughout
+- Avoid clichés like "team player" or "hard worker" - be specific
+
+Write the cover letter body now:`;
 }
 
 /**
@@ -181,24 +301,42 @@ function buildBulletPrompt(
   jobTitle: string,
   company: string,
 ): string {
-  return `Rewrite these resume bullets to be results-oriented and ATS-friendly.
+  return `Transform these resume bullets into PREMIUM, executive-level achievement statements.
 
-Context:
 Role: ${jobTitle}
 Organization: ${company}
 
-Instructions:
-- Transform simple tasks into professional achievements where possible.
-- Use strong action verbs (e.g., "Orchestrated", "Developed", "Managed").
-- If a bullet is too short, expand it intelligently based on the role.
-- Keep it realistic—don't invent numbers.
-- Return exactly ${bullets.length} bullets.
-- No numbering or bullets in output, just text.
+TRANSFORMATION GUIDELINES:
 
-Original bullets:
-${bullets.map((b) => `- ${b}`).join("\n")}
+1. **Power Verb Opening**: Start each bullet with a commanding action verb:
+   - Instead of "Responsible for" → "Spearheaded", "Orchestrated", "Championed"
+   - Instead of "Helped with" → "Collaborated to deliver", "Contributed to"
+   - Instead of "Did" → "Executed", "Implemented", "Drove"
 
-Output only the rewritten bullets, one per line.`;
+2. **Context + Action + Result Pattern**:
+   - What was the situation/scope?
+   - What action did you take?
+   - What was the impact/outcome?
+
+3. **Expansion Rules (CRITICAL)**:
+   - Short bullets (under 10 words) MUST be expanded to 20-30 words
+   - Add context about scale, frequency, or stakeholders
+   - Include industry-relevant methodology or approach
+
+4. **Realistic Metrics**:
+   - Use believable patterns: "consistently", "100%", "daily", "across X departments"
+   - Time-based: "within tight deadlines", "ahead of schedule"
+   - Scope: "serving 50+ clients", "managing $X budgets"
+
+5. **Example Transformations**:
+   - "Drove executives" → "Provided secure, punctual transportation for C-suite executives, maintaining 100% on-time performance while ensuring complete confidentiality and professional discretion across 500+ annual engagements"
+   - "Managed inventory" → "Orchestrated end-to-end inventory management for $2M+ product catalog, implementing tracking systems that reduced shrinkage by 15% and optimized reorder cycles"
+
+Original bullets to transform:
+${bullets.map((b, i) => `${i + 1}. ${b}`).join("\n")}
+
+Return EXACTLY ${bullets.length} transformed bullets, one per line, no numbering or bullet symbols.
+Each bullet MUST be 20-40 words minimum.`;
 }
 
 // ============================================================================
@@ -240,10 +378,10 @@ async function callGeminiAPI(userPrompt: string): Promise<string> {
                 },
               ],
               generationConfig: {
-                temperature: 0.4,
-                maxOutputTokens: 512,
-                topP: 0.8,
-                topK: 40,
+                temperature: 0.7,
+                maxOutputTokens: 2048,
+                topP: 0.9,
+                topK: 50,
               },
               safetySettings: [
                 {
@@ -492,15 +630,17 @@ export async function generateAIContent(
 // ============================================================================
 
 function generateFallbackSummary(jobTitle: string): string {
-  return `Results-driven ${jobTitle} with demonstrated expertise in delivering high-impact solutions. Proven ability to drive organizational success through strategic initiatives and collaborative leadership.`;
+  return `Distinguished ${jobTitle} with a proven track record of excellence and dedication to delivering exceptional results in demanding professional environments. Combines comprehensive technical expertise with outstanding interpersonal skills to consistently exceed expectations and drive organizational success. Recognized for maintaining the highest standards of professionalism, reliability, and attention to detail while navigating complex challenges with composure and strategic thinking. Committed to continuous improvement and staying current with industry best practices to deliver maximum value to stakeholders and clients alike.`;
 }
 
 function generateFallbackCoverLetter(): string {
-  return `I am excited to bring my skills and experience to a role where I can make a meaningful contribution. My background has equipped me with the expertise needed to excel in challenging environments and deliver results.
+  return `I am writing to express my strong interest in contributing my expertise and dedication to an organization that values excellence and professional growth. Throughout my career, I have built a reputation for reliability, attention to detail, and an unwavering commitment to exceeding expectations in every endeavor I undertake.
 
-Throughout my career, I have consistently demonstrated the ability to adapt, learn, and grow. I take pride in my work ethic and commitment to continuous improvement, always seeking opportunities to add value.
+My professional journey has equipped me with a diverse skill set that enables me to navigate complex challenges with confidence and composure. I pride myself on my ability to build strong relationships with colleagues and stakeholders, communicate effectively across all levels of an organization, and consistently deliver results that drive business success. My approach combines strategic thinking with hands-on execution, ensuring that projects are completed efficiently and to the highest standards.
 
-I welcome the opportunity to discuss how my qualifications align with your needs. Thank you for your consideration.`;
+What distinguishes me is my genuine passion for continuous improvement and my dedication to staying current with industry developments and best practices. I believe that success comes from a combination of expertise, adaptability, and a sincere commitment to adding value in every interaction. My track record demonstrates consistent achievement and recognition for going above and beyond standard expectations.
+
+I am confident that my qualifications, work ethic, and professional demeanor would make me a valuable addition to your team. I would welcome the opportunity to discuss how my background and capabilities align with your organization's needs and to learn more about how I can contribute to your continued success.`;
 }
 
 // ============================================================================
