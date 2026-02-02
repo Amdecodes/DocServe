@@ -415,7 +415,8 @@ export async function renderAgreementToHtml(
     let displayVal: string;
 
     // Determine if this is a seller/buyer name field
-    const isNameField = v.key.includes("SELLER_FULL_NAME") || v.key.includes("BUYER_FULL_NAME");
+    const isNameField =
+      v.key.includes("SELLER_FULL_NAME") || v.key.includes("BUYER_FULL_NAME");
     const varClass = isNameField ? "variable-name" : "variable";
 
     if (rawVal === null || rawVal === undefined || rawVal === "") {
@@ -437,7 +438,7 @@ export async function renderAgreementToHtml(
     /\{\?(\w+)=([^}]+)\}([\s\S]*?)\{\/\?\}/g,
     (match, varKey, expectedValue, innerContent) => {
       const actualValue = formData[varKey];
-      
+
       // Only show content if:
       // 1. Value matches expected value exactly
       // 2. OR it's a checkbox (boolean true) and expected value is the truthy option
