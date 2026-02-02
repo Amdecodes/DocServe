@@ -249,7 +249,7 @@ function buildCoverLetterPrompt(
 ): string {
   const toneInstruction = TONE_MAP[tone] || TONE_MAP.Neutral;
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
-  
+
   // Get role-specific guidance for cover letter
   const roleGuidance = getRoleSpecificGuidance(jobTitle);
 
@@ -401,7 +401,7 @@ async function callGeminiAPI(userPrompt: string): Promise<string> {
               ],
               generationConfig: {
                 temperature: 0.7,
-                maxOutputTokens: 2048,
+                maxOutputTokens: 4096,
                 topP: 0.9,
                 topK: 50,
               },
