@@ -45,16 +45,16 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 // SYSTEM PROMPTS (Language-aware)
 // ============================================================================
 
-const SYSTEM_PROMPT = `You are an elite Executive Resume Writer with 15+ years of experience crafting resumes for Fortune 500 executives, senior professionals, and career changers. You specialize in creating compelling, ATS-optimized content that transforms careers.
+const SYSTEM_PROMPT = `You are a strict, professional Resume Writer focused on clarity, accuracy, and ATS optimization. You write in a human tone without buzzwords or fluff.
 
 Your Writing Philosophy:
-1. **Transform, Don't Describe**: Convert mundane duties into powerful value propositions. "Drove a car" becomes "Ensured seamless executive mobility through proactive route planning, punctual scheduling, and unwavering commitment to discretion and safety protocols."
-2. **Depth Over Brevity**: PAID users expect PREMIUM content. Write comprehensive, rich descriptions that demonstrate deep expertise. Never write less than 3 substantial sentences for summaries.
-3. **Industry Authority**: Demonstrate mastery of role-specific terminology, methodologies, and value drivers. Research-level knowledge of what makes professionals in each field exceptional.
-4. **Quantify Intelligently**: Use realistic, believable metrics and timeframes. "Maintained 100% on-time performance across 500+ executive transports annually."
-5. **ATS Mastery**: Naturally weave in industry keywords, certifications, and technical terms that recruiters search for.
-6. **No Hallucinations**: Never invent company names, specific percentages, or false claims. Use patterns like "consistently delivered", "maintained exceptional standards", "recognized for".
-7. **Premium Quality**: This is a PAID service. Output must reflect executive-level writing that justifies the investment.`;
+1. **Clear & Direct**: Use simple, professional language. Avoid flowery adjectives like "unwavering commitment", "seamless", "visionary".
+2. **Tasks Over Authority**: Describe WHAT was done, not just the level of responsibility. "Managed a team" -> "Coordinated daily tasks for a team of 5, ensuring deadlines were met."
+3. **No Inflated Claims**: Do not use "world-class", "elite", "top-tier" unless explicitly in the input.
+4. **No Future Dates**: Never imply actions in the future.
+5. **ATS Mastery**: Use standard industry keywords that recruiters search for.
+6. **No Hallucinations**: Never invent company names, metrics, or specifics not provided.
+7. **Human Tone**: excessive formality feels AI-generated. Write like a professional human.`;
 
 // Experience level translations
 const EXPERIENCE_LEVEL_MAP: Record<ExperienceLevel, string> = {
@@ -210,10 +210,10 @@ function buildSummaryPrompt(
   // Build role-specific enhancement guidance
   const roleEnhancements = getRoleSpecificGuidance(jobTitle);
 
-  return `Craft a PREMIUM executive-level About Me section for a ${expLevelText} ${jobTitle} professional.
+  return `Write a clear, ATS-friendly Professional Summary for a ${expLevelText} ${jobTitle}.
 
 Candidate Context:
-"${userNotes ? userNotes : `Dedicated ${jobTitle} professional with comprehensive expertise in ${industry}`}"
+"${userNotes ? userNotes : `Skilled ${jobTitle} with experience in ${industry}`}"
 
 Industry/Field: ${industry}
 Experience Level: ${expLevelText}
@@ -221,19 +221,16 @@ Experience Level: ${expLevelText}
 ${roleEnhancements}
 
 CRITICAL Requirements:
-1. Write 3-4 concise sentences (80-120 words) - formal CV style.
-2. Opening sentence: Clear statement of expertise and experience level.
-3. Second sentence: Core competencies and key skills.
-4. Third sentence: Notable achievements or strengths.
-5. Optional fourth: Value proposition or professional approach.
-6. Third person throughout ("Accomplished ${jobTitle}..." not "I am...").
-7. Include industry-specific keywords for ATS optimization.
-8. Professional, direct, and impactful - no fluff.
+1. **MAXIMUM 4 LINES** (approx 40-60 words).
+2. Focus on relevant skills and accurate experience.
+3. No buzzwords (e.g., "game-changer", "synergy").
+4. Third person implicit (e.g., "Experienced Project Manager..." not "I am...").
+5. Describe tasks and skills clearly.
 
-Example Quality Level (DO NOT COPY, just match this caliber):
-"Senior Marketing Director with 12+ years of experience leading data-driven brand campaigns for Fortune 500 organizations. Core expertise in digital transformation, customer journey optimization, and go-to-market strategy development. Recognized for consistently delivering 40%+ ROI improvements while building high-performing teams. Trusted advisor to C-suite on brand positioning and competitive differentiation."
+Example Style:
+"Experienced Project Manager with 5+ years in construction. Proven track record of delivering projects on time and within budget. Skilled in scheduling, cost estimation, and team leadership. Committed to safety and quality standards on all job sites."
 
-Now write the About Me section for the ${jobTitle}:`;
+Now write the Summary for the ${jobTitle}:`;
 }
 
 /**
@@ -253,54 +250,36 @@ function buildCoverLetterPrompt(
   // Get role-specific guidance for cover letter
   const roleGuidance = getRoleSpecificGuidance(jobTitle);
 
-  return `You are writing a PREMIUM cover letter for a PAYING customer. This must be exceptional quality that justifies their investment.
+  return `Write a clear, professional Cover Letter for a ${expLevelText} ${jobTitle}.
 
 CANDIDATE PROFILE:
 - Position: ${expLevelText} ${jobTitle}
 - Industry: ${industry}
 - Writing Tone: ${toneInstruction}
-- Background: "${userNotes ? userNotes : `Dedicated ${jobTitle} professional with solid experience in ${industry}`}"
+- Background: "${userNotes ? userNotes : `Skilled ${jobTitle} with experience in ${industry}`}"
 
 ${roleGuidance}
 
-COVER LETTER STRUCTURE (Write 3 distinct paragraphs with blank lines between them):
+COVER LETTER STRUCTURE (3 paragraphs, under 1 page):
 
-**PARAGRAPH 1 - OPENING (4-5 sentences, ~60-80 words)**
-Start with a strong opening that establishes your professional identity and interest. Mention your experience level and what drives your passion for this role. Highlight your key value proposition. Keep it punchy and engaging.
+**PARAGRAPH 1 - MOTIVATION (3-4 sentences)**
+State why you are applying. Motivation must align with the role/industry, not prestige. Focus on what you can do for them.
 
-**PARAGRAPH 2 - CORE QUALIFICATIONS (5-7 sentences, ~100-130 words)**
-This is the main body. Detail your relevant skills and experience:
-- Your strongest competencies as a ${jobTitle}
-- Specific methodologies or approaches you use
-- Key achievements or consistent patterns of success
-- How your expertise aligns with typical role requirements
-Use concrete examples and industry terminology.
+**PARAGRAPH 2 - SKILLS & TASKS (4-6 sentences)**
+Describe specific tasks you have performed and skills you have mastered. Avoid generalities.
+- Mention specific tools or methods.
+- Describe how you work daily.
+- Focus on competence and reliability.
 
-**PARAGRAPH 3 - CLOSING (3-4 sentences, ~50-70 words)**
-End with professional confidence:
-- Reiterate your enthusiasm for the opportunity
-- Express readiness to contribute immediately
-- Include a confident call-to-action
-- Thank them for their consideration
+**PARAGRAPH 3 - CLOSING (2-3 sentences)**
+Reiterate interest and request an interview. meaningful call to action.
 
 CRITICAL RULES:
-1. FIRST PERSON throughout ("I am...", "My experience...", "I have...")
-2. NO greeting ("Dear Hiring Manager") or signature ("Sincerely, Name")
-3. Total length: 250-330 words - concise yet comprehensive
-4. SEPARATE paragraphs with a blank line (use \n\n between paragraphs)
-5. NO generic phrases like "team player", "hard worker", "go-getter"
-6. NO invented facts, company names, or specific percentages
-7. Include industry keywords naturally for ATS optimization
-8. Sound confident and professional, not desperate
-
-EXAMPLE QUALITY LEVEL (for a Marketing Manager - DO NOT COPY, just match this caliber):
-"My passion for strategic marketing began over a decade ago, and every campaign since has reinforced my dedication to creating meaningful brand connections that drive measurable business results. As a marketing professional, I thrive on the challenge of translating complex business objectives into compelling narratives that resonate with target audiences. The constantly evolving digital landscape energizes me—each algorithm change, each new platform, each shift in consumer behavior presents an opportunity to innovate and outperform. I bring this enthusiasm, combined with proven expertise in multi-channel campaign orchestration, to every role I undertake.
-
-My core competencies span the full spectrum of modern marketing operations. I excel at developing data-driven strategies that align marketing initiatives with overarching business goals, leveraging analytics to optimize performance in real-time. My approach to content marketing emphasizes authentic storytelling supported by rigorous A/B testing and audience segmentation. I am particularly skilled at managing cross-functional teams, coordinating between creative, analytics, and sales departments to ensure cohesive campaign execution. Additionally, my proficiency with marketing automation platforms and CRM systems enables me to streamline workflows while maintaining personalized customer experiences at scale.
-
-Throughout my career, I have consistently been recognized for exceeding performance targets and delivering campaigns that surpass industry benchmarks. Colleagues describe me as someone who combines creative vision with analytical rigor—a professional who can both conceptualize innovative ideas and execute them with precision. I approach challenges with a solution-oriented mindset, viewing obstacles as opportunities for creative problem-solving. My commitment to staying current with industry trends and emerging technologies has allowed me to introduce forward-thinking strategies that keep organizations ahead of competitors.
-
-I am genuinely excited about the opportunity to bring my strategic marketing expertise to a new challenge. My combination of creative thinking, analytical capability, and proven execution makes me confident I can deliver immediate value. I am flexible, dedicated, and ready to contribute from day one. I welcome the opportunity to discuss how my background aligns with your organization's marketing objectives."
+1. First person ("I...").
+2. No greeting or signature.
+3. Concise and respectful tone.
+4. NO buzzwords ("synergy", "paradigm shift", "ninja").
+5. Motivation must be about the work, not "passion for excellence".
 
 Now write the cover letter body for the ${jobTitle}:`;
 }
@@ -314,42 +293,25 @@ function buildBulletPrompt(
   jobTitle: string,
   company: string,
 ): string {
-  return `Transform these resume bullets into PREMIUM, executive-level achievement statements.
+  return `Improve these resume bullets to be clear, task-oriented, and ATS-friendly.
 
 Role: ${jobTitle}
 Organization: ${company}
 
-TRANSFORMATION GUIDELINES:
+GUIDELINES:
 
-1. **Power Verb Opening**: Start each bullet with a commanding action verb:
-   - Instead of "Responsible for" → "Spearheaded", "Orchestrated", "Championed"
-   - Instead of "Helped with" → "Collaborated to deliver", "Contributed to"
-   - Instead of "Did" → "Executed", "Implemented", "Drove"
+1. **Clear Action Verbs**: Start with strong but common verbs (e.g., "Managed", "Created", "Analyzed", "Built"). Avoid "Spearheaded", "Orchestrated" unless truly executive level.
+2. **Tasks, Not Just Authority**: Describe the actual work performed.
+   - Bad: "Responsible for sales."
+   - Good: "Managed daily sales operations, finding new clients and maintaining relationships with existing ones."
+3. **No Fluff**: Remove adjectives that add no meaning ("proactive", "visionary", "synergistic").
+4. **Accuracy**: Do not invent metrics or numbers if they aren't implied.
+5. **Length**: 1-2 lines maximum. Do not force expansion if the task was simple.
 
-2. **Context + Action + Result Pattern**:
-   - What was the situation/scope?
-   - What action did you take?
-   - What was the impact/outcome?
-
-3. **Expansion Rules (CRITICAL)**:
-   - Short bullets (under 10 words) MUST be expanded to 20-30 words
-   - Add context about scale, frequency, or stakeholders
-   - Include industry-relevant methodology or approach
-
-4. **Realistic Metrics**:
-   - Use believable patterns: "consistently", "100%", "daily", "across X departments"
-   - Time-based: "within tight deadlines", "ahead of schedule"
-   - Scope: "serving 50+ clients", "managing $X budgets"
-
-5. **Example Transformations**:
-   - "Drove executives" → "Provided secure, punctual transportation for C-suite executives, maintaining 100% on-time performance while ensuring complete confidentiality and professional discretion across 500+ annual engagements"
-   - "Managed inventory" → "Orchestrated end-to-end inventory management for $2M+ product catalog, implementing tracking systems that reduced shrinkage by 15% and optimized reorder cycles"
-
-Original bullets to transform:
+Original bullets:
 ${bullets.map((b, i) => `${i + 1}. ${b}`).join("\n")}
 
-Return EXACTLY ${bullets.length} transformed bullets, one per line, no numbering or bullet symbols.
-Each bullet MUST be 20-40 words minimum.`;
+Return EXACTLY ${bullets.length} improved bullets, one per line, no numbering.`;
 }
 
 // ============================================================================
@@ -643,17 +605,15 @@ export async function generateAIContent(
 // ============================================================================
 
 function generateFallbackSummary(jobTitle: string): string {
-  return `Distinguished ${jobTitle} with a proven track record of excellence and dedication to delivering exceptional results in demanding professional environments. Combines comprehensive technical expertise with outstanding interpersonal skills to consistently exceed expectations and drive organizational success. Recognized for maintaining the highest standards of professionalism, reliability, and attention to detail while navigating complex challenges with composure and strategic thinking. Committed to continuous improvement and staying current with industry best practices to deliver maximum value to stakeholders and clients alike.`;
+  return `Experienced ${jobTitle} with strong professional skills. Proven ability to handle tasks efficiently and work well within a team. Committed to delivering high-quality results and continuous professional development. Reliability and attention to detail are key strengths.`;
 }
 
 function generateFallbackCoverLetter(): string {
-  return `I am writing to express my strong interest in contributing my expertise and dedication to an organization that values excellence and professional growth. Throughout my career, I have built a reputation for reliability, attention to detail, and an unwavering commitment to exceeding expectations in every endeavor I undertake.
+  return `I am writing to apply for the position. I have experience in this field and I am confident in my ability to contribute to your team.
 
-My professional journey has equipped me with a diverse skill set that enables me to navigate complex challenges with confidence and composure. I pride myself on my ability to build strong relationships with colleagues and stakeholders, communicate effectively across all levels of an organization, and consistently deliver results that drive business success. My approach combines strategic thinking with hands-on execution, ensuring that projects are completed efficiently and to the highest standards.
+My background includes working on various projects where I developed strong professional skills. I am reliable, detail-oriented, and accustomed to meeting deadlines. I focus on getting the job done right and working well with colleagues.
 
-What distinguishes me is my genuine passion for continuous improvement and my dedication to staying current with industry developments and best practices. I believe that success comes from a combination of expertise, adaptability, and a sincere commitment to adding value in every interaction. My track record demonstrates consistent achievement and recognition for going above and beyond standard expectations.
-
-I am confident that my qualifications, work ethic, and professional demeanor would make me a valuable addition to your team. I would welcome the opportunity to discuss how my background and capabilities align with your organization's needs and to learn more about how I can contribute to your continued success.`;
+I am interested in this opportunity because it aligns with my professional goals. Thank you for considering my application. I look forward to discussing my qualifications further.`;
 }
 
 // ============================================================================
