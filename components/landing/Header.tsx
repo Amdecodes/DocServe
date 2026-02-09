@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"; // Assuming UI components exist
 import { Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
+import Image from "next/image";
 
 export default function Header() {
   const t = useTranslations("Header");
@@ -56,10 +57,16 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <span className="text-2xl md:text-3xl font-bold text-primary tracking-tight">
-            {t("logo")}
-          </span>
+        <Link href="/" className="flex items-center gap-2">
+          <div className="relative h-9 md:h-12 w-36 md:w-48">
+            <Image
+              src="/images/Logo/sened png.png"
+              alt={t("logo")}
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </Link>
 
         {/* Desktop Nav - Only for Landing Page */}

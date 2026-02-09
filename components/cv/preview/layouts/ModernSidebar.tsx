@@ -25,6 +25,7 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
   const education = data.education || [];
   const skills = data.skills || [];
   const languages = data.languages || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol (needed for clickable PDF links)
@@ -298,7 +299,7 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
 
         {/* Key Highlights / Core Competencies (Replacing References) */}
         {coreCompetencies.length > 0 && (
-          <section style={{ pageBreakInside: "avoid" }}>
+          <section className="mb-10" style={{ pageBreakInside: "avoid" }}>
             <h2 className="text-2xl font-bold text-[#1F1F1F] mb-6 uppercase tracking-wide">
               Key Highlights
             </h2>
@@ -309,6 +310,28 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
                   <span className="text-sm text-gray-700 font-medium">
                     {comp}
                   </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* References */}
+        {references.length > 0 && (
+          <section style={{ pageBreakInside: "avoid" }}>
+            <h2 className="text-2xl font-bold text-[#1F1F1F] mb-6 uppercase tracking-wide">
+              References
+            </h2>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+              {references.map((ref: any, idx) => (
+                <div key={idx} className="relative">
+                   <h4 className="font-bold text-base text-[#1F1F1F]">{ref.name}</h4>
+                   <p className="text-gray-500 text-xs font-bold uppercase mt-1">
+                     {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                   </p>
+                   <p className="text-xs text-gray-400 mt-2">
+                      {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                   </p>
                 </div>
               ))}
             </div>

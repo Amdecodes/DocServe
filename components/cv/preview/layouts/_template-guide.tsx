@@ -269,4 +269,22 @@ export const SAMPLE_CV_DATA: CVData = {
       description: "Mentoring civic tech projects",
     },
   ],
+  references: [
+    {
+      id: "1",
+      name: "Dr. Sarah Mitchell",
+      position: "VP of Product",
+      company: "TechCorp Inc.",
+      phone: "+1 555 987 6543",
+      email: "sarah.m@techcorp.com",
+    },
+    {
+      id: "2",
+      name: "Mark Johnson",
+      position: "CTO",
+      company: "StartupXYZ",
+      phone: "+1 555 246 8135",
+      email: "mark@startupxyz.com",
+    },
+  ],
 };

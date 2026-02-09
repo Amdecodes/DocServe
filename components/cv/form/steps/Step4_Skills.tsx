@@ -5,25 +5,39 @@ import { useCV } from "@/components/cv/CVContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { COMMON_SKILLS } from "@/config/skills";
 
 export function Step4_Skills() {
   const { cvData, addItem, removeItem } = useCV();
   const [skillName, setSkillName] = useState("");
   const t = useTranslations("Skills");
 
-  const handleAdd = (e?: React.FormEvent) => {
-    e?.preventDefault()
-    if (skillName.trim()) {
-      addItem("skills", { 
-        id: crypto.randomUUID(), 
-        name: skillName.trim(), 
-        level: "Intermediate" 
-      }) // Default level
-      setSkillName("")
+  const handleAdd = (nameText: string) => {
+    const trimmed = nameText.trim();
+    if (trimmed) {
+      // Prevent adding exact duplicate name
+      const exists = cvData.skills.some(
+        (s) => s.name.toLowerCase() === trimmed.toLowerCase()
+      );
+      if (exists) return;
+
+      addItem("skills", {
+        id: crypto.randomUUID(),
+        name: trimmed,
+        level: "Intermediate",
+      });
+      setSkillName("");
     }
-  }
+  };
+
+  const suggestions = COMMON_SKILLS.filter(
+    (s) =>
+      !cvData.skills.some((userSkill) => 
+        userSkill.name.toLowerCase() === s.toLowerCase()
+      )
+  ).slice(0, 12); // Show top 12 available suggestions
 
   return (
     <div className="space-y-6">
@@ -32,30 +46,14 @@ export function Step4_Skills() {
         <p className="text-gray-500">{t("description")}</p>
       </div>
 
-      <div className="flex flex-wrap gap-2 min-h-25 content-start p-4 bg-white border rounded-lg">
-        {cvData.skills.length === 0 && (
-          <p className="text-sm text-gray-400 w-full text-center py-4">
-            {t("noSkills")}
-          </p>
-        )}
-        {cvData.skills.map((skill) => (
-          <Badge
-            key={skill.id}
-            variant="secondary"
-            className="pl-3 pr-1 py-1 text-sm bg-gray-100 hover:bg-gray-200"
-          >
-            {skill.name}
-            <button
-              onClick={() => removeItem("skills", skill.id)}
-              className="ml-2 rounded-full p-0.5 hover:bg-gray-300 text-gray-500"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </Badge>
-        ))}
-      </div>
-
-      <form onSubmit={handleAdd} className="flex gap-2">
+      {/* Manual Entry */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleAdd(skillName);
+        }}
+        className="flex gap-2"
+      >
         <Input
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
@@ -66,6 +64,59 @@ export function Step4_Skills() {
           <Plus className="mr-2 h-4 w-4" /> {t("add")}
         </Button>
       </form>
+
+      {/* Suggestions Section */}
+      {suggestions.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 text-amber-500" />
+            Suggestions
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map((skill, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleAdd(skill)}
+                className="px-3 py-1.5 rounded-full border border-dashed border-gray-300 text-sm text-gray-600 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/50 transition-all flex items-center gap-1.5"
+              >
+                <Plus className="w-3 h-3" />
+                {skill}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Selected Skills List */}
+      <div className="space-y-3">
+         <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            Selected Skills
+          </div>
+        <div className="flex flex-wrap gap-2 min-h-25 content-start p-4 bg-gray-50/50 border border-dashed rounded-lg">
+          {cvData.skills.length === 0 && (
+            <p className="text-sm text-gray-400 w-full text-center py-4">
+              {t("noSkills")}
+            </p>
+          )}
+          {cvData.skills.map((skill) => (
+            <Badge
+              key={skill.id}
+              variant="secondary"
+              className="pl-3 pr-1 py-1.5 text-sm bg-white border shadow-sm flex items-center gap-1"
+            >
+              {skill.name}
+              <button
+                type="button"
+                onClick={() => removeItem("skills", skill.id)}
+                className="ml-1 rounded-full p-0.5 hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

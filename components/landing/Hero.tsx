@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/navigation";
 import { motion } from "framer-motion";
@@ -86,18 +85,13 @@ export default function Hero() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-linear-to-tr from-secondary/20 to-primary/10 rounded-full hidden md:block blur-3xl -z-10"
             />
 
-            {/* Image Container */}
+            {/* Video Container */}
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{
                 opacity: 1,
-                y: [0, -15, 0],
+                y: 0,
                 transition: {
-                  y: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  },
                   opacity: { duration: 0.8 },
                   scale: { duration: 0.8 },
                 },
@@ -105,17 +99,15 @@ export default function Hero() {
               className="relative bg-white p-3 rounded-2xl shadow-2xl border border-gray-100 group overflow-hidden"
             >
               <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0" />
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 z-10 flex justify-center">
-                <Image
-                  className="h-full w-auto max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
-                  src="/images/templet-previev/crative-split.png"
-                  alt="Creative Split Resume Template"
-                  width={500}
-                  height={667}
-                  priority
-                />
-                {/* Subtle overlay blur on edges */}
-                <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]" />
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gray-50 z-10">
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/1uMeQOg7BKQ?si=dWA7SFsyTElGT9Ew"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                ></iframe>
               </div>
             </motion.div>
           </div>

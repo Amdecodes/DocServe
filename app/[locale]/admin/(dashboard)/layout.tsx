@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import Image from "next/image";
+
 const sidebarItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/print-orders", label: "Print Orders", icon: Printer },
@@ -51,10 +53,18 @@ export default function DashboardLayout({
           isSidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="h-16 flex items-center px-6 border-b border-gray-100">
-          <span className="font-bold text-xl tracking-tight text-teal-700">
-            Admin
-          </span>
+        <div className="h-20 flex items-center px-6 border-b border-gray-100">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-10 w-32">
+              <Image
+                src="/images/Logo/sened png.png"
+                alt="SENEDX Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </Link>
           <button
             className="ml-auto lg:hidden text-gray-500"
             onClick={() => setSidebarOpen(false)}
@@ -100,14 +110,24 @@ export default function DashboardLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
-        <header className="lg:hidden h-16 flex items-center px-4 bg-white border-b border-gray-200 sticky top-0 z-30">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-md"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <span className="ml-3 font-semibold">Admin Panel</span>
+        <header className="lg:hidden h-16 flex items-center px-4 bg-white border-b border-gray-200 sticky top-0 z-30 justify-between">
+          <div className="flex items-center">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 text-gray-600 hover:bg-gray-100 rounded-md"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <span className="ml-3 font-semibold text-sm text-gray-500">Admin</span>
+          </div>
+          <Link href="/" className="relative h-8 w-24">
+            <Image
+              src="/images/Logo/sened png.png"
+              alt="Logo"
+              fill
+              className="object-contain"
+            />
+          </Link>
         </header>
 
         {/* Content Scroll Area */}

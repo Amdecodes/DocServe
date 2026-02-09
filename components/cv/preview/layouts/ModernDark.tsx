@@ -13,6 +13,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   return (
@@ -223,6 +224,28 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
               </div>
             </section>
           )}
+
+          {/* References */}
+          {references.length > 0 && (
+            <section style={{ pageBreakInside: "avoid" }} className="mt-8 pt-4">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-200 pb-2">
+                References
+              </h2>
+              <div className="grid grid-cols-2 gap-6">
+                {references.map((ref: any, idx) => (
+                   <div key={idx} className="text-sm">
+                      <p className="font-bold text-black">{ref.name}</p>
+                      <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wider">
+                        {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                      </p>
+                      <p className="text-gray-500 text-xs mt-1">
+                         {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                      </p>
+                   </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
 
@@ -231,7 +254,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
       {/* Footer Contact */}
       <div className="px-12 py-8 bg-white pb-12">
         <h2 className="text-lg font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-4 text-center">
-          Contact Person
+          Contact Details
         </h2>
         <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm text-gray-600">
           {personalInfo.phone && (

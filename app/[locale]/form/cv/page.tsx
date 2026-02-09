@@ -56,7 +56,7 @@ function CVWizardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template");
-  const { setTemplate, selectedTemplate, cvData } = useCV();
+  const { setTemplate, selectedTemplate, cvData, updateCVData } = useCV();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
@@ -98,28 +98,84 @@ function CVWizardContent() {
   const handleProceedToCheckout = async () => {
     setIsCreatingOrder(true);
     try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          service_type: "cv_writing",
-          form_data: {
-            ...cvData,
-            selectedTemplate: selectedTemplate || "golden", // Must match key in process-order.ts
-          },
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to create order");
-
-      const data = await response.json();
-      localStorage.setItem("paperless.orderId", data.orderId);
+      // Create/Save order first (if not already existing)
+      const orderId = await saveDraftOrder();
       router.push("/checkout");
     } catch (error) {
       console.error("Error creating order:", error);
       alert("Failed to create order. Please try again.");
     } finally {
       setIsCreatingOrder(false);
+    }
+  };
+
+  const saveDraftOrder = async () => {
+    // Check if we already have an order ID in localStorage to update?
+    // For now, consistent with previous logic, we create a new one or update if logic existed (it didn't).
+    // But to support "Draft" updates, we'd need PUT /api/orders.
+    // simpler: valid way to get orderId.
+    
+    // Check if we have an orderID in memory or localstorage? 
+    // The current flow creates a NEW order every time 'checkout' is clicked. 
+    // We should probably keep that behavior for now or strictly create-new.
+    
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_type: "cv_writing",
+        form_data: {
+          ...cvData,
+          selectedTemplate: selectedTemplate || "golden",
+        },
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to save draft order");
+    
+    const data = await response.json();
+    localStorage.setItem("paperless.orderId", data.orderId);
+    return data.orderId;
+  };
+
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+
+  const handleGenerateAI = async () => {
+    setIsGeneratingAI(true);
+    try {
+      // 1. Save Draft
+      const orderId = await saveDraftOrder();
+
+      // 2. Call AI Generation
+      const response = await fetch("/api/ai/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "AI generation failed");
+
+      // 3. Update Local State with AI Content
+      if (result.data) {
+          // Iterate and update relevant sections
+          if (result.data.summary) updateCVData("summary", result.data.summary);
+          if (result.data.experience) updateCVData("experience", result.data.experience);
+          if (result.data.coverLetter) updateCVData("coverLetter", result.data.coverLetter);
+          
+          // CRITICAL: Update metadata so the preview knows to unblur
+          if (result.data.aiMetadata) updateCVData("aiMetadata", result.data.aiMetadata);
+
+          // Force a small delay to let UI refresh
+          // Optionally show a success toast here
+          alert("AI Enhancement Complete! Check your summary and experience sections.");
+      }
+
+    } catch (error) {
+      console.error("AI Generation Error:", error);
+      alert("Failed to generate AI content. Please try again.");
+    } finally {
+      setIsGeneratingAI(false);
     }
   };
 
@@ -151,7 +207,12 @@ function CVWizardContent() {
       case 5:
         return <Step6_CoverLetter />;
       case 6:
-        return <Step5_Review />;
+        return (
+          <Step5_Review 
+            onGenerateAI={handleGenerateAI} 
+            isGenerating={isGeneratingAI} 
+          />
+        );
       default:
         return null;
     }
@@ -379,9 +440,9 @@ function CVWizardContent() {
                 {/* On mobile, only render preview if active to save CPU/Memory. 
                     Using 'activeTab' check to completely unmount it. */}
                 {typeof window !== "undefined" && window.innerWidth < 1024 ? (
-                  activeTab === "preview" && <CVPreview />
+                  activeTab === "preview" && <CVPreview showDummyData={false} />
                 ) : (
-                  <CVPreview />
+                  <CVPreview showDummyData={false} />
                 )}
               </div>
             </div>

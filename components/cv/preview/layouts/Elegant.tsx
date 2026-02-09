@@ -13,6 +13,7 @@ export function ElegantLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
 
   const formatUrl = (url?: string) => {
     if (!url) return undefined;
@@ -255,7 +256,26 @@ export function ElegantLayout({ data }: { data: CVData }) {
              </section>
            )}
 
-        </main>
+        {/* References */}
+        {references.length > 0 && (
+          <section style={{ pageBreakInside: "avoid", breakInside: "avoid" }} className="mt-8">
+            <h3 className="text-lg font-bold uppercase tracking-wider text-[#3e3430] mb-4">
+              References
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+                {references.map((ref: any, idx) => (
+                  <div key={idx} className="text-sm">
+                      <p className="font-bold text-gray-900">{ref.name}</p>
+                      <p className="text-gray-600 italic">{ref.position} {ref.company ? `– ${ref.company}` : ""}</p>
+                      <div className="text-gray-500 text-xs mt-1">
+                        {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                      </div>
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+      </main>
       </div>
     </div>
   );

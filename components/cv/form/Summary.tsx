@@ -30,7 +30,7 @@ export function Summary() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Professional Summary</CardTitle>
+        <CardTitle>About Me</CardTitle>
         <CardDescription>
           Write 2-4 sentences that highlight your value and years of experience.
         </CardDescription>

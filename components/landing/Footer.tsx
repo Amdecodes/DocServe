@@ -7,6 +7,7 @@ import {
   Phone,
   Send,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -54,9 +55,20 @@ export default function Footer() {
               <Instagram className="w-6 h-6" />
             </a>
           </div>
-          <p className="text-gray-500 text-xs">
-            © {new Date().getFullYear()} SENEDX. All rights reserved.
-          </p>
+
+          <div className="flex flex-col items-center gap-4 pt-4 border-t border-gray-800 w-full max-w-xs">
+            <div className="relative h-12 w-48">
+              <Image
+                src="/images/Logo/sened png.png"
+                alt="SENEDX Logo"
+                fill
+                className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+              />
+            </div>
+            <p className="text-gray-500 text-[10px] uppercase tracking-widest">
+              © {new Date().getFullYear()} SENEDX. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

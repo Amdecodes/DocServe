@@ -13,6 +13,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -159,6 +160,24 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
                                <div key={idx} className="flex items-center gap-2 text-sm text-slate-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
                                   <Hash size={12} className="text-[#059669]" />
                                   {comp}
+                               </div>
+                          ))}
+                       </div>
+                     </section>
+                   )}
+
+                   {/* References */}
+                   {references.length > 0 && (
+                     <section style={{ pageBreakInside: "avoid" }} className="mt-10">
+                       <h3 className="text-sm font-bold text-[#059669] uppercase mb-4 tracking-widest border-b border-emerald-100 pb-1">References</h3>
+                       <div className="grid grid-cols-2 gap-6">
+                          {references.map((ref: any, idx) => (
+                               <div key={idx} className="text-sm">
+                                  <div className="font-bold text-slate-800">{ref.name}</div>
+                                  <div className="text-[#059669] text-xs font-semibold">{ref.position} {ref.company ? `at ${ref.company}` : ""}</div>
+                                  <div className="text-slate-500 text-[11px] mt-1">
+                                     {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                                  </div>
                                </div>
                           ))}
                        </div>

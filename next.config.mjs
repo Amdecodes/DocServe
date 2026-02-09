@@ -29,7 +29,7 @@ const nextConfig = {
       '@radix-ui/react-tabs',
     ],
   },
-  serverExternalPackages: ['puppeteer-core', '@sparticuz/chromium'],
+  serverExternalPackages: ['puppeteer', 'sharp'],
 };
 
 export default withNextIntl(nextConfig);

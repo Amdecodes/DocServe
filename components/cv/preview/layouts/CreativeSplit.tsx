@@ -13,6 +13,7 @@ export function CreativeSplitLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -174,6 +175,26 @@ export function CreativeSplitLayout({ data }: { data: CVData }) {
                           <p className="text-sm text-slate-600 italic">{vol.description}</p>
                        </div>
                   ))}
+               </div>
+             </section>
+           )}
+
+           {/* References */}
+           {references.length > 0 && (
+             <section style={{ pageBreakInside: "avoid" }} className="mt-10">
+               <h3 className="text-2xl font-black text-[#312e81] uppercase mb-6 pb-2 border-b-2 border-[#312e81]">References</h3>
+               <div className="grid grid-cols-2 gap-8">
+                   {references.map((ref: any, idx) => (
+                        <div key={idx} className="text-sm">
+                           <div className="font-bold text-slate-800">{ref.name}</div>
+                           <div className="text-[#4338ca] text-xs font-semibold uppercase mb-1">
+                             {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                           </div>
+                           <div className="text-slate-500 text-xs">
+                             {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                           </div>
+                        </div>
+                   ))}
                </div>
              </section>
            )}

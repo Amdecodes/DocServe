@@ -328,7 +328,7 @@
     "city": "City",
     "country": "Country",
     "dateOfBirth": "Date of Birth (Optional)",
-    "summaryTitle": "Professional Summary",
+    "summaryTitle": "About Me",
     "summaryDescription": "Write 2-4 sentences that highlight your value and years of experience.",
     "placeholders": {
       "firstName": "e.g. Abebe",
@@ -349,14 +349,35 @@
     "save": "Save",
     "cancel": "Cancel",
     "school": "School / University",
-    "degree": "Degree",
+    "degree": "Educational Background",
     "startDate": "Start Date",
     "endDate": "End Date",
     "city": "City",
     "placeholders": {
       "school": "e.g. Addis Ababa University",
-      "degree": "e.g. BSc in Computer Science",
-      "city": "e.g. Addis Ababa"
+      "degree": "e.g. Computer Science, Grade 12 complete",
+      "city": "e.g. Addis Ababa",
+      "startDate": "e.g. 2020 or Dec 2021",
+      "endDate": "e.g. 2024 or Present"
+    }
+  },
+  "References": {
+    "title": "References",
+    "description": "Add people who can vouch for your professional work.",
+    "add": "Add Reference",
+    "save": "Save",
+    "cancel": "Cancel",
+    "name": "Full Name",
+    "position": "Position / Title",
+    "company": "Company / Organization",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "placeholders": {
+      "name": "e.g. Dr. Abebe Kebede",
+      "position": "e.g. Senior Manager",
+      "company": "e.g. Commercial Bank of Ethiopia",
+      "phone": "e.g. +251 911...",
+      "email": "e.g. abebe@company.com"
     }
   },
   "Experience": {
@@ -685,41 +706,41 @@
         "4": "No job guarantees (employer decisions vary)"
       },
       "packages": {
-        "basic": {
-          "title": "Basic",
-          "bestFor": "Best for: Fresh graduates & first-time job seekers",
+        "standard": {
+          "title": "Standard",
+          "price": "299",
+          "bestFor": "Best for: Active job seekers",
           "features": {
-            "1": "Apply to 10 job vacancies",
-            "2": "Use client’s existing CV",
-            "3": "Basic CV alignment",
-            "4": "Application tracking",
-            "5": "Weekly update (WhatsApp/Email)"
-          },
-          "outcome": "Consistent applications with minimal effort"
+            "1": "AI + Expert Review of Resume & Cover Letter",
+            "2": "1 Revision: one set of edits after delivery",
+            "3": "ATS-Optimized Resume & Cover Letter",
+            "4": "Apply to up to 5 suitable jobs",
+            "5": "Email, text & call notifications",
+            "6": "Timeline: up to 2 weeks"
+          }
         },
         "professional": {
           "title": "Professional",
+          "price": "399",
           "bestFor": "Best for: Working professionals",
           "features": {
-            "1": "Apply to 25 job vacancies",
-            "2": "Job-specific CV customization",
-            "3": "Tailored cover letter per role",
-            "4": "Application tracking",
-            "5": "Weekly detailed progress report"
-          },
-          "outcome": "Higher-quality applications with improved chances"
+            "1": "All Standard features",
+            "2": "2 Revisions: two sets of edits",
+            "3": "Priority interview notifications",
+            "4": "Timeline: up to 2 weeks"
+          }
         },
-        "elite": {
-          "title": "Elite",
-          "bestFor": "Best for: Serious or urgent job seekers",
+        "premium": {
+          "title": "Premium",
+          "price": "599",
+          "bestFor": "Best for: Serious career growth",
           "features": {
-            "1": "Apply to 50 job vacancies",
-            "2": "Advanced CV tailoring per vacancy",
-            "3": "Priority handling",
-            "4": "Application strategy support",
-            "5": "Detailed application reports"
-          },
-          "outcome": "Maximum exposure with expert-managed applications"
+            "1": "All Professional features",
+            "2": "Custom Cover Letters per application",
+            "3": "LinkedIn Profile Optimization",
+            "4": "Personalized interview follow-up",
+            "5": "3 Revisions: 2 sets of job apps (up to 7 jobs)"
+          }
         }
       }
     }

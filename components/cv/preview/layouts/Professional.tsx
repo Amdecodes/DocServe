@@ -18,6 +18,7 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
   const education = data.education || [];
   const skills = data.skills || [];
   const languages = data.languages || [];
+  const references = data.references || [];
 
   return (
     <div className="h-full w-full bg-white flex flex-col font-sans text-gray-800">
@@ -229,6 +230,37 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                     </div>
                     <div className="text-sm font-medium text-gray-600 italic">
                       {edu.school}, {edu.city}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* References */}
+          {references.length > 0 && (
+            <section className="relative pl-8 border-l-2 border-gray-300 pb-4">
+              <div className="absolute -left-5.25 top-0 bg-[#2c3e50] text-white rounded-full p-2">
+                <User size={20} />
+              </div>
+              <div className="mb-6">
+                <h3 className="text-lg font-bold uppercase tracking-widest text-[#2c3e50]">
+                  References
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                {references.map((ref: any) => (
+                  <div key={ref.id}>
+                    <h4 className="font-bold text-base text-gray-800">
+                      {ref.name}
+                    </h4>
+                    <p className="text-sm font-medium text-gray-600 italic mb-1">
+                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      {ref.phone && <p>{ref.phone}</p>}
+                      {ref.email && <p>{ref.email}</p>}
                     </div>
                   </div>
                 ))}

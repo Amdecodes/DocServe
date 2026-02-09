@@ -60,6 +60,15 @@ export interface VolunteerItem {
   description: string;
 }
 
+export interface ReferenceItem {
+  id: string;
+  name: string;
+  position: string;
+  company: string;
+  phone: string;
+  email: string;
+}
+
 export type CoverLetterTone = "Formal" | "Neutral" | "Confident";
 
 // Document language (CV content is English-only)
@@ -91,6 +100,7 @@ export interface CVData {
   skills: SkillItem[];
   languages: LanguageItem[];
   volunteer: VolunteerItem[];
+  references: ReferenceItem[];
   coverLetter?: CoverLetterData;
   aiMetadata?: AIMetadata; // Track AI generation status
 }

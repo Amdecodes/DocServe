@@ -13,6 +13,7 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -252,6 +253,28 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
           </section>
         )}
 
+        {/* References */}
+        {references.length > 0 && (
+          <section style={{ pageBreakInside: "avoid" }} className="mt-8">
+            <h2 className="text-lg font-bold text-[#1a365d] mb-4 uppercase flex items-center gap-2">
+                <span className="w-8 h-1 bg-[#1a365d] inline-block"></span>
+                References
+            </h2>
+            <div className="grid grid-cols-2 gap-6">
+                {references.map((ref: any, idx) => (
+                     <div key={idx} className="text-sm">
+                        <div className="font-bold text-slate-800">{ref.name}</div>
+                        <div className="text-slate-500 text-xs italic">
+                          {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                        </div>
+                        <div className="text-[#1a365d] text-xs mt-1">
+                          {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                        </div>
+                     </div>
+                ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

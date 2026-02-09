@@ -12,6 +12,7 @@ export function GoldenLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
 
   const formatUrl = (url?: string) => {
     if (!url) return undefined;
@@ -127,10 +128,6 @@ export function GoldenLayout({ data }: { data: CVData }) {
             </section>
           )}
 
-          {/* Interests - Optional, if available in data type? Checked and it's not in base CVData but maybe handled in generic? Modern doesn't show it except mapped if available. 
-             Wait, image showed "Interests". I'll skip if not in data.
-             Let's check Languages though.
-           */}
            {languages.length > 0 && (
             <section className="break-inside-avoid">
                <h3 className="text-xl font-bold uppercase tracking-widest text-[#1e293b] mb-4 border-b-2 border-[#d4af37] pb-1 inline-block">
@@ -247,6 +244,28 @@ export function GoldenLayout({ data }: { data: CVData }) {
                        {vol.description && (
                          <p className="text-sm text-gray-700 mt-1 text-justify">{vol.description}</p>
                        )}
+                    </div>
+                  ))}
+               </div>
+             </section>
+           )}
+
+           {/* References */}
+           {references.length > 0 && (
+             <section>
+               <h3 className="text-xl font-bold uppercase tracking-widest text-[#1e293b] mb-6 border-b-2 border-[#1e293b] pb-1 inline-block">
+                References
+              </h3>
+               <div className="grid grid-cols-2 gap-6">
+                  {references.map((ref: any, idx) => (
+                    <div key={idx} className="relative">
+                       <h4 className="font-bold text-base text-[#1e293b]">{ref.name}</h4>
+                       <p className="text-[#1e293b]/80 italic text-xs font-semibold">
+                         {ref.position} {ref.company ? `– ${ref.company}` : ""}
+                       </p>
+                       <p className="text-xs text-gray-500 mt-1 font-sans">
+                         {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                       </p>
                     </div>
                   ))}
                </div>

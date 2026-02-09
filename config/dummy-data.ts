@@ -83,4 +83,22 @@ export const CV_DUMMY_DATA = {
     "Team Leadership",
     "Unit Testing",
   ],
+  references: [
+    {
+      id: "1",
+      name: "Dr. Kebede Alemu",
+      position: "Senior Researcher",
+      company: "AAU Institute of Technology",
+      phone: "+251 911 112233",
+      email: "kebede.a@aau.edu.et",
+    },
+    {
+      id: "2",
+      name: "Sara Johnson",
+      position: "Product Manager",
+      company: "Tech Solutions Inc.",
+      phone: "+251 922 445566",
+      email: "sara.j@techsolutions.com",
+    },
+  ],
 };

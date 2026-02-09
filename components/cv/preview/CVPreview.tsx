@@ -6,6 +6,7 @@ import { DEFAULT_TEMPLATE, templateComponents } from "@/config/templates";
 import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
 import { FileText, Mail, Loader2 } from "lucide-react";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
+import { PreviewProtection } from "@/components/ui/PreviewProtection";
 import { CV_DUMMY_DATA } from "@/config/dummy-data";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,12 +34,20 @@ const lazyCoverLetters = Object.fromEntries(
 >;
 
 // Helper function outside the component to avoid re-creation
-const mergePersonalInfo = (raw?: Partial<PersonalInfo>, dummy?: Partial<PersonalInfo>) => {
+const mergePersonalInfo = (raw: Partial<PersonalInfo> | undefined, dummy: Partial<PersonalInfo> | undefined, showDummyData: boolean) => {
+  if (!showDummyData) return raw || {};
   if (!raw) return dummy;
-  // Shave off empty strings and undefined to allow dummy data to show through
-  const entries = Object.entries(raw).filter(([_, v]) => v !== undefined && v !== "");
-  if (entries.length === 0) return dummy;
-  return { ...dummy, ...Object.fromEntries(entries) };
+  // If user has ANY data, do not merge with dummy. 
+  // We want to show only what the user entered + AI generated content.
+  // Dummy data should only show if the user has entered NOTHING in this section.
+  const hasData = Object.values(raw).some(v => v !== undefined && v !== "");
+  if (hasData) {
+      return { ...dummy, ...raw }; // We still merge with dummy structure/defaults, but maybe we should just return raw?
+      // Actually, for "preview" feeling, we might want dummy data to disappear completely once user starts typing.
+      // Let's try: if (hasData) return raw; -> but we need to match type.
+      return { ...raw } as PersonalInfo;
+  }
+  return dummy;
 };
 
 // Cover Letter Preview Component
@@ -123,7 +132,7 @@ function CoverLetterPreviewContent({
   );
 }
 
-export function CVPreview() {
+export function CVPreview({ showDummyData = true }: { showDummyData?: boolean }) {
   const { selectedTemplate, cvData } = useCV();
   const [activePreview, setActivePreview] = useState<"resume" | "coverLetter">(
     "resume",
@@ -144,20 +153,44 @@ export function CVPreview() {
     );
   }, [selectedTemplate]);
 
-  // Merge dummy data using DEFERRED value
+  // Helper to choose between user data and dummy data
+  // Logic: If user has ANY item in the list, show ONLY user items. Omit dummy.
   const previewData = useMemo(() => {
+    // If showDummyData is false, we strictly return the user data (or empty structure)
+    if (!showDummyData) {
+        return {
+            ...deferredCvData,
+             // Ensure arrays are arrays, not undefined, to prevent crashes
+            experience: deferredCvData.experience || [],
+            education: deferredCvData.education || [],
+            skills: deferredCvData.skills || [],
+            languages: deferredCvData.languages || [],
+            volunteer: deferredCvData.volunteer || [],
+            coreCompetencies: deferredCvData.coreCompetencies || [],
+            personalInfo: deferredCvData.personalInfo || {},
+            summary: deferredCvData.summary || "",
+            references: deferredCvData.references || [],
+        } as CVData;
+    }
+
     return {
       ...deferredCvData,
-      personalInfo: mergePersonalInfo(deferredCvData.personalInfo, CV_DUMMY_DATA.personalInfo),
+      personalInfo: mergePersonalInfo(deferredCvData.personalInfo, CV_DUMMY_DATA.personalInfo, true),
+      
+      // For arrays: If length > 0, use user data. Else use dummy data.
       summary: deferredCvData.summary || CV_DUMMY_DATA.summary,
       experience: deferredCvData.experience?.length ? deferredCvData.experience : CV_DUMMY_DATA.experience,
       education: deferredCvData.education?.length ? deferredCvData.education : CV_DUMMY_DATA.education,
       skills: deferredCvData.skills?.length ? deferredCvData.skills : CV_DUMMY_DATA.skills,
       languages: deferredCvData.languages?.length ? deferredCvData.languages : CV_DUMMY_DATA.languages,
       volunteer: deferredCvData.volunteer?.length ? deferredCvData.volunteer : CV_DUMMY_DATA.volunteer,
+      references: deferredCvData.references?.length ? deferredCvData.references : CV_DUMMY_DATA.references,
       coreCompetencies: deferredCvData.coreCompetencies?.length ? deferredCvData.coreCompetencies : CV_DUMMY_DATA.coreCompetencies,
+      
+      // Cover Letter specific handling
+      coverLetter: deferredCvData.coverLetter 
     } as CVData;
-  }, [deferredCvData]);
+  }, [deferredCvData, showDummyData]);
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -196,44 +229,47 @@ export function CVPreview() {
           backfaceVisibility: 'hidden'
         }}
       >
-        <Suspense
-          fallback={
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 md:bg-gray-50/50 md:backdrop-blur-sm z-50">
-               <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-gray-100">
-                  <Loader2 className="w-10 h-10 text-teal-600 animate-spin" />
-                  <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Preparing Template...</p>
-               </div>
-            </div>
-          }
-        >
-          {/* Visual Page Break Overlay */}
-          <div 
-            className="absolute inset-0 pointer-events-none z-[40]"
-            style={{
-              background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(297mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
-            }} 
-          />
+        <PreviewProtection isPaid={false} className="w-full h-full">
+          <Suspense
+            fallback={
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 md:bg-gray-50/50 md:backdrop-blur-sm z-50">
+                <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-gray-100">
+                    <Loader2 className="w-10 h-10 text-teal-600 animate-spin" />
+                    <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Preparing Template...</p>
+                </div>
+              </div>
+            }
+          >
+            {/* Visual Page Break Overlay */}
+            <div 
+              className="absolute inset-0 pointer-events-none z-[40]"
+              style={{
+                background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(297mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
+              }} 
+            />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${selectedTemplate}-${activePreview}`}
-              initial={{ opacity: 0, scale: 0.99 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.01 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full h-full"
-            >
-              {activePreview === "resume" ? (
-                <TemplateComponent data={previewData} />
-              ) : (
-                <CoverLetterPreviewContent
-                   coverLetter={previewData.coverLetter || ({} as CoverLetterData)}
-                   personalInfo={previewData.personalInfo || {}}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </Suspense>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${selectedTemplate}-${activePreview}`}
+                initial={{ opacity: 0, scale: 0.99 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.01 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="w-full h-full"
+              >
+                {activePreview === "resume" ? (
+                  <TemplateComponent data={previewData} />
+                ) : (
+                  <CoverLetterPreviewContent
+                    coverLetter={previewData.coverLetter || ({} as CoverLetterData)}
+                    personalInfo={previewData.personalInfo || {}}
+                    aiGenerated={!!previewData.aiMetadata?.generated}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Suspense>
+        </PreviewProtection>
       </div>
     </div>
   );

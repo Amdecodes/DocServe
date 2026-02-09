@@ -7,6 +7,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
   const experience = data.experience || [];
   const education = data.education || [];
   const skills = data.skills || [];
+  const references = data.references || [];
 
   return (
     <div className="h-full w-full p-12 font-serif text-gray-900 leading-relaxed">
@@ -115,6 +116,28 @@ export function ClassicLayout({ data }: { data: CVData }) {
             <div className="text-sm flex flex-wrap gap-x-6 gap-y-2">
               {skills.map((s) => (
                 <span key={s.id}>• {s.name}</span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* References */}
+        {references.length > 0 && (
+          <section>
+            <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase text-sm tracking-wider">
+              References
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {references.map((ref: any) => (
+                <div key={ref.id} className="text-sm">
+                  <div className="font-bold">{ref.name}</div>
+                  <div className="italic text-gray-700">
+                    {ref.position} {ref.company ? `– ${ref.company}` : ""}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                  </div>
+                </div>
               ))}
             </div>
           </section>

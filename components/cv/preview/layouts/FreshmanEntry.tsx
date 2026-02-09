@@ -8,10 +8,6 @@ import {
   Linkedin,
   Globe,
   Cake,
-  Award,
-  GraduationCap,
-  Briefcase,
-  Star,
 } from "lucide-react";
 
 export function FreshmanEntryLayout({ data }: { data: CVData }) {
@@ -24,6 +20,7 @@ export function FreshmanEntryLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
   const coreCompetencies = data.coreCompetencies || [];
 
   const formatUrl = (url?: string) => {
@@ -119,10 +116,10 @@ export function FreshmanEntryLayout({ data }: { data: CVData }) {
                   .slice(0, 10)
                   .map((skill, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <span className="text-[#fb7185] text-[10px]">■</span>
-                      <p className="text-sm font-bold text-slate-800">
-                        {skill.name}
-                      </p>
+                       <span className="text-[#fb7185] text-[10px]">■</span>
+                       <p className="text-sm font-bold text-slate-800">
+                         {skill.name}
+                       </p>
                     </div>
                   ))}
               </div>
@@ -144,6 +141,29 @@ export function FreshmanEntryLayout({ data }: { data: CVData }) {
                       {vol.organization}
                     </p>
                     <p className="text-slate-500 mt-1">{vol.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* References */}
+          {references.length > 0 && (
+            <section>
+              <h3 className="text-xl font-black text-[#fb7185] uppercase mb-4 tracking-wider flex items-center gap-3">
+                References
+                <div className="flex-1 h-2 bg-[#fef2f2]"></div>
+              </h3>
+              <div className="grid grid-cols-2 gap-6">
+                {references.map((ref, idx) => (
+                  <div key={idx} className="text-sm">
+                    <p className="font-bold text-slate-800">{ref.name}</p>
+                    <p className="text-[#fb7185] text-xs font-medium">
+                      {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                    </p>
+                    <p className="text-slate-500 text-xs mt-1">
+                      {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                    </p>
                   </div>
                 ))}
               </div>

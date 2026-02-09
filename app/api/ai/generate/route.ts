@@ -31,12 +31,8 @@ export async function POST(req: Request) {
     }
 
     // 2. Verify payment (AI generation only for PAID orders)
-    if (order.status !== "PAID") {
-      return NextResponse.json(
-        { error: "Order must be paid before AI generation" },
-        { status: 403 },
-      );
-    }
+    // 2. Verify payment (AI generation allowed for ALL orders now)
+    // if (order.status !== "PAID") { ... } - REMOVED to allow pre-payment preview
 
     // 3. Check if AI already generated (prevent duplicate generation)
     const formData = order.form_data as unknown as CVData;
@@ -76,6 +72,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
+      data: enrichedData, // Return full data for immediate frontend update
       aiContent: {
         summaryGenerated: !!aiContent.professionalSummary,
         coverLetterGenerated: !!aiContent.coverLetterBody,

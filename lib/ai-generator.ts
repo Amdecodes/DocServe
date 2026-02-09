@@ -196,7 +196,7 @@ function getRoleSpecificGuidance(jobTitle: string): string {
 // ============================================================================
 
 /**
- * Professional Summary Prompt (CV)
+ * About Me Prompt (CV)
  * Output: 120-180 words, premium quality, ATS-optimized
  */
 function buildSummaryPrompt(
@@ -210,7 +210,7 @@ function buildSummaryPrompt(
   // Build role-specific enhancement guidance
   const roleEnhancements = getRoleSpecificGuidance(jobTitle);
 
-  return `Craft a PREMIUM executive-level professional summary for a ${expLevelText} ${jobTitle} professional.
+  return `Craft a PREMIUM executive-level About Me section for a ${expLevelText} ${jobTitle} professional.
 
 Candidate Context:
 "${userNotes ? userNotes : `Dedicated ${jobTitle} professional with comprehensive expertise in ${industry}`}"
@@ -233,7 +233,7 @@ CRITICAL Requirements:
 Example Quality Level (DO NOT COPY, just match this caliber):
 "Senior Marketing Director with 12+ years of experience leading data-driven brand campaigns for Fortune 500 organizations. Core expertise in digital transformation, customer journey optimization, and go-to-market strategy development. Recognized for consistently delivering 40%+ ROI improvements while building high-performing teams. Trusted advisor to C-suite on brand positioning and competitive differentiation."
 
-Now write the professional summary for the ${jobTitle}:`;
+Now write the About Me section for the ${jobTitle}:`;
 }
 
 /**
@@ -559,8 +559,8 @@ export async function generateAIContent(
   const tone = cvData.coverLetter?.tone || "Neutral";
 
   try {
-    // 1. Generate Professional Summary
-    console.log(`[AI Generator] Generating summary...`);
+    // 1. Generate About Me section
+    console.log(`[AI Generator] Generating About Me...`);
     const summaryPrompt = buildSummaryPrompt(
       jobTitle,
       experienceLevel,
