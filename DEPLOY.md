@@ -109,3 +109,23 @@ Set up Nginx as a reverse proxy to port 3000.
    sudo nginx -t
    sudo systemctl restart nginx
    ```
+
+## 6. Verification and Logs
+
+- **View Logs**:
+  ```bash
+  pm2 logs senedx-app
+  ```
+
+- **Update Environment Variables**:
+  If you need to change secrets (e.g., API keys) in `.env`:
+  1. Edit the file on the VPS: `nano .env`
+  2. If it's a **Server-side Variable** (e.g., `DATABASE_URL`):
+     ```bash
+     pm2 restart senedx-app
+     ```
+  3. If it's a **Client-side Variable** (`NEXT_PUBLIC_...`):
+     ```bash
+     npm run build
+     pm2 reload senedx-app
+     ```

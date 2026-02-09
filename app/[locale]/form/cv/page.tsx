@@ -440,9 +440,9 @@ function CVWizardContent() {
                 {/* On mobile, only render preview if active to save CPU/Memory. 
                     Using 'activeTab' check to completely unmount it. */}
                 {typeof window !== "undefined" && window.innerWidth < 1024 ? (
-                  activeTab === "preview" && <CVPreview showDummyData={false} />
+                  activeTab === "preview" && <CVPreview showDummyData={true} />
                 ) : (
-                  <CVPreview showDummyData={false} />
+                  <CVPreview showDummyData={true} />
                 )}
               </div>
             </div>

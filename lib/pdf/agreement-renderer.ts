@@ -512,7 +512,144 @@ export async function renderAgreementToHtml(
     <!-- FOOTER: Skeleton Table Structure -->
     ${
       hasWitnessSection
-        ? `
+        ? template.id === "marriage-contract-am"
+          ? `
+        <div class="witness-section">
+          <div class="witness-header">ይህንን የጋብቻ ውል ስናደርግ የነበሩ ምስክሮች፡-</div>
+          
+          <div class="witness-list">
+            <!-- Groom Side -->
+            <div style="margin-bottom: 10px; font-weight: 600;">በ 1ኛ ተዋዋይ በአቶ ${formData["GROOM_NAME"]} በኩል:</div>
+            ${[1, 2]
+              .map(
+                (i) => `
+              <div class="witness-list-item">
+                <span class="number">${i}/</span>
+                <span class="name-field">${formData[`GROOM_WITNESS${i}_NAME`] || ""}</span>
+                <span class="address-label">አድራሻ፡-</span>
+                <span class="address-field">${formData[`GROOM_WITNESS${i}_ADDRESS`] || ""}</span>
+              </div>`
+              )
+              .join("")}
+            
+            <!-- Bride Side -->
+            <div style="margin-top: 15px; margin-bottom: 10px; font-weight: 600;">በ 2ኛ ተዋዋይ በወ/ሪት ${formData["BRIDE_NAME"]} በኩል:</div>
+            ${[1, 2]
+              .map(
+                (i) => `
+              <div class="witness-list-item">
+                <span class="number">${i}/</span>
+                <span class="name-field">${formData[`BRIDE_WITNESS${i}_NAME`] || ""}</span>
+                <span class="address-label">አድራሻ፡-</span>
+                <span class="address-field">${formData[`BRIDE_WITNESS${i}_ADDRESS`] || ""}</span>
+              </div>`
+              )
+              .join("")}
+          </div>
+
+          <!-- MARRIAGE SPECIFIC SIGNATURES -->
+          <div style="margin-top: 30px;">
+            <div class="sig-header" style="margin-bottom: 15px;">የተጋቢዎች ስምና ፈርማ:</div>
+            <div style="margin-bottom: 10px;">1. ________________________ (${formData["GROOM_NAME"]})</div>
+            <div style="margin-bottom: 25px;">2. ________________________ (${formData["BRIDE_NAME"]})</div>
+
+            <table class="sig-table" style="margin-top: 10px;">
+              <tr>
+                <td style="width: 50%; padding-right: 20px;">
+                   <div class="sig-header">የምስክሮች ፈርማ በ 1ኛ ተዋዋይ በኩል</div>
+                   <div class="witness-sigs">
+                    <div class="witness-sig-line"><span class="num">1.</span><div class="line"></div></div>
+                    <div class="witness-sig-line"><span class="num">2.</span><div class="line"></div></div>
+                   </div>
+                </td>
+                <td style="width: 50%; padding-left: 20px;">
+                   <div class="sig-header">የምስክሮች ፈርማ በ 2ኛ ተዋዋይ በኩል</div>
+                   <div class="witness-sigs">
+                    <div class="witness-sig-line"><span class="num">1.</span><div class="line"></div></div>
+                    <div class="witness-sig-line"><span class="num">2.</span><div class="line"></div></div>
+                   </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+          `
+          : template.id === "employment-contract-am"
+          ? `
+        <div class="witness-section">
+          <div style="margin-bottom: 20px;">እኛም ምስክሮች ቀጣሪና ተቀጣሪ ከላይ በተገለጸው መሠረት ሲዋዋሉና ሲፈራረሙ አይተን በምስክርነት ፈርመናል፡፡</div>
+          
+          <table class="sig-table">
+            <tr>
+              <td>
+                <div class="sig-header">የቀጣሪ ፊርማ</div>
+                <div class="sig-lines">
+                  <div class="sig-line"></div>
+                </div>
+              </td>
+              <td>
+                <div class="sig-header">የተቀጣሪ ፊርማ</div>
+                <div class="sig-lines">
+                  <div class="sig-line"></div>
+                </div>
+              </td>
+              <td>
+                <div class="sig-header">የምስክሮች ፊርማ</div>
+                <div class="witness-sigs">
+                  <div class="witness-sig-line">
+                    <span class="num">1.</span>
+                    <div class="line"></div>
+                  </div>
+                  <div class="witness-sig-line">
+                    <span class="num">2.</span>
+                    <div class="line"></div>
+                  </div>
+                  <div class="witness-sig-line">
+                    <span class="num">3.</span>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+          `
+          : template.id === "contract-labor-am"
+          ? `
+        <div class="witness-section">
+          <!-- MAIN SIGNATURES AT TOP -->
+          <table class="sig-table" style="margin-bottom: 30px;">
+            <tr>
+              <td style="width: 50%; padding-right: 20px;">
+                <div class="sig-header">የውል ሰጪ ፊርማ</div>
+                <div class="sig-line"></div>
+              </td>
+              <td style="width: 50%; padding-left: 20px;">
+                <div class="sig-header">የውል ተቀባይ ፊርማ</div>
+                <div class="sig-line"></div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- WITNESSES LIST BELOW -->
+          <div class="witness-header">ምስክሮች:</div>
+          <div class="witness-list">
+            <!-- Witness 1 -->
+            <div style="margin-bottom: 20px;">
+               <div style="margin-bottom: 6px;">1. <span style="font-weight:600;">${formData["WITNESS1_NAME"] || "........................"}</span></div>
+               <div style="margin-bottom: 6px; padding-left: 20px;">አድራሻ: ${formData["WITNESS1_ADDRESS"] || "........................"}</div>
+               <div style="padding-left: 20px;">ፊርማ: ________________________</div>
+            </div>
+            <!-- Witness 2 -->
+            <div style="margin-bottom: 20px;">
+               <div style="margin-bottom: 6px;">2. <span style="font-weight:600;">${formData["WITNESS2_NAME"] || "........................"}</span></div>
+               <div style="margin-bottom: 6px; padding-left: 20px;">አድራሻ: ${formData["WITNESS2_ADDRESS"] || "........................"}</div>
+               <div style="padding-left: 20px;">ፊርማ: ________________________</div>
+            </div>
+          </div>
+        </div>
+          `
+          : `
     <div class="witness-section">
       <div class="witness-header">ይህንን ውል ስንዋዋል የነበሩ ምስክሮች፡-</div>
       
