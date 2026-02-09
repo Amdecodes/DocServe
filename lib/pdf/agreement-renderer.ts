@@ -512,36 +512,36 @@ export async function renderAgreementToHtml(
     <!-- FOOTER: Skeleton Table Structure -->
     ${
       hasWitnessSection
-        ? template.id === "marriage-contract-am"
+          ? template.id === "marriage-contract-am"
           ? `
         <div class="witness-section">
           <div class="witness-header">ይህንን የጋብቻ ውል ስናደርግ የነበሩ ምስክሮች፡-</div>
           
           <div class="witness-list">
             <!-- Groom Side -->
-            <div style="margin-bottom: 10px; font-weight: 600;">በ 1ኛ ተዋዋይ በአቶ ${formData["GROOM_NAME"]} በኩል:</div>
+            <div style="margin-bottom: 10px; font-weight: 600;">በ 1ኛ ተዋዋይ በአቶ ${formData["GROOM_NAME"] || "........................"} በኩል:</div>
             ${[1, 2]
               .map(
                 (i) => `
               <div class="witness-list-item">
                 <span class="number">${i}/</span>
-                <span class="name-field">${formData[`GROOM_WITNESS${i}_NAME`] || ""}</span>
+                <span class="name-field">${formData[`GROOM_WITNESS${i}_NAME`] || "........................"}</span>
                 <span class="address-label">አድራሻ፡-</span>
-                <span class="address-field">${formData[`GROOM_WITNESS${i}_ADDRESS`] || ""}</span>
+                <span class="address-field">${formData[`GROOM_WITNESS${i}_ADDRESS`] || "........................"}</span>
               </div>`
               )
               .join("")}
             
             <!-- Bride Side -->
-            <div style="margin-top: 15px; margin-bottom: 10px; font-weight: 600;">በ 2ኛ ተዋዋይ በወ/ሪት ${formData["BRIDE_NAME"]} በኩል:</div>
+            <div style="margin-top: 15px; margin-bottom: 10px; font-weight: 600;">በ 2ኛ ተዋዋይ በወ/ሪት ${formData["BRIDE_NAME"] || "........................"} በኩል:</div>
             ${[1, 2]
               .map(
                 (i) => `
               <div class="witness-list-item">
                 <span class="number">${i}/</span>
-                <span class="name-field">${formData[`BRIDE_WITNESS${i}_NAME`] || ""}</span>
+                <span class="name-field">${formData[`BRIDE_WITNESS${i}_NAME`] || "........................"}</span>
                 <span class="address-label">አድራሻ፡-</span>
-                <span class="address-field">${formData[`BRIDE_WITNESS${i}_ADDRESS`] || ""}</span>
+                <span class="address-field">${formData[`BRIDE_WITNESS${i}_ADDRESS`] || "........................"}</span>
               </div>`
               )
               .join("")}
@@ -550,8 +550,8 @@ export async function renderAgreementToHtml(
           <!-- MARRIAGE SPECIFIC SIGNATURES -->
           <div style="margin-top: 30px;">
             <div class="sig-header" style="margin-bottom: 15px;">የተጋቢዎች ስምና ፈርማ:</div>
-            <div style="margin-bottom: 10px;">1. ________________________ (${formData["GROOM_NAME"]})</div>
-            <div style="margin-bottom: 25px;">2. ________________________ (${formData["BRIDE_NAME"]})</div>
+            <div style="margin-bottom: 10px;">1. ________________________ (${formData["GROOM_NAME"] || "........................"})</div>
+            <div style="margin-bottom: 25px;">2. ________________________ (${formData["BRIDE_NAME"] || "........................"})</div>
 
             <table class="sig-table" style="margin-top: 10px;">
               <tr>
