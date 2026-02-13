@@ -359,7 +359,7 @@ function CVWizardContent() {
                                   <div className="bg-white rounded-[20px] overflow-hidden min-h-[500px] relative shadow-inner">
                                     {/* Scaling Logic - Fits A4 width on mobile */}
                                     <div className="origin-top scale-[0.55] sm:scale-[0.65] w-full h-full">
-                                      <CVPreview />
+                                      <CVPreview showDummyData={false} />
                                     </div>
 
                                     {/* Gradient Overlay at bottom */}
@@ -440,9 +440,9 @@ function CVWizardContent() {
                 {/* On mobile, only render preview if active to save CPU/Memory. 
                     Using 'activeTab' check to completely unmount it. */}
                 {typeof window !== "undefined" && window.innerWidth < 1024 ? (
-                  activeTab === "preview" && <CVPreview showDummyData={true} />
+                  activeTab === "preview" && <CVPreview showDummyData={currentStep !== stepsConfig.length - 1} />
                 ) : (
-                  <CVPreview showDummyData={true} />
+                  <CVPreview showDummyData={currentStep !== stepsConfig.length - 1} />
                 )}
               </div>
             </div>

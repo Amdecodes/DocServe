@@ -204,12 +204,43 @@ function buildSummaryPrompt(
   experienceLevel: ExperienceLevel,
   industry: string,
   userNotes: string,
+  hasExperience: boolean,
+  educationSummary: string,
+  skillsSummary: string,
 ): string {
   const expLevelText = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
   // Build role-specific enhancement guidance
   const roleEnhancements = getRoleSpecificGuidance(jobTitle);
 
+  // ── No work experience: focus on education, skills, and potential ──
+  if (!hasExperience) {
+    return `Write a clear, ATS-friendly Professional Summary for a fresh graduate / entry-level ${jobTitle} candidate who has NO formal work experience.
+
+Candidate Context:
+"${userNotes ? userNotes : `Motivated ${jobTitle} candidate seeking first professional opportunity`}"
+
+Education: ${educationSummary || "Not specified"}
+Skills: ${skillsSummary || "Not specified"}
+
+${roleEnhancements}
+
+CRITICAL Requirements:
+1. **MAXIMUM 4 LINES** (approx 40-60 words).
+2. Focus on education, skills, willingness to learn, and enthusiasm for the role.
+3. Do NOT fabricate or imply any work experience — the candidate has none.
+4. Highlight transferable skills (e.g., teamwork from school projects, communication, technology skills).
+5. Third person implicit (e.g., "Motivated graduate..." not "I am...").
+6. No buzzwords (e.g., "game-changer", "synergy").
+7. Keep it honest — this is an entry-level candidate, not a seasoned professional.
+
+Example Style:
+"Recent Computer Science graduate with strong foundations in programming, data analysis, and problem-solving. Eager to apply academic knowledge in a professional setting. Skilled in Python, Java, and SQL through university coursework and personal projects. Quick learner with excellent teamwork and communication skills."
+
+Now write the Summary for the ${jobTitle}:`;
+  }
+
+  // ── Has work experience: standard prompt ──
   return `Write a clear, ATS-friendly Professional Summary for a ${expLevelText} ${jobTitle}.
 
 Candidate Context:
@@ -519,15 +550,28 @@ export async function generateAIContent(
     LIMITS.userNotes,
   );
   const tone = cvData.coverLetter?.tone || "Neutral";
+  const hasExperience = cvData.experience.length > 0;
+
+  // Build education summary for no-experience scenarios
+  const educationSummary = (cvData.education || [])
+    .map((edu) => `${edu.degree || ""} at ${edu.school || ""}`.trim())
+    .filter(Boolean)
+    .join("; ") || "";
+
+  // Build skills summary
+  const skillsSummary = (cvData.skills || []).join(", ") || "";
 
   try {
     // 1. Generate About Me section
-    console.log(`[AI Generator] Generating About Me...`);
+    console.log(`[AI Generator] Generating About Me... (hasExperience: ${hasExperience})`);
     const summaryPrompt = buildSummaryPrompt(
       jobTitle,
       experienceLevel,
       industry,
       userNotes,
+      hasExperience,
+      educationSummary,
+      skillsSummary,
     );
     const professionalSummary = await callGeminiAPI(summaryPrompt);
 

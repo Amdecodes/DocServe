@@ -2,6 +2,7 @@ import "server-only";
 import { CVData } from "@/types/cv";
 import { THEME } from "@/config/theme";
 import { templateComponents, DEFAULT_TEMPLATE } from "@/config/templates";
+import { UnifiedCoverLetter } from "@/components/cv/preview/layouts/UnifiedCoverLetter";
 
 export async function renderCvToHtml(
   cvData: CVData,
@@ -9,20 +10,19 @@ export async function renderCvToHtml(
 ): Promise<string> {
   const { renderToStaticMarkup } = await import("react-dom/server");
 
-  // Dynamically load the template components
+  // Dynamically load the resume template component
   const template =
     templateComponents[templateId] || templateComponents[DEFAULT_TEMPLATE];
   const { default: ResumeComponent } = await template.resume();
-  const { default: CoverLetterComponent } = await template.coverLetter();
 
   // Render resume page
   const resumeHtml = renderToStaticMarkup(<ResumeComponent data={cvData} />);
 
-  // Render cover letter page (if present)
+  // Render cover letter page (if present) — uses the unified design for all templates
   let coverLetterHtml = "";
   if (cvData.coverLetter) {
     coverLetterHtml = renderToStaticMarkup(
-      <CoverLetterComponent
+      <UnifiedCoverLetter
         coverLetter={cvData.coverLetter}
         personalInfo={cvData.personalInfo}
       />,

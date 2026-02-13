@@ -13,10 +13,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
-      {/* Product Image */}
-      <div className="relative aspect-4/3 w-full bg-gray-100 overflow-hidden">
-        {/* Placeholder if image loads fail - handled by Next.js Image usually, but we can style the bg */}
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gray-200">
+      {/* Product Image — clickable, navigates to order page */}
+      <Link href={`/print-orders/${product.id}`} className="block relative aspect-4/3 w-full bg-gray-50 overflow-hidden cursor-pointer">
+        {/* Placeholder if image fails to load */}
+        <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gray-100">
           <span className="text-4xl">🖼️</span>
         </div>
         {product.image_url && (
@@ -24,11 +24,11 @@ export function ProductCard({ product }: ProductCardProps) {
             src={product.image_url ?? ""}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-5 flex flex-col grow">

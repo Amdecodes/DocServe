@@ -3,12 +3,12 @@
 import { Suspense, lazy, useMemo, useState, useDeferredValue } from "react";
 import { useCV } from "@/components/cv/CVContext";
 import { DEFAULT_TEMPLATE, templateComponents } from "@/config/templates";
-import { CVData, CoverLetterData, PersonalInfo } from "@/types/cv";
+import { CVData, PersonalInfo } from "@/types/cv";
 import { FileText, Mail, Loader2 } from "lucide-react";
-import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { PreviewProtection } from "@/components/ui/PreviewProtection";
 import { CV_DUMMY_DATA } from "@/config/dummy-data";
 import { motion, AnimatePresence } from "framer-motion";
+import { UnifiedCoverLetter } from "@/components/cv/preview/layouts/UnifiedCoverLetter";
 
 // Dynamically generate lazy-loaded components from the registry
 const lazyTemplates = Object.fromEntries(
@@ -18,20 +18,7 @@ const lazyTemplates = Object.fromEntries(
   ])
 ) as Record<string, React.LazyExoticComponent<React.ComponentType<{ data: CVData }>>>;
 
-const lazyCoverLetters = Object.fromEntries(
-  Object.entries(templateComponents).map(([id, config]) => [
-    id,
-    lazy(config.coverLetter),
-  ])
-) as Record<
-  string,
-  React.LazyExoticComponent<
-    React.ComponentType<{
-      coverLetter: CoverLetterData;
-      personalInfo: PersonalInfo;
-    }>
-  >
->;
+
 
 // Helper function outside the component to avoid re-creation
 const mergePersonalInfo = (raw: Partial<PersonalInfo> | undefined, dummy: Partial<PersonalInfo> | undefined, showDummyData: boolean) => {
@@ -50,87 +37,7 @@ const mergePersonalInfo = (raw: Partial<PersonalInfo> | undefined, dummy: Partia
   return dummy;
 };
 
-// Cover Letter Preview Component
-function CoverLetterPreviewContent({
-  coverLetter,
-  personalInfo,
-  aiGenerated = false,
-}: {
-  coverLetter?: CoverLetterData;
-  personalInfo: PersonalInfo;
-  aiGenerated?: boolean;
-}) {
-  const formatDate = () => {
-    return new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
-  const senderName =
-    `${personalInfo.firstName} ${personalInfo.lastName}`.trim() || "Your Name";
-
-  return (
-    <div className="p-12 max-w-[210mm] mx-auto text-gray-900 bg-white h-full font-serif leading-relaxed">
-      {/* Header / Sender Info */}
-      <div className="mb-8 border-b border-gray-300 pb-6">
-        <h1 className="text-3xl font-bold mb-2 uppercase tracking-wider">
-          {senderName}
-        </h1>
-        <div className="text-sm text-gray-600 flex flex-wrap gap-4">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>• {personalInfo.phone}</span>}
-          {personalInfo.city && (
-            <span>
-              • {personalInfo.city}
-              {personalInfo.country ? `, ${personalInfo.country}` : ""}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Date */}
-      <div className="mb-8 text-right">
-        <p>{formatDate()}</p>
-      </div>
-
-      {/* Recipient Info */}
-      <div className="mb-8">
-        <p className="font-bold">
-          {coverLetter?.recipientName || "Recipient Name"}
-        </p>
-        <p>{coverLetter?.jobTitle && `${coverLetter.jobTitle}`}</p>
-        <p>{coverLetter?.companyName || "Company Name"}</p>
-      </div>
-
-      {/* Salutation */}
-      <div className="mb-6">
-        <p>Dear {coverLetter?.recipientName || "Hiring Manager"},</p>
-      </div>
-
-      {/* Body */}
-      <AIBlurOverlay type="coverLetter" isGenerated={aiGenerated}>
-        <div className="mb-8 whitespace-pre-wrap text-justify">
-          {coverLetter?.letterBody || (
-            <span className="text-gray-400 italic">
-              [Your cover letter body will appear here. Fill in the Cover Letter
-              step to see your content.]
-            </span>
-          )}
-        </div>
-      </AIBlurOverlay>
-
-      {/* Sign-off */}
-      <div className="mt-12">
-        <p>Sincerely,</p>
-        <br />
-        <br />
-        <p className="font-bold">{senderName}</p>
-      </div>
-    </div>
-  );
-}
 
 export function CVPreview({ showDummyData = true }: { showDummyData?: boolean }) {
   const { selectedTemplate, cvData } = useCV();
@@ -147,11 +54,7 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
     return lazyTemplates[selectedTemplate] || lazyTemplates[DEFAULT_TEMPLATE];
   }, [selectedTemplate]);
 
-  const CoverLetterComponent = useMemo(() => {
-    return (
-      lazyCoverLetters[selectedTemplate] || lazyCoverLetters[DEFAULT_TEMPLATE]
-    );
-  }, [selectedTemplate]);
+
 
   // Helper to choose between user data and dummy data
   // Logic: If user has ANY item in the list, show ONLY user items. Omit dummy.
@@ -260,10 +163,10 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
                 {activePreview === "resume" ? (
                   <TemplateComponent data={previewData} />
                 ) : (
-                  <CoverLetterPreviewContent
-                    coverLetter={previewData.coverLetter || ({} as CoverLetterData)}
-                    personalInfo={previewData.personalInfo || {}}
-                    aiGenerated={!!previewData.aiMetadata?.generated}
+                  <UnifiedCoverLetter
+                    coverLetter={previewData.coverLetter || ({} as any)}
+                    personalInfo={previewData.personalInfo || ({} as any)}
+                    isPreview={showDummyData}
                   />
                 )}
               </motion.div>

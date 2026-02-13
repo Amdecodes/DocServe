@@ -33,18 +33,10 @@ export const Step6_CoverLetter = () => {
           <h3 className="text-lg font-semibold text-gray-900">
             {t("recipientDetails")}
           </h3>
+          <p className="text-xs text-gray-500 -mt-2">
+            {t("recipientHint")}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                {t("recipientName")}
-              </label>
-              <Input
-                name="recipientName"
-                placeholder={t("recipientPlaceholder")}
-                value={coverLetter?.recipientName || ""}
-                onChange={handleChange}
-              />
-            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
                 {t("companyName")}
@@ -56,16 +48,26 @@ export const Step6_CoverLetter = () => {
                 onChange={handleChange}
               />
             </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                {t("jobTitle")}
+              </label>
+              <Input
+                name="jobTitle"
+                placeholder={t("jobTitlePlaceholder")}
+                value={coverLetter?.jobTitle || ""}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
-              {t("jobTitle")}
+              {t("recipientName")}
             </label>
             <Input
-              name="jobTitle"
-              placeholder={t("jobTitlePlaceholder")}
-              value={coverLetter?.jobTitle || ""}
+              name="recipientName"
+              placeholder={t("recipientPlaceholder")}
+              value={coverLetter?.recipientName || ""}
               onChange={handleChange}
             />
           </div>
