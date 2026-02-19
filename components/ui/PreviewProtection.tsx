@@ -57,9 +57,9 @@ export function PreviewProtection({
           {Array.from({ length: 150 }).map((_, i) => (
             <img 
               key={i}
-              src="/images/Logo/sened png.png" 
+              src="/images/Logo/senedx logo.svg" 
               alt="" 
-              className="w-32 h-32 object-contain select-none opacity-[0.15]"
+              className="w-32 h-32 object-contain select-none opacity-[0.15] scale-110"
               draggable={false}
             />
           ))}

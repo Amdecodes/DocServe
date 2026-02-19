@@ -57,10 +57,10 @@ export default function DashboardLayout({
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-10 w-32">
               <Image
-                src="/images/Logo/sened png.png"
+                src="/images/Logo/senedx logo.svg"
                 alt="SENEDX Logo"
                 fill
-                className="object-contain"
+                className="object-contain scale-110"
                 priority
               />
             </div>
@@ -122,10 +122,10 @@ export default function DashboardLayout({
           </div>
           <Link href="/" className="relative h-8 w-24">
             <Image
-              src="/images/Logo/sened png.png"
+              src="/images/Logo/senedx logo.svg"
               alt="Logo"
               fill
-              className="object-contain"
+              className="object-contain scale-110"
             />
           </Link>
         </header>

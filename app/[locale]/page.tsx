@@ -20,7 +20,7 @@ export default function HomePage() {
     "@type": "Organization",
     "name": "SENEDX",
     "url": "https://senedx.com",
-    "logo": "https://senedx.com/images/Logo/sened png.png",
+    "logo": "https://senedx.com/images/Logo/senedx logo.svg",
     "description": "Professional document services in Ethiopia.",
     "potentialAction": {
       "@type": "SearchAction",

@@ -59,10 +59,10 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-4 pt-4 border-t border-gray-800 w-full max-w-xs">
             <div className="relative h-12 w-48">
               <Image
-                src="/images/Logo/sened png.png"
+                src="/images/Logo/senedx logo.svg"
                 alt="SENEDX Logo"
                 fill
-                className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                className="object-contain opacity-80 hover:opacity-100 transition-opacity scale-110"
               />
             </div>
             <p className="text-gray-500 text-[10px] uppercase tracking-widest">

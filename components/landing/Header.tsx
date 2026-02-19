@@ -60,10 +60,10 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2">
           <div className="relative h-9 md:h-12 w-36 md:w-48">
             <Image
-              src="/images/Logo/sened png.png"
+              src="/images/Logo/senedx logo.svg"
               alt={t("logo")}
               fill
-              className="object-contain"
+              className="object-contain scale-110"
               priority
             />
           </div>
