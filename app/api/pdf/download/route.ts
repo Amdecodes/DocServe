@@ -13,11 +13,16 @@ export async function GET(req: NextRequest) {
   });
 
   if (!order) {
-    return new Response(`Order ${orderId} not found in database.`, { status: 404 });
+    return new Response(`Order ${orderId} not found in database.`, {
+      status: 404,
+    });
   }
 
   if (order.status !== "PAID") {
-    return new Response(`Order status is "${order.status}", not PAID. Payment may still be pending.`, { status: 403 });
+    return new Response(
+      `Order status is "${order.status}", not PAID. Payment may still be pending.`,
+      { status: 403 },
+    );
   }
 
   const downloadName = order.service_type.startsWith("agreement:")
@@ -36,13 +41,17 @@ export async function GET(req: NextRequest) {
         fileBuffer = await fileResponse.arrayBuffer();
         diagnostics.push("Fetched stored PDF successfully.");
       } else {
-        diagnostics.push(`Stored PDF fetch returned HTTP ${fileResponse.status}.`);
+        diagnostics.push(
+          `Stored PDF fetch returned HTTP ${fileResponse.status}.`,
+        );
       }
     } catch (e) {
       diagnostics.push(`Stored PDF fetch threw: ${String(e)}`);
     }
   } else {
-    diagnostics.push("No pdf_url in DB — PDF was never generated (background task may have failed).");
+    diagnostics.push(
+      "No pdf_url in DB — PDF was never generated (background task may have failed).",
+    );
   }
 
   // 2. Fallback: regenerate
@@ -50,7 +59,11 @@ export async function GET(req: NextRequest) {
     diagnostics.push("Attempting on-the-fly PDF regeneration...");
     try {
       const { processOrderPdf } = await import("@/lib/pdf/process-order");
-      const result = await processOrderPdf(order.id, order.form_data, order.service_type);
+      const result = await processOrderPdf(
+        order.id,
+        order.form_data,
+        order.service_type,
+      );
 
       if (result?.pdfUrl) {
         diagnostics.push(`PDF regenerated. URL: ${result.pdfUrl}`);
@@ -63,7 +76,9 @@ export async function GET(req: NextRequest) {
             data: { pdf_url: result.pdfUrl, expires_at: result.expiresAt },
           });
         } else {
-          diagnostics.push(`Regenerated PDF URL fetch returned HTTP ${newResponse.status}.`);
+          diagnostics.push(
+            `Regenerated PDF URL fetch returned HTTP ${newResponse.status}.`,
+          );
         }
       } else {
         diagnostics.push("processOrderPdf returned null/no URL.");
@@ -84,7 +99,10 @@ export async function GET(req: NextRequest) {
   }
 
   // Return detailed diagnostics so the failure reason is visible without needing Vercel logs
-  const errorBody = ["PDF generation failed. Diagnostics:", ...diagnostics].join("\n");
+  const errorBody = [
+    "PDF generation failed. Diagnostics:",
+    ...diagnostics,
+  ].join("\n");
   console.error("[Download] Final failure:", errorBody);
   return new Response(errorBody, { status: 404 });
 }
