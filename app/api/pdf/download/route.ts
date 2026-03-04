@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSignedUrl } from "@/lib/upload";
 
 export async function GET(req: NextRequest) {
   const orderId = req.nextUrl.searchParams.get("orderId");
@@ -13,69 +12,68 @@ export async function GET(req: NextRequest) {
     where: { id: orderId },
   });
 
-  if (!order || order.status !== "PAID") {
-    return new Response("Unauthorized", { status: 403 });
+  if (!order) {
+    return new Response(`Order ${orderId} not found in database.`, { status: 404 });
   }
 
-  // No time check needed. If file exists in DB/Storage (it should, as we stopped auto-cleanup), allow download.
-  // We generate a fresh link every time.
+  if (order.status !== "PAID") {
+    return new Response(`Order status is "${order.status}", not PAID. Payment may still be pending.`, { status: 403 });
+  }
 
-  // 1. Determine target URL
-  let targetUrl = order.pdf_url;
   const downloadName = order.service_type.startsWith("agreement:")
     ? "Agreement.pdf"
     : "CV.pdf";
 
   let fileBuffer: ArrayBuffer | null = null;
+  let diagnostics: string[] = [];
 
-  // 2. Try fetching existing PDF if URL is present
-  if (targetUrl) {
+  // 1. Try fetching existing stored PDF
+  if (order.pdf_url) {
+    diagnostics.push(`Stored pdf_url found: ${order.pdf_url}`);
     try {
-      const fileResponse = await fetch(targetUrl);
+      const fileResponse = await fetch(order.pdf_url);
       if (fileResponse.ok) {
         fileBuffer = await fileResponse.arrayBuffer();
+        diagnostics.push("Fetched stored PDF successfully.");
       } else {
-        console.warn(`[Download] Stored PDF URL returned status ${fileResponse.status}. Attempting regeneration.`);
+        diagnostics.push(`Stored PDF fetch returned HTTP ${fileResponse.status}.`);
       }
     } catch (e) {
-      console.error("[Download] Error fetching stored PDF:", e);
+      diagnostics.push(`Stored PDF fetch threw: ${String(e)}`);
     }
+  } else {
+    diagnostics.push("No pdf_url in DB — PDF was never generated (background task may have failed).");
   }
 
-  // 3. Fallback: Regenerate if fetch failed or URL was missing
+  // 2. Fallback: regenerate
   if (!fileBuffer) {
+    diagnostics.push("Attempting on-the-fly PDF regeneration...");
     try {
-      console.log(`[Download] Regenerating PDF for Order ${orderId}...`);
       const { processOrderPdf } = await import("@/lib/pdf/process-order");
-      
-      const result = await processOrderPdf(
-        order.id,
-        order.form_data,
-        order.service_type
-      );
+      const result = await processOrderPdf(order.id, order.form_data, order.service_type);
 
       if (result?.pdfUrl) {
-        // Fetch the newly generated PDF
+        diagnostics.push(`PDF regenerated. URL: ${result.pdfUrl}`);
         const newResponse = await fetch(result.pdfUrl);
         if (newResponse.ok) {
           fileBuffer = await newResponse.arrayBuffer();
-          
-          // Update order status with new URL to fix future downloads
+
           await prisma.order.update({
             where: { id: orderId },
-            data: { 
-              pdf_url: result.pdfUrl,
-              expires_at: result.expiresAt
-            },
+            data: { pdf_url: result.pdfUrl, expires_at: result.expiresAt },
           });
+        } else {
+          diagnostics.push(`Regenerated PDF URL fetch returned HTTP ${newResponse.status}.`);
         }
+      } else {
+        diagnostics.push("processOrderPdf returned null/no URL.");
       }
     } catch (e) {
-      console.error("[Download] PDF regeneration failed:", e);
+      diagnostics.push(`PDF regeneration threw: ${String(e)}`);
+      console.error("[Download] PDF regeneration error:", e);
     }
   }
 
-  // 4. Return the file if we have a buffer
   if (fileBuffer) {
     return new NextResponse(fileBuffer, {
       headers: {
@@ -85,8 +83,8 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  return new Response("File not found or could not be generated.", {
-    status: 404,
-  });
+  // Return detailed diagnostics so the failure reason is visible without needing Vercel logs
+  const errorBody = ["PDF generation failed. Diagnostics:", ...diagnostics].join("\n");
+  console.error("[Download] Final failure:", errorBody);
+  return new Response(errorBody, { status: 404 });
 }
-
