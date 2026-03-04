@@ -1,15 +1,29 @@
-import puppeteer from "puppeteer";
+import puppeteerCore from "puppeteer-core";
+
+async function getBrowser() {
+  // Local dev: point PUPPETEER_EXECUTABLE_PATH to your local Chrome/Chromium
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    return puppeteerCore.launch({
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+  }
+
+  // Production (Vercel serverless): use @sparticuz/chromium
+  const chromium = (await import("@sparticuz/chromium")).default;
+  return puppeteerCore.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: true,
+  });
+}
 
 export async function generatePdfFromHtml(html: string) {
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Safe for most container envs
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-    });
+    const browser = await getBrowser();
     const page = await browser.newPage();
 
-    // Set content and wait for network idle (to load Tailwind CDN/images)
     await page.setContent(html, {
       waitUntil: "networkidle0",
     });

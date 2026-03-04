@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "app/api/payment/chapa/webhook/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/pdf/download/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/ai/generate/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
