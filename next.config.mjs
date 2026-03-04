@@ -29,6 +29,17 @@ const nextConfig = {
     ],
   },
   serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium", "sharp"],
+  // Tell Next.js output tracer to include the Chromium binary files.
+  // Without this, Vercel doesn't deploy the bin/ directory because nothing
+  // statically imports it — @sparticuz/chromium reads it at runtime only.
+  outputFileTracingIncludes: {
+    "/api/pdf/download": [
+      "./node_modules/@sparticuz/chromium/bin/**",
+    ],
+    "/api/payment/chapa/webhook": [
+      "./node_modules/@sparticuz/chromium/bin/**",
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);
