@@ -13,7 +13,7 @@ async function getBrowser() {
   // Production (Vercel serverless): use @sparticuz/chromium
   const chromium = (await import("@sparticuz/chromium")).default;
   return puppeteerCore.launch({
-    args: chromium.args,
+    args: [...chromium.args, "--disable-dev-shm-usage"],
     executablePath: await chromium.executablePath(),
     headless: true,
   });
@@ -25,8 +25,12 @@ export async function generatePdfFromHtml(html: string) {
     const page = await browser.newPage();
 
     await page.setContent(html, {
-      waitUntil: "networkidle0",
+      waitUntil: "load",
+      timeout: 30000,
     });
+
+    // Give the Tailwind CDN script time to execute and inject styles
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const pdfBuffer = await page.pdf({
       format: "A4",
