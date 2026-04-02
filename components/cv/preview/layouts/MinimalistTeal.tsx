@@ -1,5 +1,5 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
+import { DocImage } from "@/components/ui/DocImage";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -36,7 +36,7 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
         {/* Photo (Optional, centered) */}
         {personalInfo.photo && (
           <div className="w-32 h-32 mx-auto mb-6 rounded-full border-4 border-white shadow-md overflow-hidden relative">
-            <Image
+            <DocImage
               src={personalInfo.photo}
               alt={personalInfo.firstName}
               fill

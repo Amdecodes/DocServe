@@ -1,5 +1,5 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
+import { DocImage } from "@/components/ui/DocImage";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -30,7 +30,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
         {/* Photo */}
         {personalInfo.photo && (
           <div className="shrink-0 relative w-48 h-56">
-            <Image
+            <DocImage
               src={personalInfo.photo}
               alt={personalInfo.firstName}
               fill

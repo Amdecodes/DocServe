@@ -1,5 +1,5 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
+import { DocImage } from "@/components/ui/DocImage";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Hash, Cake } from "lucide-react";
 
@@ -84,7 +84,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
              {/* Optional Photo */}
              {personalInfo.photo && (
                 <div className="w-24 h-24 rounded-full border-2 border-emerald-100 p-1 shrink-0 ml-4 relative overflow-hidden">
-                  <Image
+                  <DocImage
                     src={personalInfo.photo}
                     alt={personalInfo.firstName}
                     fill

@@ -1,5 +1,5 @@
 import { CVData } from "@/types/cv";
-import Image from "next/image";
+import { DocImage } from "@/components/ui/DocImage";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Mail, Phone, MapPin, Linkedin, Globe, Cake } from "lucide-react";
 
@@ -50,7 +50,7 @@ export function CreativeSplitLayout({ data }: { data: CVData }) {
              
              {personalInfo.photo ? (
                 <div className="w-32 h-32 rounded-full border-4 border-[#c7d2fe] overflow-hidden relative z-10 shadow-xl">
-                  <Image
+                  <DocImage
                     src={personalInfo.photo}
                     alt={personalInfo.firstName}
                     fill

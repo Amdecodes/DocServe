@@ -1,7 +1,7 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
 import { Cake } from "lucide-react";
-import Image from "next/image";
+import { DocImage } from "@/components/ui/DocImage";
 
 export function ModernLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -29,7 +29,7 @@ export function ModernLayout({ data }: { data: CVData }) {
         <div className="flex items-center gap-6">
           {personalInfo.photo && (
             <div className="relative h-32 w-32 shrink-0">
-              <Image
+              <DocImage
                 src={personalInfo.photo}
                 alt={personalInfo.firstName}
                 fill

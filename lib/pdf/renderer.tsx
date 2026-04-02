@@ -10,6 +10,10 @@ export async function renderCvToHtml(
 ): Promise<string> {
   const { renderToStaticMarkup } = await import("react-dom/server");
 
+  // Signal to DocImage to use a plain <img> tag
+  (global as any).IS_PDF_MODE = true;
+
+
   // Dynamically load the resume template component
   const template =
     templateComponents[templateId] || templateComponents[DEFAULT_TEMPLATE];
