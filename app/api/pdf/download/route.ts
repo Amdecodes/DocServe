@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   const orderId = req.nextUrl.searchParams.get("orderId");
+  const forceRegenerateRaw = req.nextUrl.searchParams.get("regenerate");
+  const forceRegenerate =
+    forceRegenerateRaw === "1" || forceRegenerateRaw === "true";
 
   if (!orderId) {
     return new Response("Missing orderId", { status: 400 });
@@ -33,7 +36,7 @@ export async function GET(req: NextRequest) {
   let diagnostics: string[] = [];
 
   // 1. Try fetching existing stored PDF
-  if (order.pdf_url) {
+  if (order.pdf_url && !forceRegenerate) {
     diagnostics.push(`Stored pdf_url found: ${order.pdf_url}`);
     try {
       const fileResponse = await fetch(order.pdf_url);
@@ -48,6 +51,8 @@ export async function GET(req: NextRequest) {
     } catch (e) {
       diagnostics.push(`Stored PDF fetch threw: ${String(e)}`);
     }
+  } else if (forceRegenerate) {
+    diagnostics.push("Forced regeneration requested by query param.");
   } else {
     diagnostics.push(
       "No pdf_url in DB — PDF was never generated (background task may have failed).",
