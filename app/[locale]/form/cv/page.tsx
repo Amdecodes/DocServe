@@ -161,6 +161,7 @@ function CVWizardContent() {
           // Iterate and update relevant sections
           if (result.data.summary) updateCVData("summary", result.data.summary);
           if (result.data.experience) updateCVData("experience", result.data.experience);
+          if (result.data.coreCompetencies) updateCVData("coreCompetencies", result.data.coreCompetencies);
           if (result.data.coverLetter) updateCVData("coverLetter", result.data.coverLetter);
           
           // CRITICAL: Update metadata so the preview knows to unblur
@@ -168,7 +169,7 @@ function CVWizardContent() {
 
           // Force a small delay to let UI refresh
           // Optionally show a success toast here
-          alert("AI Enhancement Complete! Check your summary and experience sections.");
+          alert("AI Enhancement Complete! Check your summary, core competencies, and experience sections.");
       }
 
     } catch (error) {

@@ -21,6 +21,7 @@ interface AIGenerationOutput {
   professionalSummary: string;
   coverLetterBody?: string;
   optimizedBullets: string[][];
+  coreCompetencies: string[];
   generatedAt: string;
 }
 
@@ -345,15 +346,61 @@ ${bullets.map((b, i) => `${i + 1}. ${b}`).join("\n")}
 Return EXACTLY ${bullets.length} improved bullets, one per line, no numbering.`;
 }
 
+/**
+ * Key Highlights / Core Competencies Generation Prompt
+ * Output: 3 to 4 points, strictly grounded on input data
+ */
+function buildCoreCompetenciesPrompt(
+  jobTitle: string,
+  experience: ExperienceItem[],
+  skills: string[],
+  educationSummary: string,
+  currentCompetencies?: string[],
+): string {
+  const hasCurrent = currentCompetencies && currentCompetencies.length > 0;
+
+  const experienceStr = experience
+    .map(
+      (exp) =>
+        `Role: ${exp.jobTitle} at ${exp.company}
+Achievements:
+${exp.achievements.map((ach) => `- ${ach}`).join("\n")}`
+    )
+    .join("\n\n");
+
+  return `Write exactly between 3 and 4 short, professional key achievements, core competencies, or highlight points for a resume.
+
+Target Job Title: ${jobTitle}
+Skills: ${skills.join(", ") || "Not specified"}
+Education: ${educationSummary || "Not specified"}
+Experience:
+${experienceStr || "No formal work experience listed."}
+
+${
+  hasCurrent
+    ? `The candidate has provided the following draft highlights:
+${currentCompetencies.map((c) => `- ${c}`).join("\n")}
+
+Improve and refine these highlights to be more professional, ATS-friendly, and concise. Maintain all specific metrics or facts provided by the candidate.`
+    : `The candidate has not provided highlights. Generate 3 to 4 key highlights or core competencies based strictly on their experience, skills, and education listed above.`
+}
+
+CRITICAL Requirements:
+1. Output exactly between 3 and 4 points, with each point on a new line.
+2. Return ONLY the plain text points, one per line. Do NOT prefix with numbers, bullet characters (like -, *, •), or markdown.
+3. Every point must be a concise professional phrase (e.g. "Developed responsive web interfaces using React and Next.js" or "Optimized database performance to reduce page load time").
+4. DO NOT BE CREATIVE OR INVENT ANY METRICS. Every point must be grounded strictly in the candidate's input data provided above. If no metrics are provided, focus on their specified skills, duties, or education. Do not hallucinate company names, projects, or statistics.`;
+}
+
 // ============================================================================
 // GEMINI API CALL
 // ============================================================================
 
 // Fallback models in priority order
 const FALLBACK_MODELS = [
-  "gemini-3-pro", // Primary
-  "gemini-2.5-flash", // Fallback 1
-  "gemini-2.5-flash-lite", // Fallback 2
+  "gemini-2.5-flash", // Primary (Highly capable & fast)
+  "gemini-2.5-flash-lite", // Fallback 1
+  "gemini-1.5-pro", // Fallback 2 (High capability reasoning)
   "gemini-1.5-flash", // Legacy fallback
 ];
 
@@ -559,7 +606,7 @@ export async function generateAIContent(
     .join("; ") || "";
 
   // Build skills summary
-  const skillsSummary = (cvData.skills || []).join(", ") || "";
+  const skillsSummary = (cvData.skills || []).map((s) => s.name).join(", ") || "";
 
   try {
     // 1. Generate About Me section
@@ -574,6 +621,26 @@ export async function generateAIContent(
       skillsSummary,
     );
     const professionalSummary = await callGeminiAPI(summaryPrompt);
+
+    // 1.5 Generate Core Competencies / Key Highlights
+    console.log(`[AI Generator] Generating Key Highlights / Core Competencies...`);
+    const coreCompetenciesPrompt = buildCoreCompetenciesPrompt(
+      jobTitle,
+      cvData.experience || [],
+      (cvData.skills || []).map((s) => s.name),
+      educationSummary,
+      cvData.coreCompetencies,
+    );
+    const coreCompetenciesRaw = await callGeminiAPI(coreCompetenciesPrompt);
+    const coreCompetencies = coreCompetenciesRaw
+      .split("\n")
+      .map((line) => line.replace(/^[-•*#0-9.]\s*/, "").trim())
+      .filter((line) => line.length > 0)
+      .slice(0, 4);
+
+    const parsedCompetencies = coreCompetencies.length > 0
+      ? coreCompetencies
+      : (cvData.coreCompetencies || []);
 
     // 2. Generate Cover Letter (only if user has cover letter data)
     let coverLetterBody: string | undefined;
@@ -627,6 +694,7 @@ export async function generateAIContent(
         professionalSummary || generateFallbackSummary(jobTitle),
       coverLetterBody,
       optimizedBullets,
+      coreCompetencies: parsedCompetencies,
       generatedAt: new Date().toISOString(),
     };
   } catch (error) {
@@ -639,6 +707,7 @@ export async function generateAIContent(
         ? generateFallbackCoverLetter()
         : undefined,
       optimizedBullets: cvData.experience.map((exp) => exp.achievements),
+      coreCompetencies: cvData.coreCompetencies || [],
       generatedAt: new Date().toISOString(),
     };
   }
@@ -682,6 +751,10 @@ export function mergeAIContent(
       ...exp,
       achievements: aiContent.optimizedBullets[index] || exp.achievements,
     })),
+    // Add AI-generated core competencies
+    coreCompetencies: aiContent.coreCompetencies.length > 0
+      ? aiContent.coreCompetencies
+      : cvData.coreCompetencies,
     // Add AI-generated cover letter body
     coverLetter: cvData.coverLetter
       ? {

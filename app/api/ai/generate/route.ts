@@ -77,6 +77,7 @@ export async function POST(req: Request) {
         summaryGenerated: !!aiContent.professionalSummary,
         coverLetterGenerated: !!aiContent.coverLetterBody,
         bulletsOptimized: aiContent.optimizedBullets.length,
+        coreCompetenciesGenerated: aiContent.coreCompetencies.length,
       },
     });
   } catch (error) {

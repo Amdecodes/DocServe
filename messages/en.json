@@ -24,11 +24,19 @@
     "otherLanguageName": "አማርኛ"
   },
   "Hero": {
-    "title": "Create professional documents online. Fast, easy, and print-ready.",
-    "subtitle": "CVs, agreements, and documents fill the form, pay online, and download instantly or print in our office.",
+    "title": "Choose Your Winning CV Template",
+    "subtitle": "Browse our collection of professional, ATS-friendly resume designs to land your dream job.",
     "ctaPrimary": "Build CV",
     "ctaSecondary": "Apply Job",
-    "imageAlt": "Document Preview"
+    "imageAlt": "Document Preview",
+    "template1": "Minimalist Elegance",
+    "template2": "Creative Modern",
+    "template3": "Professional Classic",
+    "template4": "Tech Resume"
+  },
+  "VideoGuide": {
+    "title": "See How to Build Your Perfect CV in Minutes",
+    "subtitle": "Watch our quick guide to learn how to customize our templates and create a professional CV effortlessly. Get started today!"
   },
   "HowItWorks": {
     "title": "How It Works",

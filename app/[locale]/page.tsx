@@ -1,5 +1,6 @@
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
+import VideoGuide from "@/components/landing/VideoGuide";
 import Services from "@/components/landing/Services";
 import WhyChooseUs from "@/components/landing/WhyChooseUs";
 import Preview from "@/components/landing/Preview";
@@ -37,6 +38,7 @@ export default function HomePage() {
       />
       <Header />
       <Hero />
+      <VideoGuide />
       <Services />
       <WhyChooseUs />
       <Preview />
