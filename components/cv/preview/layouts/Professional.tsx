@@ -193,9 +193,13 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                           <li key={i}>{ach}</li>
                         ))}
                       </ul>
-                    ) : (
-                      <p className="text-sm text-gray-600">{exp.description}</p>
-                    )}
+                    ) : exp.description ? (
+                      <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-1 marker:text-gray-400">
+                        {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                          <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
                 ))}
               </div>

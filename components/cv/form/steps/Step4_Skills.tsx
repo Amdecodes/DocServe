@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { X, Plus, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { COMMON_SKILLS } from "@/config/skills";
+import { HARD_SKILLS, SOFT_SKILLS } from "@/config/skills";
 
 export function Step4_Skills() {
   const { cvData, addItem, removeItem } = useCV();
@@ -32,12 +32,19 @@ export function Step4_Skills() {
     }
   };
 
-  const suggestions = COMMON_SKILLS.filter(
+  const hardSkillsSuggestions = HARD_SKILLS.filter(
     (s) =>
       !cvData.skills.some((userSkill) => 
         userSkill.name.toLowerCase() === s.toLowerCase()
       )
-  ).slice(0, 12); // Show top 12 available suggestions
+  ).slice(0, 12);
+
+  const softSkillsSuggestions = SOFT_SKILLS.filter(
+    (s) =>
+      !cvData.skills.some((userSkill) => 
+        userSkill.name.toLowerCase() === s.toLowerCase()
+      )
+  ).slice(0, 12);
 
   return (
     <div className="space-y-6">
@@ -66,25 +73,56 @@ export function Step4_Skills() {
       </form>
 
       {/* Suggestions Section */}
-      {suggestions.length > 0 && (
-        <div className="space-y-3">
+      {(hardSkillsSuggestions.length > 0 || softSkillsSuggestions.length > 0) && (
+        <div className="space-y-4 bg-gray-50/30 p-4 rounded-xl border border-gray-100">
           <div className="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            <Sparkles className="w-3 h-3 text-amber-500" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             Suggestions
           </div>
-          <div className="flex flex-wrap gap-2">
-            {suggestions.map((skill, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleAdd(skill)}
-                className="px-3 py-1.5 rounded-full border border-dashed border-gray-300 text-sm text-gray-600 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/50 transition-all flex items-center gap-1.5"
-              >
-                <Plus className="w-3 h-3" />
-                {skill}
-              </button>
-            ))}
-          </div>
+
+          {/* Hard Skills */}
+          {hardSkillsSuggestions.length > 0 && (
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                Hard Skills
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {hardSkillsSuggestions.map((skill, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleAdd(skill)}
+                    className="px-3 py-1.5 rounded-full border border-dashed border-gray-300 text-sm text-gray-600 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/50 transition-all flex items-center gap-1.5 bg-white"
+                  >
+                    <Plus className="w-3 h-3" />
+                    {skill}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Soft Skills */}
+          {softSkillsSuggestions.length > 0 && (
+            <div className="space-y-2 pt-2 border-t border-dashed border-gray-100">
+              <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                Soft Skills
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {softSkillsSuggestions.map((skill, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleAdd(skill)}
+                    className="px-3 py-1.5 rounded-full border border-dashed border-gray-300 text-sm text-gray-600 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/50 transition-all flex items-center gap-1.5 bg-white"
+                  >
+                    <Plus className="w-3 h-3" />
+                    {skill}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

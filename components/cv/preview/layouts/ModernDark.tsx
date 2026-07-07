@@ -191,10 +191,9 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
                     </div>
                     
                     <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
-                      <ul className="space-y-2 text-sm text-gray-700 leading-relaxed">
-                        {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <span className="text-[#D4AF37] mt-1.5 text-[10px]">●</span>
+                      <ul className="list-disc list-outside ml-4 space-y-2 text-sm text-gray-700 leading-relaxed marker:text-[#D4AF37]">
+                        {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : (exp.description || "").split("\n").filter((l) => l.trim()).map((l) => l.replace(/^[-*•]\s*/, ""))).filter(Boolean).map((point, i) => (
+                          <li key={i}>
                             <span>{point}</span>
                           </li>
                         ))}

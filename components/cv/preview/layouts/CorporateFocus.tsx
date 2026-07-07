@@ -201,7 +201,7 @@ export function CorporateFocusLayout({ data }: { data: CVData }) {
                   
                   <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
                     <ul className="space-y-1.5 text-sm text-slate-600 leading-relaxed list-disc list-outside ml-4 marker:text-[#1a365d]">
-                      {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
+                      {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : (exp.description || "").split("\n").filter((l: string) => l.trim()).map((l: string) => l.replace(/^[-*•]\s*/, ""))).filter(Boolean).map((point, i) => (
                         <li key={i} className="pl-1">
                           <span>{point}</span>
                         </li>

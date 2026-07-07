@@ -198,15 +198,14 @@ export function GoldenLayout({ data }: { data: CVData }) {
                     </p>
                  
                      <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
-                      <ul className="mt-2 space-y-1 text-sm text-gray-700">
-                         {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
-                            <li key={i} className="flex items-start gap-2 text-justify">
-                              <span className="mt-1.5 w-1.5 h-1.5 bg-[#1e293b] shrink-0"></span>
-                              <span>{point}</span>
-                            </li>
-                         ))}
-                      </ul>
-                    </AIBlurOverlay>
+                       <ul className="list-disc list-outside ml-4 mt-2 space-y-1 text-sm text-gray-700 marker:text-[#1e293b]">
+                          {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : (exp.description || "").split("\n").filter((l) => l.trim()).map((l) => l.replace(/^[-*•]\s*/, ""))).filter(Boolean).map((point, i) => (
+                             <li key={i} className="text-justify">
+                               <span>{point}</span>
+                             </li>
+                          ))}
+                       </ul>
+                     </AIBlurOverlay>
                   </div>
                 ))
               )}

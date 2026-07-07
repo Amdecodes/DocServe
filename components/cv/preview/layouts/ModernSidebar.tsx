@@ -276,15 +276,14 @@ export function ModernSidebarLayout({ data }: { data: CVData }) {
                       type="bullets"
                       isGenerated={data.aiMetadata?.generated}
                     >
-                      <ul className="space-y-2 text-sm text-gray-600 leading-relaxed">
+                      <ul className="list-disc list-outside ml-4 space-y-2 text-sm text-gray-600 leading-relaxed marker:text-gray-400">
                         {(exp.achievements && exp.achievements.length > 0
                           ? exp.achievements
-                          : [exp.description]
+                          : (exp.description || "").split("\n").filter((l) => l.trim()).map((l) => l.replace(/^[-*•]\s*/, ""))
                         )
                           .filter(Boolean)
                           .map((point, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="mt-1.5 w-1 h-1 bg-gray-400 rounded-full shrink-0"></span>
+                            <li key={i}>
                               <span>{point}</span>
                             </li>
                           ))}

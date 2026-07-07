@@ -27,6 +27,7 @@ export interface ExperienceItem {
   description: string; // legacy block text
   achievements: string[]; // bullet points
   current: boolean;
+  optimizeWithAi?: boolean; // new toggle field to control AI optimization
 }
 
 export interface EducationItem {

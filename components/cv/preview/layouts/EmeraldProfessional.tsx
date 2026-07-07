@@ -138,7 +138,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
                                
                                <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
                                 <ul className="space-y-1.5 text-sm text-slate-600 leading-relaxed list-disc list-outside ml-4 marker:text-[#10b981]">
-                                  {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
+                                  {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : (exp.description || "").split("\n").filter((l) => l.trim()).map((l) => l.replace(/^[-*•]\s*/, ""))).filter(Boolean).map((point, i) => (
                                     <li key={i}>
                                       <span>{point}</span>
                                     </li>

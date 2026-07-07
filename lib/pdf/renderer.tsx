@@ -115,6 +115,17 @@ export async function renderCvToHtml(
           body { -webkit-print-color-adjust: exact; }
           .pdf-page-break { page-break-before: always; }
           
+          /* Force bullet points visibility in print/PDF for all templates using list-disc */
+          ul.list-disc, .list-disc {
+            list-style-type: disc !important;
+            padding-left: 1.5rem !important;
+            margin-left: 0.5rem !important;
+          }
+          ul.list-disc li, .list-disc li {
+            display: list-item !important;
+            list-style-type: disc !important;
+          }
+          
           /* Golden, Elegant & Modern Dark template specific background for full-page persistence */
           ${
             templateId === "golden" ||

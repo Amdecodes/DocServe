@@ -93,7 +93,7 @@ export function LavenderExecutiveLayout({ data }: { data: CVData }) {
                   </div>
                   <AIBlurOverlay type="bullets" isGenerated={data.aiMetadata?.generated}>
                     <ul className="list-disc list-outside ml-4 mt-2 space-y-1.5 text-sm text-gray-700">
-                      {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : [exp.description]).filter(Boolean).map((point, i) => (
+                      {(exp.achievements && exp.achievements.length > 0 ? exp.achievements : (exp.description || "").split("\n").filter((l) => l.trim()).map((l) => l.replace(/^[-*•]\s*/, ""))).filter(Boolean).map((point, i) => (
                         <li key={i} className="pl-1 leading-relaxed">
                           {point}
                         </li>

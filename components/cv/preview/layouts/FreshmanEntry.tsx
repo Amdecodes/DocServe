@@ -286,6 +286,19 @@ export function FreshmanEntryLayout({ data }: { data: CVData }) {
                     <p className="text-slate-600 font-medium text-xs mt-1">
                       {exp.company}
                     </p>
+                    {exp.achievements && exp.achievements.length > 0 ? (
+                      <ul className="list-disc list-inside text-xs text-slate-500 mt-2 space-y-1">
+                        {exp.achievements.map((ach, i) => (
+                          <li key={i}>{ach}</li>
+                        ))}
+                      </ul>
+                    ) : exp.description ? (
+                      <ul className="list-disc list-inside text-xs text-slate-500 mt-2 space-y-1">
+                        {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                          <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
                 ))}
               </div>

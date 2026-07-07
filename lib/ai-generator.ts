@@ -347,6 +347,35 @@ Return EXACTLY ${bullets.length} improved bullets, one per line, no numbering.`;
 }
 
 /**
+ * Bullet Point Generation Prompt (When candidate has no pre-entered bullets)
+ */
+function buildBulletGenerationPrompt(
+  jobTitle: string,
+  company: string,
+  description: string,
+  userNotes: string,
+  skills: string[],
+  experienceLevel?: string,
+): string {
+  return `Write exactly between 2 and 4 professional, task-oriented, and ATS-friendly resume bullet points for the following work experience.
+  
+Role: ${jobTitle}
+Organization: ${company}
+Experience Level: ${experienceLevel || "Not specified"}
+${description ? `Candidate's Description of Role:\n${description}` : ""}
+
+Global Candidate Context:
+Summary/Background: ${userNotes || "Not specified"}
+Skills: ${skills.join(", ") || "Not specified"}
+
+GUIDELINES:
+1. **Clear Action Verbs**: Start each bullet point with a strong, active verb (e.g., "Developed", "Analyzed", "Built", "Managed", "Collaborated").
+2. **Task-Oriented & Realistic**: Describe typical responsibilities and achievements of a ${jobTitle} at ${company} matching a ${experienceLevel || "professional"} level of seniority. ${description ? "Base the bullet points primarily on the Candidate's Description of Role provided above, but format and enhance them to be highly professional." : "Make them professional and realistic based on the role, company, and experience level."} Do not invent specific statistics or numbers (e.g., "increased sales by 45%") since they are not provided by the candidate, but focus on the duties, tasks, and collaboration.
+3. **No Fluff**: Keep them concise and professional.
+4. **Output Format**: Return ONLY the plain text points, one per line. Do NOT prefix with numbers, bullet characters (like -, *, •), or markdown.`;
+}
+
+/**
  * Key Highlights / Core Competencies Generation Prompt
  * Output: 3 to 4 points, strictly grounded on input data
  */
@@ -656,10 +685,17 @@ export async function generateAIContent(
       coverLetterBody = await callGeminiAPI(coverLetterPrompt);
     }
 
-    // 3. Optimize Experience Bullets (only if user provided bullets)
+    // 3. Optimize Experience Bullets (generate from scratch if empty)
     const optimizedBullets: string[][] = [];
 
     for (const exp of cvData.experience) {
+      // If AI optimization is disabled, KEEP user's manual achievements exactly as they entered them.
+      if (exp.optimizeWithAi === false) {
+        console.log(`[AI Generator] Skipping AI optimization for ${exp.company} (manual toggle off)`);
+        optimizedBullets.push(exp.achievements || []);
+        continue;
+      }
+
       const sanitizedBullets = sanitizeBullets(exp.achievements);
 
       if (sanitizedBullets.length > 0) {
@@ -683,7 +719,28 @@ export async function generateAIContent(
           parsedBullets.length > 0 ? parsedBullets : sanitizedBullets,
         );
       } else {
-        optimizedBullets.push([]);
+        console.log(`[AI Generator] Generating bullets from scratch for ${exp.company}...`);
+        const bulletPrompt = buildBulletGenerationPrompt(
+          exp.jobTitle || "Professional",
+          exp.company || "Company",
+          exp.description || "",
+          cvData.summary || cvData.summaryNotes || "",
+          (cvData.skills || []).map((s) => s.name),
+          experienceLevel,
+        );
+        try {
+          const generated = await callGeminiAPI(bulletPrompt);
+          const parsedBullets = generated
+            .split("\n")
+            .map((line) => line.replace(/^[-•*#0-9.]\s*/, "").trim())
+            .filter((line) => line.length > 0)
+            .slice(0, 4);
+
+          optimizedBullets.push(parsedBullets);
+        } catch (e) {
+          console.error(`Failed to generate bullets for ${exp.company}:`, e);
+          optimizedBullets.push([]);
+        }
       }
     }
 
@@ -706,7 +763,17 @@ export async function generateAIContent(
       coverLetterBody: cvData.coverLetter
         ? generateFallbackCoverLetter()
         : undefined,
-      optimizedBullets: cvData.experience.map((exp) => exp.achievements),
+      optimizedBullets: cvData.experience.map((exp) => {
+        if (exp.optimizeWithAi === false) {
+          return exp.achievements || [];
+        }
+        return exp.achievements && exp.achievements.length > 0
+          ? exp.achievements
+          : [
+              `Performed general duties as a ${exp.jobTitle || "Professional"} at ${exp.company || "Company"}.`,
+              `Collaborated with team members to achieve organizational goals.`,
+            ];
+      }),
       coreCompetencies: cvData.coreCompetencies || [],
       generatedAt: new Date().toISOString(),
     };

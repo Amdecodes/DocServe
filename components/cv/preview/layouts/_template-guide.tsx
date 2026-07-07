@@ -100,7 +100,11 @@ export function TemplateSkeletonLayout({ data }: { data: CVData }) {
                       ))}
                     </ul>
                   ) : exp.description ? (
-                    <p className="mt-2 text-sm">{exp.description}</p>
+                    <ul className="mt-2 list-disc list-inside text-sm">
+                      {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                        <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                      ))}
+                    </ul>
                   ) : null}
                 </div>
               ))}

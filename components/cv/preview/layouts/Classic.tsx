@@ -74,9 +74,13 @@ export function ClassicLayout({ data }: { data: CVData }) {
                         <li key={i}>{ach}</li>
                       ))}
                     </ul>
-                  ) : (
-                    <p className="text-sm">{exp.description}</p>
-                  )}
+                  ) : exp.description ? (
+                    <ul className="list-disc list-inside text-sm pl-2">
+                      {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                        <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               ))}
             </div>

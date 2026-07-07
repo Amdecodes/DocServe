@@ -38,8 +38,8 @@ export default function HomePage() {
       />
       <Header />
       <Hero />
-      <VideoGuide />
       <Services />
+      <VideoGuide />
       <WhyChooseUs />
       <Preview />
       <PaymentTrust />

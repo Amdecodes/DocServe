@@ -143,7 +143,6 @@ export function ModernLayout({ data }: { data: CVData }) {
                 <p className="text-teal-600 font-medium text-sm mb-2">
                   {exp.company}
                 </p>
-                {/* Achievements */}
                 {exp.achievements && exp.achievements.length > 0 ? (
                   <AIBlurOverlay
                     type="bullets"
@@ -160,13 +159,13 @@ export function ModernLayout({ data }: { data: CVData }) {
                       </ul>
                     </div>
                   </AIBlurOverlay>
-                ) : (
-                  exp.description && (
-                    <p className="text-sm text-gray-700 whitespace-pre-line">
-                      {exp.description}
-                    </p>
-                  )
-                )}
+                ) : exp.description ? (
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 mt-1">
+                    {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                      <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             ))}
             {experience.length === 0 && (

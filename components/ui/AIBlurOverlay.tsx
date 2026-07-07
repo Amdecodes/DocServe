@@ -14,7 +14,9 @@ export function AIBlurOverlay({
   isGenerated = false,
   type,
 }: AIBlurOverlayProps) {
-  if (isGenerated) {
+  const isPdfMode = typeof window === "undefined" && (global as any).IS_PDF_MODE;
+
+  if (isGenerated || isPdfMode || type === "bullets") {
     return <>{children}</>;
   }
 
