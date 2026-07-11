@@ -427,10 +427,9 @@ CRITICAL Requirements:
 
 // Fallback models in priority order
 const FALLBACK_MODELS = [
-  "gemini-2.5-flash", // Primary (Highly capable & fast)
-  "gemini-2.5-flash-lite", // Fallback 1
-  "gemini-1.5-pro", // Fallback 2 (High capability reasoning)
-  "gemini-1.5-flash", // Legacy fallback
+  "gemini-2.0-flash", // Primary (Highly capable & fast)
+  "gemini-1.5-flash", // Fallback 1 (Stable & fast)
+  "gemini-1.5-pro",   // Fallback 2 (High capability reasoning)
 ];
 
 const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -638,8 +637,8 @@ export async function generateAIContent(
   const skillsSummary = (cvData.skills || []).map((s) => s.name).join(", ") || "";
 
   try {
-    // 1. Generate About Me section
-    console.log(`[AI Generator] Generating About Me... (hasExperience: ${hasExperience})`);
+    // 1. Generate About Me section task
+    console.log(`[AI Generator] Triggering About Me generation... (hasExperience: ${hasExperience})`);
     const summaryPrompt = buildSummaryPrompt(
       jobTitle,
       experienceLevel,
@@ -649,10 +648,14 @@ export async function generateAIContent(
       educationSummary,
       skillsSummary,
     );
-    const professionalSummary = await callGeminiAPI(summaryPrompt);
+    const professionalSummaryPromise = callGeminiAPI(summaryPrompt)
+      .catch((e) => {
+        console.error("[AI Generator] About Me generation failed:", e);
+        return generateFallbackSummary(jobTitle);
+      });
 
-    // 1.5 Generate Core Competencies / Key Highlights
-    console.log(`[AI Generator] Generating Key Highlights / Core Competencies...`);
+    // 1.5 Generate Core Competencies / Key Highlights task
+    console.log(`[AI Generator] Triggering Key Highlights / Core Competencies generation...`);
     const coreCompetenciesPrompt = buildCoreCompetenciesPrompt(
       jobTitle,
       cvData.experience || [],
@@ -660,21 +663,24 @@ export async function generateAIContent(
       educationSummary,
       cvData.coreCompetencies,
     );
-    const coreCompetenciesRaw = await callGeminiAPI(coreCompetenciesPrompt);
-    const coreCompetencies = coreCompetenciesRaw
-      .split("\n")
-      .map((line) => line.replace(/^[-•*#0-9.]\s*/, "").trim())
-      .filter((line) => line.length > 0)
-      .slice(0, 4);
+    const coreCompetenciesPromise = callGeminiAPI(coreCompetenciesPrompt)
+      .then((raw) => {
+        const parsed = raw
+          .split("\n")
+          .map((line) => line.replace(/^[-•*#0-9.]\s*/, "").trim())
+          .filter((line) => line.length > 0)
+          .slice(0, 4);
+        return parsed.length > 0 ? parsed : (cvData.coreCompetencies || []);
+      })
+      .catch((e) => {
+        console.error("[AI Generator] Key Highlights generation failed:", e);
+        return cvData.coreCompetencies || [];
+      });
 
-    const parsedCompetencies = coreCompetencies.length > 0
-      ? coreCompetencies
-      : (cvData.coreCompetencies || []);
-
-    // 2. Generate Cover Letter (only if user has cover letter data)
-    let coverLetterBody: string | undefined;
+    // 2. Generate Cover Letter task (only if user has cover letter data)
+    let coverLetterPromise: Promise<string | undefined> = Promise.resolve(undefined);
     if (cvData.coverLetter) {
-      console.log(`[AI Generator] Generating cover letter...`);
+      console.log(`[AI Generator] Triggering cover letter generation...`);
       const coverLetterPrompt = buildCoverLetterPrompt(
         jobTitle,
         experienceLevel,
@@ -682,18 +688,19 @@ export async function generateAIContent(
         tone,
         userNotes,
       );
-      coverLetterBody = await callGeminiAPI(coverLetterPrompt);
+      coverLetterPromise = callGeminiAPI(coverLetterPrompt)
+        .catch((e) => {
+          console.error("[AI Generator] Cover letter generation failed:", e);
+          return generateFallbackCoverLetter();
+        });
     }
 
-    // 3. Optimize Experience Bullets (generate from scratch if empty)
-    const optimizedBullets: string[][] = [];
-
-    for (const exp of cvData.experience) {
+    // 3. Optimize Experience Bullets tasks (generate from scratch if empty)
+    const bulletPromises = cvData.experience.map(async (exp) => {
       // If AI optimization is disabled, KEEP user's manual achievements exactly as they entered them.
       if (exp.optimizeWithAi === false) {
         console.log(`[AI Generator] Skipping AI optimization for ${exp.company} (manual toggle off)`);
-        optimizedBullets.push(exp.achievements || []);
-        continue;
+        return exp.achievements || [];
       }
 
       const sanitizedBullets = sanitizeBullets(exp.achievements);
@@ -705,19 +712,21 @@ export async function generateAIContent(
           exp.jobTitle,
           exp.company,
         );
-        const optimized = await callGeminiAPI(bulletPrompt);
+        try {
+          const optimized = await callGeminiAPI(bulletPrompt);
 
-        // Parse output - one bullet per line
-        const parsedBullets = optimized
-          .split("\n")
-          .map((line) => line.replace(/^[-•]\s*/, "").trim())
-          .filter((line) => line.length > 0)
-          .slice(0, sanitizedBullets.length); // Ensure same count
+          // Parse output - one bullet per line
+          const parsedBullets = optimized
+            .split("\n")
+            .map((line) => line.replace(/^[-•]\s*/, "").trim())
+            .filter((line) => line.length > 0)
+            .slice(0, sanitizedBullets.length); // Ensure same count
 
-        // If parsing failed, keep original
-        optimizedBullets.push(
-          parsedBullets.length > 0 ? parsedBullets : sanitizedBullets,
-        );
+          return parsedBullets.length > 0 ? parsedBullets : sanitizedBullets;
+        } catch (e) {
+          console.error(`Failed to optimize bullets for ${exp.company}:`, e);
+          return sanitizedBullets;
+        }
       } else {
         console.log(`[AI Generator] Generating bullets from scratch for ${exp.company}...`);
         const bulletPrompt = buildBulletGenerationPrompt(
@@ -736,28 +745,41 @@ export async function generateAIContent(
             .filter((line) => line.length > 0)
             .slice(0, 4);
 
-          optimizedBullets.push(parsedBullets);
+          return parsedBullets;
         } catch (e) {
           console.error(`Failed to generate bullets for ${exp.company}:`, e);
-          optimizedBullets.push([]);
+          return [];
         }
       }
-    }
+    });
 
-    console.log(`[AI Generator] ✅ Generation complete for Order ${orderId}`);
+    // Run all tasks in parallel
+    const [
+      professionalSummary,
+      coreCompetencies,
+      coverLetterBody,
+      optimizedBullets,
+    ] = await Promise.all([
+      professionalSummaryPromise,
+      coreCompetenciesPromise,
+      coverLetterPromise,
+      Promise.all(bulletPromises),
+    ]);
+
+    console.log(`[AI Generator] ✅ Concurrent generation complete for Order ${orderId}`);
 
     return {
       professionalSummary:
         professionalSummary || generateFallbackSummary(jobTitle),
       coverLetterBody,
       optimizedBullets,
-      coreCompetencies: parsedCompetencies,
+      coreCompetencies,
       generatedAt: new Date().toISOString(),
     };
   } catch (error) {
-    console.error("[AI Generator] ❌ Generation failed:", error);
+    console.error("[AI Generator] ❌ Parallel generation failed:", error);
 
-    // Return fallback content - never fail the order
+    // Return fallback content - never fail the entire order
     return {
       professionalSummary: generateFallbackSummary(jobTitle),
       coverLetterBody: cvData.coverLetter
