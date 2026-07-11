@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { processOrderPdf } from "@/lib/pdf/process-order";
 import { generateAIContent, mergeAIContent } from "@/lib/ai-generator";
 import { CVData } from "@/types/cv";
+import { getPriceForService } from "@/config/pricing";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -37,6 +38,15 @@ export async function GET(req: Request) {
     data.status ===
       "success" /* sometimes Chapa verify returns diff structure */
   ) {
+    // Validate that the paid amount matches the database expectations
+    const expectedAmount = getPriceForService(order.service_type);
+    const paidAmount = Number(data.data?.amount);
+
+    if (Math.abs(paidAmount - expectedAmount) > 0.01) {
+      console.error(`[VerifyJSON] Amount mismatch: Paid ${paidAmount}, Expected ${expectedAmount}`);
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+
     let pdfUrl = order.pdf_url;
     let expiresAt = order.expires_at;
 

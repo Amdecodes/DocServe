@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { processOrderPdf } from "@/lib/pdf/process-order";
 import crypto from "crypto";
+import { getPriceForService } from "@/config/pricing";
 
 async function processOrderAsync(
   orderId: string,
@@ -67,22 +68,24 @@ export async function POST(req: Request) {
 
     const rawBody = await req.text();
 
-    // 1. Validate Signature
-    if (secret && signature) {
-      const hash = crypto
-        .createHmac("sha256", secret)
-        .update(rawBody)
-        .digest("hex");
-      if (hash !== signature) {
-        console.error("[Webhook] Invalid signature. Ignoring request.");
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 403 },
-        );
-      }
-    } else {
-      console.warn(
-        "[Webhook] Missing secret or signature. Proceeding with caution (DEV mode behavior).",
+    // 1. Validate Signature - Strict enforcement
+    if (!secret || !signature) {
+      console.error("[Webhook] Missing secret or signature. Rejecting webhook request.");
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
+    const hash = crypto
+      .createHmac("sha256", secret)
+      .update(rawBody)
+      .digest("hex");
+    if (hash !== signature) {
+      console.error("[Webhook] Invalid signature. Ignoring request.");
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 403 },
       );
     }
 
@@ -139,11 +142,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid currency" }, { status: 400 });
     }
 
+    // 4. Validate Amount Paid Integrity
+    const expectedAmount = getPriceForService(order.service_type);
+    const paidAmount = Number(verifyData.data.amount);
+
+    if (Math.abs(paidAmount - expectedAmount) > 0.01) {
+      console.error(`[Webhook] Amount mismatch: Paid ${paidAmount}, Expected ${expectedAmount}`);
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+
     const { first_name, last_name, email, phone_number, reference } =
       verifyData.data;
     const verifyName = `${first_name || ""} ${last_name || ""}`.trim();
 
-    // 4. Mark order as PAID immediately
+    // 5. Mark order as PAID immediately
     await prisma.order.update({
       where: { id: order.id },
       data: {

@@ -4,6 +4,7 @@ const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -39,6 +40,35 @@ const nextConfig = {
     "/api/payment/chapa/webhook": [
       "./node_modules/@sparticuz/chromium/bin/**",
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.senedx.com https://*.clerk.accounts.dev; connect-src 'self' https://clerk.senedx.com https://*.clerk.accounts.dev wss://*.clerk.accounts.dev https://utfs.io; img-src 'self' data: blob: https://zemfyznetvnfzfkzauyg.supabase.co https://utfs.io https://img.clerk.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none';",
+          },
+        ],
+      },
+    ];
   },
 };
 
