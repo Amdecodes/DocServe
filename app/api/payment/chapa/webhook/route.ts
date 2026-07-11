@@ -61,7 +61,12 @@ async function processOrderAsync(
 export async function POST(req: Request) {
   try {
     const secret =
-      process.env.CHAPA_WEBHOOK_SECRET || process.env.CHAPA_SECRET_KEY;
+      (process.env.CHAPA_WEBHOOK_SECRET || process.env.CHAPA_SECRET_KEY)?.trim();
+    if (secret) {
+      console.log(
+        `[Webhook] Loaded secret: length=${secret.length}, prefix="${secret.substring(0, 13)}..."`
+      );
+    }
     const signature =
       req.headers.get("x-chapa-signature") ||
       req.headers.get("chapa-signature");

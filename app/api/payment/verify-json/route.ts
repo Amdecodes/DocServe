@@ -22,11 +22,18 @@ export async function GET(req: Request) {
   }
 
   // Call Chapa VERIFY API
+  const chapaSecretKey = process.env.CHAPA_SECRET_KEY?.trim();
+  if (chapaSecretKey) {
+    console.log(
+      `[VerifyJSON] Loaded secret key: length=${chapaSecretKey.length}, prefix="${chapaSecretKey.substring(0, 13)}..."`
+    );
+  }
+
   const res = await fetch(
     `https://api.chapa.co/v1/transaction/verify/${order.tx_ref}`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`,
+        Authorization: `Bearer ${chapaSecretKey}`,
       },
     },
   );

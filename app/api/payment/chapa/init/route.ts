@@ -60,10 +60,14 @@ export async function POST(req: Request) {
     });
 
     // 4. Prepare Chapa payload
-    const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY;
+    const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY?.trim();
     if (!CHAPA_SECRET_KEY) {
       throw new Error("CHAPA_SECRET_KEY is not defined");
     }
+
+    console.log(
+      `[Chapa Init] Loading API Key: length=${CHAPA_SECRET_KEY.length}, prefix="${CHAPA_SECRET_KEY.substring(0, 13)}..."`
+    );
 
     // Get the base URL for callbacks
     const baseUrl =
