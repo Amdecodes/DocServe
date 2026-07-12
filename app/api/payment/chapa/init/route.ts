@@ -69,11 +69,20 @@ export async function POST(req: Request) {
       `[Chapa Init] Loading API Key: length=${CHAPA_SECRET_KEY.length}, prefix="${CHAPA_SECRET_KEY.substring(0, 13)}..."`
     );
 
-    // Get the base URL for callbacks
-    const baseUrl =
+    // Get the base URL for callbacks with Vercel fallbacks
+    let baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||
-      process.env.NEXT_PUBLIC_API_URL ||
-      "http://localhost:3000";
+      process.env.NEXT_PUBLIC_API_URL;
+
+    if (!baseUrl && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    } else if (!baseUrl && process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    }
+
+    if (!baseUrl) {
+      baseUrl = "http://localhost:3000";
+    }
 
     // Extract customer info from stored form_data to pass to Chapa
     // formatting relies on the expected structure of form_data.personal (agreements) or personalInfo (CVs)

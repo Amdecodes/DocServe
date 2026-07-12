@@ -176,7 +176,17 @@ export async function POST(req: Request) {
     console.log(`Order ${order.id} marked as PAID via webhook`);
 
     // 5. Schedule AI + PDF generation to run after the response is sent
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+    if (!baseUrl && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    } else if (!baseUrl && process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    }
+
+    if (!baseUrl) {
+      baseUrl = "http://localhost:3000";
+    }
 
     after(
       processOrderAsync(order.id, order.form_data, order.service_type, baseUrl),
