@@ -19,6 +19,7 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
 
   return (
     <div className="h-full w-full bg-white flex flex-col font-sans text-gray-800">
@@ -242,7 +243,7 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
           )}
 
           {/* References */}
-          {references.length > 0 && (
+          {(references.length > 0 || referencesUponRequest) && (
             <section className="relative pl-8 border-l-2 border-gray-300 pb-4">
               <div className="absolute -left-5.25 top-0 bg-[#2c3e50] text-white rounded-full p-2">
                 <User size={20} />
@@ -253,22 +254,26 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-                {references.map((ref: any) => (
-                  <div key={ref.id}>
-                    <h4 className="font-bold text-base text-gray-800">
-                      {ref.name}
-                    </h4>
-                    <p className="text-sm font-medium text-gray-600 italic mb-1">
-                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
-                    </p>
-                    <div className="text-xs text-gray-500">
-                      {ref.phone && <p>{ref.phone}</p>}
-                      {ref.email && <p>{ref.email}</p>}
+              {referencesUponRequest ? (
+                <p className="text-sm italic text-gray-600">References available upon request.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                  {references.map((ref) => (
+                    <div key={ref.id}>
+                      <h4 className="font-bold text-base text-gray-800">
+                        {ref.name}
+                      </h4>
+                      <p className="text-sm font-medium text-gray-600 italic mb-1">
+                        {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                      </p>
+                      <div className="text-xs text-gray-500">
+                        {ref.phone && <p>{ref.phone}</p>}
+                        {ref.email && <p>{ref.email}</p>}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </section>
           )}
         </div>

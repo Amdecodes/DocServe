@@ -1,6 +1,6 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
 
 export function LavenderExecutiveLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -12,6 +12,7 @@ export function LavenderExecutiveLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   const formatUrl = (url?: string) => {
@@ -165,25 +166,29 @@ export function LavenderExecutiveLayout({ data }: { data: CVData }) {
       )}
 
       {/* References Section */}
-      {references.length > 0 && (
+      {(references.length > 0 || referencesUponRequest) && (
         <section className="mb-8">
           <div className="border-t border-gray-200 pt-4">
             <h3 className="text-lg font-bold uppercase tracking-wider text-violet-600 mb-4">
               References
             </h3>
-            <div className="grid grid-cols-2 gap-6 text-sm">
-              {references.map((ref, idx) => (
-                <div key={idx} className="break-inside-avoid">
-                   <p className="font-bold text-gray-900">{ref.name}</p>
-                   <p className="text-violet-600 text-xs font-semibold">
-                     {ref.position} {ref.company ? `– ${ref.company}` : ""}
-                   </p>
-                   <p className="text-gray-500 text-xs mt-1">
-                      {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
-                   </p>
-                </div>
-              ))}
-            </div>
+            {referencesUponRequest ? (
+              <p className="text-sm italic text-gray-600">References available upon request.</p>
+            ) : (
+              <div className="grid grid-cols-2 gap-6 text-sm">
+                {references.map((ref, idx) => (
+                  <div key={idx} className="break-inside-avoid">
+                     <p className="font-bold text-gray-900">{ref.name}</p>
+                     <p className="text-violet-600 text-xs font-semibold">
+                       {ref.position} {ref.company ? `– ${ref.company}` : ""}
+                     </p>
+                     <p className="text-gray-500 text-xs mt-1">
+                        {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                     </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

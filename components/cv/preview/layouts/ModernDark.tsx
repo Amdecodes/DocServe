@@ -14,6 +14,7 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   return (
@@ -225,24 +226,28 @@ export function ModernDarkLayout({ data }: { data: CVData }) {
           )}
 
           {/* References */}
-          {references.length > 0 && (
+          {(references.length > 0 || referencesUponRequest) && (
             <section style={{ pageBreakInside: "avoid" }} className="mt-8 pt-4">
               <h2 className="text-xl font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-gray-200 pb-2">
                 References
               </h2>
-              <div className="grid grid-cols-2 gap-6">
-                {references.map((ref: any, idx) => (
-                   <div key={idx} className="text-sm">
-                      <p className="font-bold text-black">{ref.name}</p>
-                      <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wider">
-                        {ref.position} {ref.company ? `| ${ref.company}` : ""}
-                      </p>
-                      <p className="text-gray-500 text-xs mt-1">
-                         {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
-                      </p>
-                   </div>
-                ))}
-              </div>
+              {referencesUponRequest ? (
+                <p className="text-sm italic text-gray-600">References available upon request.</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-6">
+                  {references.map((ref, idx) => (
+                     <div key={idx} className="text-sm">
+                        <p className="font-bold text-black">{ref.name}</p>
+                        <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wider">
+                          {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                        </p>
+                        <p className="text-gray-500 text-xs mt-1">
+                           {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                        </p>
+                     </div>
+                  ))}
+                </div>
+              )}
             </section>
           )}
         </div>

@@ -14,6 +14,7 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -267,26 +268,30 @@ export function MinimalistTealLayout({ data }: { data: CVData }) {
            )}
 
            {/* References */}
-           {references.length > 0 && (
-            <section style={{ pageBreakInside: "avoid" }}>
-              <h3 className="text-xl font-bold uppercase tracking-widest text-[#0f766e] mb-4 flex items-center gap-3">
-                 <span className="p-2 bg-[#0d9488] text-white rounded-md">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                 </span>
-                 References
-               </h3>
-               <div className="grid grid-cols-2 gap-6 text-sm">
-                  {references.map((ref: any, idx) => (
-                       <div key={idx} className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                          <div className="font-bold text-slate-800 text-base mb-1">{ref.name}</div>
-                          <div className="text-[#0d9488] font-medium text-xs uppercase mb-1">{ref.position} {ref.company ? `| ${ref.company}` : ""}</div>
-                          <p className="text-slate-500 text-xs mt-1">
-                             {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
-                          </p>
-                       </div>
-                  ))}
-               </div>
-            </section>
+           {(references.length > 0 || referencesUponRequest) && (
+             <section style={{ pageBreakInside: "avoid" }}>
+               <h3 className="text-xl font-bold uppercase tracking-widest text-[#0f766e] mb-4 flex items-center gap-3">
+                  <span className="p-2 bg-[#0d9488] text-white rounded-md">
+                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  </span>
+                  References
+                </h3>
+                {referencesUponRequest ? (
+                  <p className="text-sm italic text-slate-600">References available upon request.</p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-6 text-sm">
+                     {references.map((ref, idx) => (
+                          <div key={idx} className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                             <div className="font-bold text-slate-800 text-base mb-1">{ref.name}</div>
+                             <div className="text-[#0d9488] font-medium text-xs uppercase mb-1">{ref.position} {ref.company ? `| ${ref.company}` : ""}</div>
+                             <p className="text-slate-500 text-xs mt-1">
+                                {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                             </p>
+                          </div>
+                     ))}
+                  </div>
+                )}
+             </section>
            )}
 
         </div>

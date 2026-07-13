@@ -20,6 +20,7 @@ export function ModernLayout({ data }: { data: CVData }) {
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   return (
@@ -276,25 +277,29 @@ export function ModernLayout({ data }: { data: CVData }) {
         )}
 
         {/* References */}
-        {references.length > 0 && (
+        {(references.length > 0 || referencesUponRequest) && (
           <section>
             <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
               References
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {references.map((ref: any) => (
-                <div key={ref.id} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                  <h4 className="font-bold text-gray-800">{ref.name}</h4>
-                  <p className="text-teal-600 text-sm font-medium">
-                    {ref.position} {ref.company ? `at ${ref.company}` : ""}
-                  </p>
-                  <div className="mt-1 text-xs text-gray-500">
-                    {ref.phone && <p>{ref.phone}</p>}
-                    {ref.email && <p>{ref.email}</p>}
+            {referencesUponRequest ? (
+              <p className="text-sm italic text-gray-600">References available upon request.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {references.map((ref) => (
+                  <div key={ref.id} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <h4 className="font-bold text-gray-800">{ref.name}</h4>
+                    <p className="text-teal-600 text-sm font-medium">
+                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                    </p>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ref.phone && <p>{ref.phone}</p>}
+                      {ref.email && <p>{ref.email}</p>}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>
