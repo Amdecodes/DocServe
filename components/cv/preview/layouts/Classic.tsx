@@ -139,11 +139,12 @@ export function ClassicLayout({ data }: { data: CVData }) {
                 {references.map((ref) => (
                   <div key={ref.id} className="text-sm">
                     <div className="font-bold">{ref.name}</div>
-                    <div className="text-gray-600">
-                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                    <div className="italic text-gray-700">
+                      {ref.position} {ref.company ? `– ${ref.company}` : ""}
                     </div>
-                    {ref.phone && <div>Phone: {ref.phone}</div>}
-                    {ref.email && <div>Email: {ref.email}</div>}
+                    <div className="text-xs text-gray-600">
+                      {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                    </div>
                   </div>
                 ))}
               </div>

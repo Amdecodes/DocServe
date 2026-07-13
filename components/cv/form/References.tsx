@@ -41,7 +41,7 @@ export function References() {
       </div>
 
       {/* References Upon Request Checkbox */}
-      <div className="flex items-center space-x-2 pb-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+      <div className="flex items-center space-x-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
         <input
           type="checkbox"
           id="referencesUponRequest"
@@ -51,6 +51,7 @@ export function References() {
             updateCVData("referencesUponRequest", e.target.checked);
             if (e.target.checked) {
               updateCVData("references", []);
+              setIsAdding(false);
             }
           }}
           className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
