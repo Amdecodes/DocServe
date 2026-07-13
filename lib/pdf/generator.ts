@@ -47,12 +47,7 @@ export async function generatePdfFromHtml(html: string) {
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: {
-        top: "0px",
-        right: "0px",
-        bottom: "0px",
-        left: "0px",
-      },
+      preferCSSPageSize: true,
     });
 
     await browser.close();

@@ -111,9 +111,24 @@ export async function renderCvToHtml(
         <meta charset="utf-8">
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-          @page { size: A4; margin: 0; }
+          @page {
+            size: A4;
+            margin: 20mm 15mm;
+          }
           body { -webkit-print-color-adjust: exact; }
           .pdf-page-break { page-break-before: always; }
+          
+          @media print {
+            body {
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+            /* Adjust template roots styled with min-h-[297mm] to fit within printable height */
+            div[class*="min-h-[297mm]"], .min-h-\\[297mm\\] {
+              min-height: 100% !important;
+              height: auto !important;
+            }
+          }
           
           /* Force bullet points visibility in print/PDF for all templates using list-disc */
           ul.list-disc, .list-disc {
