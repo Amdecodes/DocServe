@@ -39,6 +39,7 @@ interface CVContextType {
     data:
       | Partial<PersonalInfo>
       | string
+      | boolean
       | string[]
       | ExperienceItem[]
       | EducationItem[]
@@ -190,12 +191,14 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     data:
       | Partial<PersonalInfo>
       | string
+      | boolean
       | string[]
       | ExperienceItem[]
       | EducationItem[]
       | SkillItem[]
       | LanguageItem[]
       | VolunteerItem[]
+      | ReferenceItem[]
       | Partial<CoverLetterData>
       | AIMetadata
       | { id: string },

@@ -87,7 +87,10 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
       skills: deferredCvData.skills?.length ? deferredCvData.skills : CV_DUMMY_DATA.skills,
       languages: deferredCvData.languages?.length ? deferredCvData.languages : CV_DUMMY_DATA.languages,
       volunteer: deferredCvData.volunteer?.length ? deferredCvData.volunteer : CV_DUMMY_DATA.volunteer,
-      references: deferredCvData.references?.length ? deferredCvData.references : CV_DUMMY_DATA.references,
+      references: (deferredCvData.references?.length || deferredCvData.referencesUponRequest)
+        ? (deferredCvData.references || [])
+        : CV_DUMMY_DATA.references,
+      referencesUponRequest: deferredCvData.referencesUponRequest || false,
       coreCompetencies: deferredCvData.coreCompetencies?.length ? deferredCvData.coreCompetencies : CV_DUMMY_DATA.coreCompetencies,
       
       // Cover Letter specific handling

@@ -102,6 +102,7 @@ export interface CVData {
   languages: LanguageItem[];
   volunteer: VolunteerItem[];
   references: ReferenceItem[];
+  referencesUponRequest?: boolean;
   coverLetter?: CoverLetterData;
   aiMetadata?: AIMetadata; // Track AI generation status
 }

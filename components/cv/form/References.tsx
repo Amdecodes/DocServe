@@ -40,6 +40,26 @@ export function References() {
         </p>
       </div>
 
+      {/* References Upon Request Checkbox */}
+      <div className="flex items-center space-x-2 pb-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+        <input
+          type="checkbox"
+          id="referencesUponRequest"
+          checked={cvData.referencesUponRequest || false}
+          disabled={(cvData.references || []).length > 0}
+          onChange={(e) => {
+            updateCVData("referencesUponRequest", e.target.checked);
+            if (e.target.checked) {
+              updateCVData("references", []);
+            }
+          }}
+          className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+        />
+        <label htmlFor="referencesUponRequest" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
+          {t("uponRequest")}
+        </label>
+      </div>
+
       <div className="space-y-4">
         {cvData.references?.map((ref) => (
           <Card key={ref.id} className="relative group">
@@ -69,7 +89,7 @@ export function References() {
         ))}
       </div>
 
-      {isAdding ? (
+      {!cvData.referencesUponRequest && isAdding ? (
         <Card className="border-primary/50 ring-1 ring-primary/20">
           <CardHeader>
             <CardTitle className="text-base">{t("add")}</CardTitle>
@@ -135,7 +155,7 @@ export function References() {
             </div>
           </CardContent>
         </Card>
-      ) : (
+      ) : !cvData.referencesUponRequest ? (
         <Button
           onClick={() => setIsAdding(true)}
           variant="outline"
@@ -143,7 +163,7 @@ export function References() {
         >
           <Plus className="mr-2 h-4 w-4" /> {t("add")}
         </Button>
-      )}
+      ) : null}
     </div>
   );
 }

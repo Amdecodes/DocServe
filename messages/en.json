@@ -372,6 +372,7 @@
   "References": {
     "title": "References",
     "description": "Add people who can vouch for your professional work.",
+    "uponRequest": "References available upon request",
     "add": "Add Reference",
     "save": "Save",
     "cancel": "Cancel",
