@@ -14,6 +14,7 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -166,23 +167,27 @@ export function EmeraldProfessionalLayout({ data }: { data: CVData }) {
                      </section>
                    )}
 
-                   {/* References */}
-                   {references.length > 0 && (
-                     <section style={{ pageBreakInside: "avoid" }} className="mt-10">
-                       <h3 className="text-sm font-bold text-[#059669] uppercase mb-4 tracking-widest border-b border-emerald-100 pb-1">References</h3>
-                       <div className="grid grid-cols-2 gap-6">
-                          {references.map((ref: any, idx) => (
-                               <div key={idx} className="text-sm">
-                                  <div className="font-bold text-slate-800">{ref.name}</div>
-                                  <div className="text-[#059669] text-xs font-semibold">{ref.position} {ref.company ? `at ${ref.company}` : ""}</div>
-                                  <div className="text-slate-500 text-[11px] mt-1">
-                                     {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                    {/* References */}
+                    {(references.length > 0 || referencesUponRequest) && (
+                      <section style={{ pageBreakInside: "avoid" }} className="mt-10">
+                        <h3 className="text-sm font-bold text-[#059669] uppercase mb-4 tracking-widest border-b border-emerald-100 pb-1">References</h3>
+                        {referencesUponRequest ? (
+                          <p className="text-sm italic text-slate-600">References available upon request.</p>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-6">
+                             {references.map((ref, idx) => (
+                                  <div key={idx} className="text-sm">
+                                     <div className="font-bold text-slate-800">{ref.name}</div>
+                                     <div className="text-[#059669] text-xs font-semibold">{ref.position} {ref.company ? `at ${ref.company}` : ""}</div>
+                                     <div className="text-slate-500 text-[11px] mt-1">
+                                        {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                                     </div>
                                   </div>
-                               </div>
-                          ))}
-                       </div>
-                     </section>
-                   )}
+                             ))}
+                          </div>
+                        )}
+                      </section>
+                    )}
 
               </div>
 

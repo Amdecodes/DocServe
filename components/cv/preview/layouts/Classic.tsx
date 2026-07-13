@@ -8,6 +8,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
   const education = data.education || [];
   const skills = data.skills || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
 
   return (
     <div className="h-full w-full p-12 font-serif text-gray-900 leading-relaxed">
@@ -126,24 +127,27 @@ export function ClassicLayout({ data }: { data: CVData }) {
         )}
 
         {/* References */}
-        {references.length > 0 && (
+        {(references.length > 0 || referencesUponRequest) && (
           <section>
-            <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase text-sm tracking-wider">
+            <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-3 uppercase text-sm tracking-wider">
               References
             </h3>
-            <div className="grid grid-cols-2 gap-4">
-              {references.map((ref: any) => (
-                <div key={ref.id} className="text-sm">
-                  <div className="font-bold">{ref.name}</div>
-                  <div className="italic text-gray-700">
-                    {ref.position} {ref.company ? `– ${ref.company}` : ""}
+            {referencesUponRequest ? (
+              <p className="text-sm italic text-gray-600">References available upon request.</p>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                {references.map((ref) => (
+                  <div key={ref.id} className="text-sm">
+                    <div className="font-bold">{ref.name}</div>
+                    <div className="text-gray-600">
+                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                    </div>
+                    {ref.phone && <div>Phone: {ref.phone}</div>}
+                    {ref.email && <div>Email: {ref.email}</div>}
                   </div>
-                  <div className="text-xs text-gray-600">
-                    {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>

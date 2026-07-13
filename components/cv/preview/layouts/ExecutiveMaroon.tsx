@@ -14,6 +14,7 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
   const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   // Helper to ensure URL has protocol
@@ -170,25 +171,29 @@ export function ExecutiveMaroonLayout({ data }: { data: CVData }) {
            )}
 
            {/* References */}
-           {references.length > 0 && (
+           {(references.length > 0 || referencesUponRequest) && (
              <section style={{ pageBreakInside: "avoid" }}>
                <h3 className="text-xl font-bold text-[#7f1d1d] uppercase mb-4 border-b border-[#7f1d1d] pb-2 flex items-center gap-2">
                  <span className="w-2 h-2 bg-[#7f1d1d]"></span>
                  Professional References
                </h3>
-               <div className="grid grid-cols-2 gap-8 font-sans">
-                  {references.map((ref: any, idx) => (
-                       <div key={idx} className="text-sm">
-                          <div className="font-bold text-slate-900">{ref.name}</div>
-                          <div className="text-[#7f1d1d] text-xs font-bold uppercase mb-1">
-                            {ref.position} {ref.company ? `| ${ref.company}` : ""}
-                          </div>
-                          <div className="text-slate-500 text-xs">
-                            {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
-                          </div>
-                       </div>
-                  ))}
-               </div>
+               {referencesUponRequest ? (
+                 <p className="text-sm italic text-slate-600 font-sans">References available upon request.</p>
+               ) : (
+                 <div className="grid grid-cols-2 gap-8 font-sans">
+                    {references.map((ref, idx) => (
+                         <div key={idx} className="text-sm">
+                            <div className="font-bold text-slate-900">{ref.name}</div>
+                            <div className="text-[#7f1d1d] text-xs font-bold uppercase mb-1">
+                              {ref.position} {ref.company ? `| ${ref.company}` : ""}
+                            </div>
+                            <div className="text-slate-500 text-xs">
+                              {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                            </div>
+                         </div>
+                    ))}
+                 </div>
+               )}
              </section>
            )}
 
