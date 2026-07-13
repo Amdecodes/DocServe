@@ -3,7 +3,7 @@
 import { Suspense, lazy, useMemo, useState, useDeferredValue } from "react";
 import { useCV } from "@/components/cv/CVContext";
 import { DEFAULT_TEMPLATE, templateComponents } from "@/config/templates";
-import { CVData, PersonalInfo } from "@/types/cv";
+import { CVData, PersonalInfo, CoverLetterData } from "@/types/cv";
 import { FileText, Mail, Loader2 } from "lucide-react";
 import { PreviewProtection } from "@/components/ui/PreviewProtection";
 import { CV_DUMMY_DATA } from "@/config/dummy-data";
@@ -147,7 +147,7 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
             <div 
               className="absolute inset-0 pointer-events-none z-[40]"
               style={{
-                background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(297mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
+                background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(257mm - 1px), #e5e7eb calc(257mm - 1px), #e5e7eb 257mm)"
               }} 
             />
 
@@ -164,8 +164,8 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
                   <TemplateComponent data={previewData} />
                 ) : (
                   <UnifiedCoverLetter
-                    coverLetter={previewData.coverLetter || ({} as any)}
-                    personalInfo={previewData.personalInfo || ({} as any)}
+                    coverLetter={previewData.coverLetter || ({} as CoverLetterData)}
+                    personalInfo={previewData.personalInfo || ({} as PersonalInfo)}
                     isPreview={showDummyData}
                   />
                 )}
