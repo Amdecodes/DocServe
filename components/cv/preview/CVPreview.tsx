@@ -158,7 +158,7 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.01 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="w-full h-full"
+                className="w-full h-full px-[15mm]"
               >
                 {activePreview === "resume" ? (
                   <TemplateComponent data={previewData} />

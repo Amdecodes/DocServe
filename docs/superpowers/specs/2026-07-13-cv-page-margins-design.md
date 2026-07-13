@@ -55,7 +55,7 @@ const pdfBuffer = await page.pdf({
 <div 
   className="absolute inset-0 pointer-events-none z-[40]"
   style={{
-    background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(257mm - 1px), #e5e7eb calc(297mm - 1px), #e5e7eb 297mm)"
+    background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(257mm - 1px), #e5e7eb calc(257mm - 1px), #e5e7eb 257mm)"
   }} 
 />
 ```
