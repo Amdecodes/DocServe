@@ -147,12 +147,15 @@ export function CVPreview({ showDummyData = true }: { showDummyData?: boolean })
             }
           >
             {/* Visual Page Break Overlay */}
-            <div 
-              className="absolute inset-0 pointer-events-none z-[40]"
-              style={{
-                background: "repeating-linear-gradient(to bottom, transparent 0px, transparent calc(257mm - 1px), #e5e7eb calc(257mm - 1px), #e5e7eb 257mm)"
-              }} 
-            />
+            <div className="absolute inset-0 pointer-events-none z-[40]">
+              {[277, 534, 791, 1048, 1305].map((pos) => (
+                <div
+                  key={pos}
+                  className="absolute left-0 right-0 border-b border-gray-200"
+                  style={{ top: `${pos}mm` }}
+                />
+              ))}
+            </div>
 
             <AnimatePresence mode="wait">
               <motion.div

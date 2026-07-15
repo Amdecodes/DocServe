@@ -115,6 +115,9 @@ export async function renderCvToHtml(
             size: A4;
             margin: 20mm 0;
           }
+          @page :first {
+            margin-top: 0;
+          }
           body { -webkit-print-color-adjust: exact; }
           .pdf-page-break { page-break-before: always; }
           
