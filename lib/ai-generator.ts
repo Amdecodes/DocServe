@@ -719,9 +719,9 @@ export async function generateAIContent(
             .split("\n")
             .map((line) => line.replace(/^[-•]\s*/, "").trim())
             .filter((line) => line.length > 0)
-            .slice(0, sanitizedBullets.length); // Ensure same count
+            .slice(0, Math.min(sanitizedBullets.length, 3)); // Maximum 3 bullets
 
-          return parsedBullets.length > 0 ? parsedBullets : sanitizedBullets;
+          return parsedBullets.length > 0 ? parsedBullets : sanitizedBullets.slice(0, 3);
         } catch (e) {
           console.error(`Failed to optimize bullets for ${exp.company}:`, e);
           return sanitizedBullets;
@@ -742,7 +742,7 @@ export async function generateAIContent(
             .split("\n")
             .map((line) => line.replace(/^[-•*#0-9.]\s*/, "").trim())
             .filter((line) => line.length > 0)
-            .slice(0, 4);
+            .slice(0, 3); // Maximum 3 bullets
 
           return parsedBullets;
         } catch (e) {
