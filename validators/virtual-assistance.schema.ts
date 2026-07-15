@@ -31,6 +31,18 @@ export const experienceLevels = [
   "executive",
 ] as const;
 
+export const ethiopianEducationLevels = [
+  "high_school_certificate",
+  "tvet_level_1",
+  "tvet_level_2",
+  "tvet_level_3",
+  "tvet_level_4",
+  "tvet_level_5_diploma",
+  "bachelors_degree",
+  "masters_degree",
+  "doctorate_phd",
+] as const;
+
 export const virtualAssistanceSchema = z.object({
   full_name: z.string().min(2, "Full name is required"),
   phone_number: z.string().min(9, "Phone number is required"),
@@ -42,12 +54,16 @@ export const virtualAssistanceSchema = z.object({
   experience_level: z.enum(experienceLevels, {
     message: "Please select your experience level",
   }),
+  education_level: z.enum(ethiopianEducationLevels, {
+    message: "Please select your education level",
+  }),
   location: z.string().min(2, "Location is required"),
   notes: z
     .string()
     .max(700, "Notes must be 700 characters or less")
     .optional()
     .or(z.literal("")),
+  resume_url: z.string().optional().or(z.literal("")),
   disclaimer_accepted: z.literal(true, {
     message: "You must accept the disclaimer to continue",
   }),
@@ -59,3 +75,4 @@ export type VirtualAssistanceSchema = z.infer<typeof virtualAssistanceSchema>;
 
 export type JobCategory = (typeof jobCategories)[number];
 export type ExperienceLevel = (typeof experienceLevels)[number];
+export type EducationLevel = (typeof ethiopianEducationLevels)[number];

@@ -15,6 +15,7 @@ export function Step3_Experience() {
   const [isAdding, setIsAdding] = useState(false);
   const [newItem, setNewItem] = useState<Partial<ExperienceItem>>({
     achievements: [],
+    optimizeWithAi: true,
   });
   const [curAchievement, setCurAchievement] = useState("");
 
@@ -24,18 +25,19 @@ export function Step3_Experience() {
         ...newItem,
         description: newItem.description || "",
         achievements: newItem.achievements || [],
+        optimizeWithAi: newItem.optimizeWithAi !== false,
       });
-      setNewItem({ achievements: [] });
+      setNewItem({ achievements: [], optimizeWithAi: true });
       setIsAdding(false);
     }
   };
 
   const handleCancel = () => {
-    setNewItem({ achievements: [] });
+    setNewItem({ achievements: [], optimizeWithAi: true });
     setIsAdding(false);
   };
 
-  const addAchievement = (e: React.FormEvent) => {
+  const addAchievement = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (curAchievement.trim()) {
       setNewItem((prev) => ({
@@ -78,9 +80,18 @@ export function Step3_Experience() {
                   <p className="text-sm font-medium text-teal-600">
                     {exp.company}
                   </p>
-                  <p className="text-xs text-gray-400">
-                    {exp.startDate} - {exp.current ? t("present") : exp.endDate}
-                  </p>
+                  <div className="flex flex-wrap gap-2 items-center text-xs text-gray-400 mt-0.5">
+                    <span>
+                      {exp.startDate} - {exp.current ? t("present") : exp.endDate}
+                    </span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold border ${
+                      exp.optimizeWithAi !== false 
+                        ? "bg-teal-50 text-teal-700 border-teal-200" 
+                        : "bg-gray-50 text-gray-500 border-gray-200"
+                    }`}>
+                      {exp.optimizeWithAi !== false ? "AI Optimization On" : "AI Optimization Off"}
+                    </span>
+                  </div>
                   {/* Achievments */}
                   {exp.achievements && exp.achievements.length > 0 ? (
                     <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
@@ -173,6 +184,27 @@ export function Step3_Experience() {
                 </div>
               </div>
 
+              <div className="flex items-center gap-2 select-none md:col-span-2 py-1 border-b border-gray-100 pb-3 mb-2">
+                <input
+                  type="checkbox"
+                  id="optimizeWithAi"
+                  checked={newItem.optimizeWithAi !== false}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, optimizeWithAi: e.target.checked })
+                  }
+                  className="h-4 w-4 accent-black cursor-pointer"
+                />
+                <label
+                  htmlFor="optimizeWithAi"
+                  className="text-sm font-semibold cursor-pointer select-none"
+                >
+                  Optimize with AI
+                </label>
+                <span className="text-xs text-gray-400">
+                  (Keeps original if off, or generates bullet points if empty)
+                </span>
+              </div>
+
               <div className="space-y-2 md:col-span-2">
                 <label className="text-sm font-medium">
                   Key Achievements (Bullet Points)
@@ -202,14 +234,14 @@ export function Step3_Experience() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        addAchievement(e as any);
+                        addAchievement(e);
                       }
                     }}
                   />
                   <Button
                     type="button"
                     variant="secondary"
-                    onClick={(e) => addAchievement(e as any)}
+                    onClick={(e) => addAchievement(e)}
                   >
                     Add
                   </Button>

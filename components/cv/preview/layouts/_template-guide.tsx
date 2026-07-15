@@ -100,7 +100,11 @@ export function TemplateSkeletonLayout({ data }: { data: CVData }) {
                       ))}
                     </ul>
                   ) : exp.description ? (
-                    <p className="mt-2 text-sm">{exp.description}</p>
+                    <ul className="mt-2 list-disc list-inside text-sm">
+                      {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                        <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                      ))}
+                    </ul>
                   ) : null}
                 </div>
               ))}
@@ -267,6 +271,24 @@ export const SAMPLE_CV_DATA: CVData = {
       organization: "Code for America",
       role: "Product Advisor",
       description: "Mentoring civic tech projects",
+    },
+  ],
+  references: [
+    {
+      id: "1",
+      name: "Dr. Sarah Mitchell",
+      position: "VP of Product",
+      company: "TechCorp Inc.",
+      phone: "+1 555 987 6543",
+      email: "sarah.m@techcorp.com",
+    },
+    {
+      id: "2",
+      name: "Mark Johnson",
+      position: "CTO",
+      company: "StartupXYZ",
+      phone: "+1 555 246 8135",
+      email: "mark@startupxyz.com",
     },
   ],
 };

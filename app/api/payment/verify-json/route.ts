@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { processOrderPdf } from "@/lib/pdf/process-order";
 import { generateAIContent, mergeAIContent } from "@/lib/ai-generator";
 import { CVData } from "@/types/cv";
+import { getPriceForService } from "@/config/pricing";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -21,11 +22,18 @@ export async function GET(req: Request) {
   }
 
   // Call Chapa VERIFY API
+  const chapaSecretKey = process.env.CHAPA_SECRET_KEY?.trim();
+  if (chapaSecretKey) {
+    console.log(
+      `[VerifyJSON] Loaded secret key: length=${chapaSecretKey.length}, prefix="${chapaSecretKey.substring(0, 13)}..."`
+    );
+  }
+
   const res = await fetch(
     `https://api.chapa.co/v1/transaction/verify/${order.tx_ref}`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`,
+        Authorization: `Bearer ${chapaSecretKey}`,
       },
     },
   );
@@ -37,6 +45,15 @@ export async function GET(req: Request) {
     data.status ===
       "success" /* sometimes Chapa verify returns diff structure */
   ) {
+    // Validate that the paid amount matches the database expectations
+    const expectedAmount = getPriceForService(order.service_type);
+    const paidAmount = Number(data.data?.amount);
+
+    if (Math.abs(paidAmount - expectedAmount) > 0.01) {
+      console.error(`[VerifyJSON] Amount mismatch: Paid ${paidAmount}, Expected ${expectedAmount}`);
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+
     let pdfUrl = order.pdf_url;
     let expiresAt = order.expires_at;
 
@@ -47,6 +64,7 @@ export async function GET(req: Request) {
 
         // Step 1: Generate AI content FIRST (if not already generated)
         let formData = order.form_data as unknown as CVData;
+        const isAgreement = order.service_type.startsWith("agreement:");
 
         console.log(
           `[VerifyJSON] Form data documentLanguage: ${formData?.documentLanguage}`,
@@ -55,7 +73,7 @@ export async function GET(req: Request) {
           `[VerifyJSON] Form data keys: ${Object.keys(formData || {}).join(", ")}`,
         );
 
-        if (!formData?.aiMetadata?.generated) {
+        if (!isAgreement && !formData?.aiMetadata?.generated) {
           console.log(
             `[VerifyJSON] Generating AI content for Order ${orderId}`,
           );
@@ -92,7 +110,11 @@ export async function GET(req: Request) {
         }
 
         // Step 2: Generate PDF with AI-enriched content
-        const result = await processOrderPdf(orderId, formData);
+        const result = await processOrderPdf(
+          orderId,
+          formData,
+          order.service_type,
+        );
         if (result) {
           pdfUrl = result.pdfUrl;
           expiresAt = result.expiresAt;

@@ -12,7 +12,7 @@ export default function Pricing() {
   const t = useTranslations("Pricing");
   const [activeTab, setActiveTab] = useState<"resume" | "va">("resume");
 
-  const vaPackages = ["basic", "professional", "elite"] as const;
+  const vaPackages = ["standard", "professional", "premium"] as const;
 
   return (
     <section id="pricing" className="py-20 bg-gray-50">
@@ -73,7 +73,7 @@ export default function Pricing() {
 
                 <div className="flex items-baseline mb-8">
                   <span className="text-5xl font-extrabold text-gray-900">
-                    150
+                    100
                   </span>
                   <span className="text-xl text-gray-500 ml-2">ETB</span>
                 </div>
@@ -126,33 +126,25 @@ export default function Pricing() {
                       {t(`va.packages.${pkg}.bestFor`)}
                     </p>
 
-                    {/* Price placeholder if needed, or just "Contact" */}
-                    {/* <div className="text-3xl font-bold text-gray-900 mb-6">{t(`va.packages.${pkg}.price`)}</div> */}
+                    <div className="flex items-baseline mb-6">
+                      <span className="text-4xl font-extrabold text-gray-900">
+                        {t(`va.packages.${pkg}.price`)}
+                      </span>
+                      <span className="text-lg text-gray-500 ml-2">ETB</span>
+                    </div>
 
                     <ul className="space-y-4 mb-8">
-                      {[1, 2, 3, 4, 5].map((item) => {
-                        const featureKey = `va.packages.${pkg}.features.${item}`;
-                        return (
-                          <li key={item} className="flex items-start">
-                            <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
-                            <span className="text-sm text-gray-700">
-                              {t(featureKey)}
-                            </span>
-                          </li>
-                        );
-                      })}
+                      {Object.entries(t.raw(`va.packages.${pkg}.features`) as Record<string, string>).map(([key, feature]) => (
+                        <li key={key} className="flex items-start">
+                          <Check className="h-5 w-5 text-green-500 mr-3 shrink-0" />
+                          <span className="text-sm text-gray-700">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
                     </ul>
-
-                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-2">
-                      <p className="text-xs font-semibold uppercase text-gray-500 mb-1">
-                        {t("va.outcomeLabel")}
-                      </p>
-                      <p className="text-sm font-medium text-gray-900 italic">
-                        &quot;{t(`va.packages.${pkg}.outcome`)}&quot;
-                      </p>
-                    </div>
                   </div>
-
+  
                   <div className="p-8 pt-0 mt-auto">
                     <Link href="/form/virtual-assistance" className="block">
                       <Button

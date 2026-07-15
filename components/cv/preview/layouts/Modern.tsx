@@ -1,5 +1,7 @@
 import { CVData } from "@/types/cv";
 import { AIBlurOverlay } from "@/components/ui/AIBlurOverlay";
+import { Cake } from "lucide-react";
+import { DocImage } from "@/components/ui/DocImage";
 
 export function ModernLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -17,6 +19,8 @@ export function ModernLayout({ data }: { data: CVData }) {
   const skills = data.skills || [];
   const languages = data.languages || [];
   const volunteer = data.volunteer || [];
+  const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
   const coreCompetencies = data.coreCompetencies || [];
 
   return (
@@ -25,32 +29,42 @@ export function ModernLayout({ data }: { data: CVData }) {
       <header className="border-b-4 border-teal-600 pb-6 mb-8 flex justify-between items-start">
         <div className="flex items-center gap-6">
           {personalInfo.photo && (
-            <img
-              src={personalInfo.photo}
-              alt={personalInfo.firstName}
-              className="h-32 w-32 rounded-full object-cover border-4 border-white shadow-md"
-            />
+            <div className="relative h-32 w-32 shrink-0">
+              <DocImage
+                src={personalInfo.photo}
+                alt={personalInfo.firstName}
+                fill
+                className="rounded-full object-cover border-4 border-white shadow-md"
+                sizes="128px"
+                priority
+              />
+            </div>
           )}
           <div>
             <h1 className="text-5xl font-bold uppercase tracking-tight text-gray-900 leading-none">
-              {personalInfo.firstName || "Your"}{" "}
+              {personalInfo.firstName}{" "}
               <span className="text-teal-600">
-                {personalInfo.lastName || "Name"}
+                {personalInfo.lastName}
               </span>
             </h1>
             <p className="text-2xl mt-2 text-gray-600 font-light">
-              {personalInfo.headline || personalInfo.jobTitle || "Job Title"}
+               {personalInfo.headline || personalInfo.jobTitle}
             </p>
           </div>
         </div>
         <div className="text-right text-sm text-gray-500 space-y-1 self-center">
-          <p>{personalInfo.email || "email@example.com"}</p>
-          <p>{personalInfo.phone || "+251 900 000 000"}</p>
+          <p>{personalInfo.email}</p>
+          <p>{personalInfo.phone}</p>
           <p>
             {personalInfo.city && personalInfo.country
               ? `${personalInfo.city}, ${personalInfo.country}`
-              : "Addis Ababa, Ethiopia"}
+              : personalInfo.city || personalInfo.country}
           </p>
+          {personalInfo.dateOfBirth && (
+            <p className="text-xs uppercase tracking-wider font-bold text-teal-700 flex items-center justify-end gap-1">
+              <Cake size={10} /> Date of Birth: {personalInfo.dateOfBirth}
+            </p>
+          )}
           {personalInfo.linkedin && (
             <p>
               <a
@@ -88,7 +102,7 @@ export function ModernLayout({ data }: { data: CVData }) {
           >
             <section>
               <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
-                Profile
+                About Me
               </h3>
               <p className="text-gray-700 leading-relaxed">
                 {typeof summary === "string" ? summary : ""}
@@ -130,7 +144,6 @@ export function ModernLayout({ data }: { data: CVData }) {
                 <p className="text-teal-600 font-medium text-sm mb-2">
                   {exp.company}
                 </p>
-                {/* Achievements */}
                 {exp.achievements && exp.achievements.length > 0 ? (
                   <AIBlurOverlay
                     type="bullets"
@@ -147,13 +160,13 @@ export function ModernLayout({ data }: { data: CVData }) {
                       </ul>
                     </div>
                   </AIBlurOverlay>
-                ) : (
-                  exp.description && (
-                    <p className="text-sm text-gray-700 whitespace-pre-line">
-                      {exp.description}
-                    </p>
-                  )
-                )}
+                ) : exp.description ? (
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 mt-1">
+                    {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                      <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             ))}
             {experience.length === 0 && (
@@ -260,6 +273,33 @@ export function ModernLayout({ data }: { data: CVData }) {
                 </div>
               ))}
             </div>
+          </section>
+        )}
+
+        {/* References */}
+        {(references.length > 0 || referencesUponRequest) && (
+          <section>
+            <h3 className="text-xl font-bold uppercase tracking-wider text-gray-400 mb-3 border-b border-gray-200 pb-1">
+              References
+            </h3>
+            {referencesUponRequest ? (
+              <p className="text-sm italic text-gray-600">References available upon request.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {references.map((ref) => (
+                  <div key={ref.id} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <h4 className="font-bold text-gray-800">{ref.name}</h4>
+                    <p className="text-teal-600 text-sm font-medium">
+                      {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                    </p>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {ref.phone && <p>{ref.phone}</p>}
+                      {ref.email && <p>{ref.email}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>

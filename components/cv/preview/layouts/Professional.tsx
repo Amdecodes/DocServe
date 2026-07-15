@@ -1,9 +1,11 @@
 import { CVData } from "@/types/cv";
+import { DocImage } from "@/components/ui/DocImage";
 import {
   Phone,
   Mail,
   MapPin,
   Globe,
+  Cake,
   User,
   Briefcase,
   GraduationCap,
@@ -16,6 +18,8 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
   const education = data.education || [];
   const skills = data.skills || [];
   const languages = data.languages || [];
+  const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
 
   return (
     <div className="h-full w-full bg-white flex flex-col font-sans text-gray-800">
@@ -37,10 +41,12 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
           {/* Profile Photo - Overlapping */}
           <div className="absolute top-16 left-12 w-40 h-40 rounded-full border-[6px] border-[#e5e7eb] overflow-hidden z-10 bg-gray-300">
             {personalInfo.photo ? (
-              <img
+              <DocImage
                 src={personalInfo.photo}
                 alt="Profile"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-400 text-white text-4xl font-bold">
@@ -75,6 +81,14 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                   <span>
                     {personalInfo.city}, {personalInfo.country}
                   </span>
+                </div>
+              )}
+              {personalInfo.dateOfBirth && (
+                <div className="flex items-center gap-3">
+                  <div className="min-w-6 flex justify-center">
+                    <Cake size={16} fill="black" />
+                  </div>
+                  <span>Date of Birth: {personalInfo.dateOfBirth}</span>
                 </div>
               )}
               {(personalInfo.website || personalInfo.linkedin) && (
@@ -134,7 +148,7 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
               </div>
               <div className="mb-2">
                 <h3 className="text-lg font-bold uppercase tracking-widest text-[#2c3e50]">
-                  Profile
+                  About Me
                 </h3>
               </div>
               <p className="text-sm leading-relaxed text-gray-600 text-justify">
@@ -180,9 +194,13 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                           <li key={i}>{ach}</li>
                         ))}
                       </ul>
-                    ) : (
-                      <p className="text-sm text-gray-600">{exp.description}</p>
-                    )}
+                    ) : exp.description ? (
+                      <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-1 marker:text-gray-400">
+                        {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                          <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -221,6 +239,41 @@ export function ProfessionalLayout({ data }: { data: CVData }) {
                   </div>
                 ))}
               </div>
+            </section>
+          )}
+
+          {/* References */}
+          {(references.length > 0 || referencesUponRequest) && (
+            <section className="relative pl-8 border-l-2 border-gray-300 pb-4">
+              <div className="absolute -left-5.25 top-0 bg-[#2c3e50] text-white rounded-full p-2">
+                <User size={20} />
+              </div>
+              <div className="mb-6">
+                <h3 className="text-lg font-bold uppercase tracking-widest text-[#2c3e50]">
+                  References
+                </h3>
+              </div>
+
+              {referencesUponRequest ? (
+                <p className="text-sm italic text-gray-600">References available upon request.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                  {references.map((ref) => (
+                    <div key={ref.id}>
+                      <h4 className="font-bold text-base text-gray-800">
+                        {ref.name}
+                      </h4>
+                      <p className="text-sm font-medium text-gray-600 italic mb-1">
+                        {ref.position} {ref.company ? `at ${ref.company}` : ""}
+                      </p>
+                      <div className="text-xs text-gray-500">
+                        {ref.phone && <p>{ref.phone}</p>}
+                        {ref.email && <p>{ref.email}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )}
         </div>

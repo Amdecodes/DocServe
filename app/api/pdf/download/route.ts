@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSignedUrl } from "@/lib/upload";
 
 export async function GET(req: NextRequest) {
   const orderId = req.nextUrl.searchParams.get("orderId");
+  const forceRegenerateRaw = req.nextUrl.searchParams.get("regenerate");
+  const forceRegenerate =
+    forceRegenerateRaw === "1" || forceRegenerateRaw === "true";
 
   if (!orderId) {
     return new Response("Missing orderId", { status: 400 });
@@ -13,46 +15,99 @@ export async function GET(req: NextRequest) {
     where: { id: orderId },
   });
 
-  if (!order || order.status !== "PAID") {
-    return new Response("Unauthorized", { status: 403 });
+  if (!order) {
+    return new Response(`Order ${orderId} not found in database.`, {
+      status: 404,
+    });
   }
 
-  // STRICT TIME CHECK: If payment was > 6 hours ago, deny access permanently.
-  // This ensures that even if the cleanup job hasn't run yet, the file is inaccessible.
-  if (order.paid_at) {
-    const hoursSincePaid =
-      (Date.now() - new Date(order.paid_at).getTime()) / (1000 * 60 * 60);
-    if (hoursSincePaid > 6) {
-      return new Response("This download link has expired (6 hour limit).", {
-        status: 410,
-      });
+  if (order.status !== "PAID") {
+    return new Response(
+      `Order status is "${order.status}", not PAID. Payment may still be pending.`,
+      { status: 403 },
+    );
+  }
+
+  const downloadName = order.service_type.startsWith("agreement:")
+    ? "Agreement.pdf"
+    : "CV.pdf";
+
+  let fileBuffer: ArrayBuffer | null = null;
+  let diagnostics: string[] = [];
+
+  // 1. Try fetching existing stored PDF
+  if (order.pdf_url && !forceRegenerate) {
+    diagnostics.push(`Stored pdf_url found: ${order.pdf_url}`);
+    try {
+      const fileResponse = await fetch(order.pdf_url);
+      if (fileResponse.ok) {
+        fileBuffer = await fileResponse.arrayBuffer();
+        diagnostics.push("Fetched stored PDF successfully.");
+      } else {
+        diagnostics.push(
+          `Stored PDF fetch returned HTTP ${fileResponse.status}.`,
+        );
+      }
+    } catch (e) {
+      diagnostics.push(`Stored PDF fetch threw: ${String(e)}`);
+    }
+  } else if (forceRegenerate) {
+    diagnostics.push("Forced regeneration requested by query param.");
+  } else {
+    diagnostics.push(
+      "No pdf_url in DB — PDF was never generated (background task may have failed).",
+    );
+  }
+
+  // 2. Fallback: regenerate
+  if (!fileBuffer) {
+    diagnostics.push("Attempting on-the-fly PDF regeneration...");
+    try {
+      const { processOrderPdf } = await import("@/lib/pdf/process-order");
+      const result = await processOrderPdf(
+        order.id,
+        order.form_data,
+        order.service_type,
+      );
+
+      if (result?.pdfUrl) {
+        diagnostics.push(`PDF regenerated. URL: ${result.pdfUrl}`);
+        const newResponse = await fetch(result.pdfUrl);
+        if (newResponse.ok) {
+          fileBuffer = await newResponse.arrayBuffer();
+
+          await prisma.order.update({
+            where: { id: orderId },
+            data: { pdf_url: result.pdfUrl, expires_at: result.expiresAt },
+          });
+        } else {
+          diagnostics.push(
+            `Regenerated PDF URL fetch returned HTTP ${newResponse.status}.`,
+          );
+        }
+      } else {
+        diagnostics.push("processOrderPdf returned null/no URL.");
+      }
+    } catch (e) {
+      diagnostics.push(`PDF regeneration threw: ${String(e)}`);
+      console.error("[Download] PDF regeneration error:", e);
     }
   }
 
-  // 1. Always generate a fresh Signed URL with "download" disposition
-  // We do not rely on the cached DB URL here because we want to enforce the
-  // "Content-Disposition: attachment" header which is now default in getSignedUrl()
-  // and might not be present in older cached URLs.
-  try {
-    const predictablePath = `orders/${orderId}/cv.pdf`;
-    const freshLink = await getSignedUrl(predictablePath);
-
-    if (freshLink) {
-      // Update DB with the latest valid link (optional but good for caching elsewhere)
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { pdf_url: freshLink.signedUrl, expires_at: freshLink.expiresAt },
-      });
-      return NextResponse.redirect(freshLink.signedUrl);
-    }
-  } catch (e) {
-    console.log("Could not generate fresh link", e);
+  if (fileBuffer) {
+    return new NextResponse(fileBuffer, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${downloadName}"`,
+      },
+    });
   }
 
-  // 2. Fallback (if generating failed but we have a DB link?) - unlikely to help if generator failed.
-  // ...
-
-  return new Response("File not found or could not be accessed.", {
-    status: 404,
-  });
+  // Return detailed diagnostics so the failure reason is visible without needing Vercel logs
+  const errorBody = [
+    "PDF generation failed. Diagnostics:",
+    ...diagnostics,
+  ].join("\n");
+  console.error("[Download] Final failure:", errorBody);
+  return new Response(errorBody, { status: 404 });
 }

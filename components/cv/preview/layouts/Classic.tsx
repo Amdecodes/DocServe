@@ -1,4 +1,5 @@
 import { CVData } from "@/types/cv";
+import { Cake } from "lucide-react";
 
 export function ClassicLayout({ data }: { data: CVData }) {
   if (!data) return null;
@@ -6,6 +7,8 @@ export function ClassicLayout({ data }: { data: CVData }) {
   const experience = data.experience || [];
   const education = data.education || [];
   const skills = data.skills || [];
+  const references = data.references || [];
+  const referencesUponRequest = data.referencesUponRequest || false;
 
   return (
     <div className="h-full w-full p-12 font-serif text-gray-900 leading-relaxed">
@@ -15,7 +18,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
           {personalInfo.firstName} {personalInfo.lastName}
         </h1>
         <p className="text-lg italic text-gray-600 mb-2">
-          {personalInfo.jobTitle || "Professional Title"}
+          {personalInfo.jobTitle}
         </p>
         <div className="flex justify-center gap-3 text-sm text-gray-600">
           <span>{personalInfo.email}</span>
@@ -23,8 +26,16 @@ export function ClassicLayout({ data }: { data: CVData }) {
           <span>{personalInfo.phone}</span>
           <span>•</span>
           <span>
-            {personalInfo.city}, {personalInfo.country}
+            {personalInfo.city && personalInfo.country
+              ? `${personalInfo.city}, ${personalInfo.country}`
+              : personalInfo.city || personalInfo.country}
           </span>
+          {personalInfo.dateOfBirth && (
+            <>
+              <span>•</span>
+              <span><Cake size={12} className="inline mr-1" />Date of Birth: {personalInfo.dateOfBirth}</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -33,7 +44,7 @@ export function ClassicLayout({ data }: { data: CVData }) {
         {summary && (
           <section>
             <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-2 uppercase text-sm tracking-wider">
-              Professional Profile
+              About Me
             </h3>
             <p className="text-sm text-justify">{summary}</p>
           </section>
@@ -64,9 +75,13 @@ export function ClassicLayout({ data }: { data: CVData }) {
                         <li key={i}>{ach}</li>
                       ))}
                     </ul>
-                  ) : (
-                    <p className="text-sm">{exp.description}</p>
-                  )}
+                  ) : exp.description ? (
+                    <ul className="list-disc list-inside text-sm pl-2">
+                      {exp.description.split("\n").filter((l: string) => l.trim()).map((line: string, i: number) => (
+                        <li key={i}>{line.replace(/^[-*•]\s*/, "")}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -108,6 +123,32 @@ export function ClassicLayout({ data }: { data: CVData }) {
                 <span key={s.id}>• {s.name}</span>
               ))}
             </div>
+          </section>
+        )}
+
+        {/* References */}
+        {(references.length > 0 || referencesUponRequest) && (
+          <section>
+            <h3 className="font-bold text-gray-800 border-b border-gray-300 mb-3 uppercase text-sm tracking-wider">
+              References
+            </h3>
+            {referencesUponRequest ? (
+              <p className="text-sm italic text-gray-600">References available upon request.</p>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                {references.map((ref) => (
+                  <div key={ref.id} className="text-sm">
+                    <div className="font-bold">{ref.name}</div>
+                    <div className="italic text-gray-700">
+                      {ref.position} {ref.company ? `– ${ref.company}` : ""}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      {ref.phone} {ref.phone && ref.email ? " | " : ""} {ref.email}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>

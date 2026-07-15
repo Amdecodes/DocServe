@@ -1,6 +1,25 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { virtualAssistanceSchema } from "@/validators/virtual-assistance.schema";
+import { currentUser } from "@clerk/nextjs/server";
+
+// Helper to enforce admin auth
+async function requireAdmin() {
+  const user = await currentUser();
+  const adminEmail = process.env.ADMIN_EMAIL;
+
+  if (!user || !adminEmail) {
+    throw new Error("Unauthorized");
+  }
+
+  const isEmailMatch = user.emailAddresses.some(
+    (e) => e.emailAddress.toLowerCase() === adminEmail.toLowerCase()
+  );
+
+  if (!isEmailMatch) {
+    throw new Error("Unauthorized");
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -32,8 +51,10 @@ export async function POST(req: Request) {
         telegram_username: data.telegram_username || null,
         job_category: data.job_category,
         experience_level: data.experience_level,
+        education_level: data.education_level,
         location: data.location,
         notes: data.notes || null,
+        resume_url: data.resume_url || null,
         language: data.language,
         source: data.source,
         disclaimer_accepted_at: new Date(),
@@ -59,6 +80,9 @@ export async function POST(req: Request) {
 // GET endpoint for admin to list requests (optional, can be expanded later)
 export async function GET(req: Request) {
   try {
+    // Restrict access to admin
+    await requireAdmin();
+
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
 
@@ -75,8 +99,8 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error("[Virtual Assistance API] Error fetching requests:", error);
     return NextResponse.json(
-      { error: "Failed to fetch requests" },
-      { status: 500 },
+      { error: "Forbidden" },
+      { status: 403 },
     );
   }
 }

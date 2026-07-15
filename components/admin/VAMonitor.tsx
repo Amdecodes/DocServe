@@ -23,6 +23,10 @@ import {
   User,
   Briefcase,
   Loader2,
+  GraduationCap,
+  FileText,
+  Download,
+  Trash2,
 } from "lucide-react";
 
 export default function VAMonitor({
@@ -33,6 +37,7 @@ export default function VAMonitor({
   const [selectedRequest, setSelectedRequest] =
     useState<VirtualAssistanceRequest | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<
     "all" | "pending" | "contacted"
   >("all");
@@ -50,6 +55,32 @@ export default function VAMonitor({
     setUpdatingId(id);
     await updateVAStatus(id, newStatus as VirtualAssistanceStatus);
     setUpdatingId(null);
+  };
+
+  const handleDeleteFile = async (requestId: string, fileUrl: string) => {
+    if (!confirm("Are you sure you want to delete this file? This action cannot be undone.")) {
+      return;
+    }
+
+    setDeletingFileId(requestId);
+    try {
+      const response = await fetch(`/api/virtual-assistance/${requestId}/file`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileUrl }),
+      });
+
+      if (response.ok) {
+        window.location.reload(); // Refresh to show updated data
+      } else {
+        alert("Failed to delete file");
+      }
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Error deleting file");
+    } finally {
+      setDeletingFileId(null);
+    }
   };
 
   return (
@@ -113,6 +144,9 @@ export default function VAMonitor({
                   Target Job
                 </th>
                 <th className="h-10 px-6 text-xs font-medium uppercase tracking-wider">
+                  Education
+                </th>
+                <th className="h-10 px-6 text-xs font-medium uppercase tracking-wider">
                   Contact Info
                 </th>
                 <th className="h-10 px-6 text-xs font-medium uppercase tracking-wider">
@@ -127,7 +161,7 @@ export default function VAMonitor({
               {filteredRequests.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className="h-32 text-center text-muted-foreground"
                   >
                     No requests found matching filters.
@@ -160,6 +194,14 @@ export default function VAMonitor({
                         </Badge>
                         <span className="text-xs text-muted-foreground capitalize pl-1">
                           {req.experience_level} Level
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 align-top">
+                      <div className="flex items-center gap-1 text-xs text-gray-600">
+                        <GraduationCap className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="capitalize">
+                          {req.education_level?.replace(/_/g, " ") || "—"}
                         </span>
                       </div>
                     </td>
@@ -321,6 +363,12 @@ export default function VAMonitor({
                 </div>
                 <div className="space-y-2 text-xs">
                   <div>
+                    <span className="text-gray-500 block">Education Level</span>
+                    <span className="font-medium capitalize">
+                      {selectedRequest.education_level?.replace(/_/g, " ") || "—"}
+                    </span>
+                  </div>
+                  <div>
                     <span className="text-gray-500 block">Location</span>
                     <span className="font-medium">
                       {selectedRequest.location}
@@ -372,6 +420,48 @@ export default function VAMonitor({
                 )}
               </div>
             </div>
+
+            {selectedRequest.resume_url && (
+              <div>
+                <span className="block text-gray-500 text-xs uppercase mb-2 font-semibold">
+                  Uploaded Resume
+                </span>
+                <div className="flex items-center justify-between p-4 bg-teal-50 border border-teal-200 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-5 h-5 text-teal-600" />
+                    <div>
+                      <p className="text-sm font-medium text-teal-900">Resume File</p>
+                      <p className="text-xs text-teal-600">Uploaded by applicant</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs border-teal-300 hover:bg-teal-100"
+                      onClick={() => window.open(selectedRequest.resume_url!, "_blank")}
+                    >
+                      <Download className="w-3.5 h-3.5 mr-1" />
+                      Download
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs border-red-300 text-red-600 hover:bg-red-50"
+                      onClick={() => handleDeleteFile(selectedRequest.id, selectedRequest.resume_url!)}
+                      disabled={deletingFileId === selectedRequest.id}
+                    >
+                      {deletingFileId === selectedRequest.id ? (
+                        <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-3.5 h-3.5 mr-1" />
+                      )}
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </MinimalModal>
       )}

@@ -1,0 +1,339 @@
+"use client";
+
+import { useState } from "react";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/lib/navigation";
+import { PrintProduct } from "@/types/print";
+import { Minus, Plus, User, Phone, MapPin, Mail, Sparkles } from "lucide-react";
+import {
+  CATEGORY_FIELDS,
+  PRINT_CATEGORIES,
+  PrintCategory,
+  SUB_CATEGORY_FIELDS,
+} from "@/config/print-categories";
+
+interface OrderFormProps {
+  product: PrintProduct;
+  selectedVariationId?: string | null;
+}
+
+export function OrderForm({ product, selectedVariationId }: OrderFormProps) {
+  const t = useTranslations("PrintOrders.form");
+  const tErrors = useTranslations("PrintOrders.errors");
+  const router = useRouter();
+
+  const [quantity, setQuantity] = useState(1);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const adjustQuantity = (delta: number) => {
+    setQuantity((prev) => Math.max(1, prev + delta));
+  };
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setPending(true);
+
+    const formData = new FormData(event.currentTarget);
+
+    // Collect dynamic fields
+    const dynamicFieldsInstructions: string[] = [];
+
+    // Find dynamic fields config
+    // 1. Check if there's a sub-category config (e.g. Wedding, Birthday)
+    // 2. Fallback to main category config (e.g. Marketing, Merchandise)
+    let categoryConfig = product.sub_category
+      ? SUB_CATEGORY_FIELDS[product.sub_category]
+      : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
+
+    // If still undefined (shouldn't happen if configured correctly), default empty
+    if (!categoryConfig && product.category === "Cards") {
+      // Fallback for generic cards if sub-category missing
+      categoryConfig = CATEGORY_FIELDS["Cards"];
+    }
+
+    if (categoryConfig) {
+      categoryConfig.forEach((field) => {
+        const val = formData.get(`dynamic_${field.name}`);
+        if (val instanceof File && val.size > 0) {
+          dynamicFieldsInstructions.push(`${t(field.label)}: [File Attached]`);
+        } else if (typeof val === "string" && val) {
+          const label = t(field.label);
+          dynamicFieldsInstructions.push(`${label}: ${val}`);
+        }
+      });
+    }
+
+    const baseNotes = ((formData.get("notes") as string) || "").trim();
+    const finalNotes = [
+      baseNotes,
+      dynamicFieldsInstructions.length > 0
+        ? "\n--- Specification ---\n" + dynamicFieldsInstructions.join("\n")
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    // Construct FormData for submission
+    const submitData = new FormData();
+    submitData.append("product_id", product.id);
+    if (selectedVariationId)
+      submitData.append("variation_id", selectedVariationId);
+    submitData.append("full_name", (formData.get("fullName") as string) ?? "");
+    submitData.append("phone", (formData.get("phone") as string) ?? "");
+    const emailStr = ((formData.get("email") as string) || "").trim();
+    if (emailStr) submitData.append("email", emailStr);
+    submitData.append("location", (formData.get("location") as string) ?? "");
+    submitData.append("quantity", quantity.toString());
+    if (finalNotes) submitData.append("notes", finalNotes);
+
+    // Append files
+    if (categoryConfig) {
+      categoryConfig.forEach((field) => {
+        if (field.type === "file") {
+          const file = formData.get(`dynamic_${field.name}`);
+          if (file instanceof File && file.size > 0) {
+            submitData.append(`file_${field.name}`, file);
+          }
+        }
+      });
+    }
+
+    try {
+      const response = await fetch("/api/print-orders", {
+        method: "POST",
+        body: submitData,
+      });
+
+      if (!response.ok) {
+        console.error("Print order submit failed", await response.text());
+        setError(tErrors("generic"));
+        setPending(false);
+        return;
+      }
+
+      router.push("/print-orders/success");
+    } catch (err) {
+      console.error("Print order submit error", err);
+      setError(tErrors("generic"));
+    } finally {
+      setPending(false);
+    }
+  }
+
+  // Find selected variation name for display
+  const selectedVariation = product.variations?.find(
+    (v) => v.id === selectedVariationId,
+  );
+
+  // Determine which fields to show
+  // 1. Check sub-category fields (Wedding, Birthday, etc.)
+  // 2. Fallback to category fields (Text only for Cards, Size for Merchandise, etc.)
+  let displayFields = product.sub_category
+    ? SUB_CATEGORY_FIELDS[product.sub_category]
+    : CATEGORY_FIELDS[(product.category as PrintCategory) || "Marketing"];
+
+  // Safety fallback for Cards if sub-category is missing but category is Cards
+  if (!displayFields && product.category === "Cards") {
+    displayFields = CATEGORY_FIELDS["Cards"];
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Selected Item Summary */}
+      <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+        <div>
+          <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+            Product
+          </div>
+          <div className="font-semibold text-gray-900">{product.name}</div>
+          {selectedVariation && (
+            <div className="text-sm text-teal-600 font-medium flex items-center gap-1 mt-1">
+              <Sparkles className="w-3 h-3" />
+              {selectedVariation.name}
+            </div>
+          )}
+          {product.sub_category && (
+            <div className="text-xs text-gray-500 mt-1 italic">
+              {product.sub_category}
+            </div>
+          )}
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+            Total
+          </div>
+          <div className="font-bold text-gray-900 text-lg">
+            {(product.base_price * quantity).toLocaleString()}{" "}
+            <span className="text-sm font-normal text-gray-500">ETB</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Quantity */}
+      <div>
+        <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
+          {t("quantity")}
+        </label>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => adjustQuantity(-1)}
+            className="w-12 h-12 flex items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all text-gray-600 shadow-sm"
+          >
+            <Minus className="w-5 h-5" />
+          </button>
+          <div className="w-20 text-center font-bold text-2xl text-gray-900">
+            {quantity}
+          </div>
+          <button
+            type="button"
+            onClick={() => adjustQuantity(1)}
+            className="w-12 h-12 flex items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 active:scale-95 transition-all text-gray-600 shadow-sm"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Customer Form Fields */}
+      <div className="space-y-4">
+        <Input
+          id="fullName"
+          name="fullName"
+          required
+          placeholder={t("fullName")}
+          startIcon={<User className="w-4 h-4" />}
+          className="bg-white"
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            placeholder={t("phone")}
+            startIcon={<Phone className="w-4 h-4" />}
+            className="bg-white"
+          />
+          <Input
+            id="location"
+            name="location"
+            required
+            placeholder={t("location")}
+            startIcon={<MapPin className="w-4 h-4" />}
+            className="bg-white"
+          />
+        </div>
+
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          placeholder={t("email")}
+          startIcon={<Mail className="w-4 h-4" />}
+          className="bg-white"
+        />
+
+        {/* Dynamic Fields Section */}
+        {displayFields && displayFields.length > 0 && (
+          <div className="pt-4 border-t border-gray-100">
+            <h4 className="text-sm font-medium text-gray-900 mb-4 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-teal-600" />
+              {t("productDetails")}
+            </h4>
+            <div className="space-y-4">
+              {displayFields.map((field) => (
+                <div key={field.name} className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-500 uppercase">
+                    {field.label.startsWith("dynamic.")
+                      ? t(field.label)
+                      : field.label}{" "}
+                    {field.required && <span className="text-red-500">*</span>}
+                  </label>
+                  {field.type === "select" ? (
+                    <select
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                    >
+                      <option value="">{t("selectOption")}</option>
+                      {field.options?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <Textarea
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      className="bg-white"
+                      rows={3}
+                    />
+                  ) : field.type === "file" ? (
+                    <div className="relative">
+                      <Input
+                        type="file"
+                        accept=".pdf,.png,.jpg,.jpeg,.ai,.psd"
+                        className="bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                      />
+                      <p className="text-[10px] text-gray-400 mt-1 pl-1">
+                        Max 8MB. PDF, PNG, JPG accepted.
+                      </p>
+                    </div>
+                  ) : (
+                    <Input
+                      type={field.type}
+                      name={`dynamic_${field.name}`}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      className="bg-white"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Textarea
+          id="notes"
+          name="notes"
+          placeholder={t("notesPlaceholder")}
+          rows={3}
+          className="bg-white resize-none"
+        />
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Submit Action */}
+      <Button
+        type="submit"
+        disabled={pending}
+        className="w-full py-6 text-lg font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-xl shadow-teal-700/20 rounded-2xl transition-all active:scale-[0.98]"
+      >
+        {pending ? (
+          t("submitting")
+        ) : (
+          <span className="flex items-center gap-2">Confirm Order</span>
+        )}
+      </Button>
+
+      <p className="text-center text-xs text-gray-400 mt-2 px-4">
+        {t("disclaimer")}
+      </p>
+    </form>
+  );
+}

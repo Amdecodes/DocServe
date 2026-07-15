@@ -100,23 +100,23 @@ export function Step2_Education() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("startDate")}</label>
                 <Input
-                  type="date"
+                  type="text"
                   value={newItem.startDate || ""}
                   onChange={(e) =>
                     setNewItem({ ...newItem, startDate: e.target.value })
                   }
-                  placeholder="Select date"
+                  placeholder={t("placeholders.startDate")}
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t("endDate")}</label>
                 <Input
-                  type="date"
+                  type="text"
                   value={newItem.endDate || ""}
                   onChange={(e) =>
                     setNewItem({ ...newItem, endDate: e.target.value })
                   }
-                  placeholder="Select date"
+                  placeholder={t("placeholders.endDate")}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
